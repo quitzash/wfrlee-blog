@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { BOOKING_URL } from '@/consts';
+import {
+	cities,
+	cityAlternateHref,
+	cityHref,
+	citiesHref,
+	type City,
+} from '@/lib/cities';
+import { getPosts } from '@/lib/blog';
+import { useTranslations, type Locale } from '@/i18n/ui';
+
+interface Props {
+	lang: Locale;
+	city: City;
+}
+
+const { lang, city } = Astro.props;
+const t = useTranslations(lang);
+
+const alternateUrl = cityAlternateHref(city, lang);
+const arrow = lang === 'ar' ? '←' : '→';
+const price = (n: number) => (lang === 'ar' ? `${n} ريال` : `SAR ${n}`);
+
+const durations = [
+	{ hours: lang === 'ar' ? '3 ساعات' : '3 hours', text: lang === 'ar' ? 'استحمام سريع وراحة بين الرحلات.' : 'A quick shower and rest between flights.' },
+	{ hours: lang === 'ar' ? '6 ساعات' : '6 hours', text: lang === 'ar' ? 'قيلولة جيدة لاستعادة النشاط قبل رحلتك التالية.' : 'A proper nap to reset before your next leg.' },
+	{ hours: lang === 'ar' ? '12 ساعة' : '12 hours', text: lang === 'ar' ? 'إقامة نصف يوم للعمل أو ترانزيت ليلي.' : 'A half-day stay for work or an overnight connector.' },
+	{ hours: lang === 'ar' ? '24 ساعة' : '24 hours', text: lang === 'ar' ? 'يوم كامل عندما تحتاج الغرفة وقتًا أطول.' : 'A full day when you need the room for longer.' },
+];
+
+const allPosts = await getPosts(lang);
+const cityPosts = allPosts.filter((post) => {
+	const hay = `${post.data.title} ${post.data.category} ${post.data.tags.join(' ')}`.toLowerCase();
+	const needles = [city.slug.replace(/-/g, ' '), city.name.en.toLowerCase(), city.airport.code.toLowerCase(), ...city.tags];
+	return needles.some((needle) => hay.includes(needle.toLowerCase()));
+});
+const isFallback = cityPosts.length === 0;
+const related = (isFallback ? allPosts : cityPosts).slice(0, 3);
+const relatedTitle = isFallback ? t('home.more') : t('cities.relatedTitle');
+
+const otherCities = cities.filter((entry) => entry.slug !== city.slug);
+
+const crumbs = [
+	{ name: t('nav.home'), url: lang === 'en' ? '/' : '/ar/' },
+	{ name: t('cities.title'), url: citiesHref(lang) },
+	{ name: city.name[lang], url: cityHref(city, lang) },
+];
+---
+
+<BaseLayout
+	lang={lang}
+	title={lang === 'ar' ? `إقامة بالساعة في ${city.name.ar}` : `Hourly stays in ${city.name.en}`}
+	description={city.intro[lang]}
+	alternateUrl={alternateUrl}
+>
+	<JsonLd lang={lang} breadcrumbs={crumbs} />
+
+	<section class="border-b border-slate-200 bg-brand-700 text-white">
+		<div class="container-page grid gap-10 py-12 lg:grid-cols-2 lg:items-center lg:py-16">
+			<div>
+				<a
+					href={citiesHref(lang)}
+					class="inline-flex items-center gap-1 text-sm font-medium text-brand-200 hover:text-white"
+				>
+					<span aria-hidden="true">{lang === 'ar' ? '→' : '←'}</span>{t('cities.back')}
+				</a>
+				<p class="mt-6 text-sm font-semibold uppercase tracking-wide text-brand-200">
+					{city.region[lang]}
+				</p>
+				<h1 class="mt-3 text-4xl font-extrabold leading-tight text-white sm:text-5xl">{city.name[lang]}</h1>
+				<p class="mt-4 max-w-2xl text-lg leading-relaxed text-brand-100">{city.tagline[lang]}</p>
+				<div class="mt-6 flex flex-wrap items-center gap-4">
+					<a
+						href={BOOKING_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-brand-800 transition-colors hover:bg-brand-50"
+					>
+						{t('cities.ctaButton')}
+					</a>
+					<span class="text-sm text-brand-100">
+						{t('cities.from')} <span class="font-bold text-white">{price(city.startingPrice)}</span> {t('cities.perStay')}
+					</span>
+				</div>
+			</div>
+			<Image
+				src={city.image}
+				alt={city.imageAlt[lang]}
+				width={1200}
+				height={800}
+				loading="eager"
+				decoding="async"
+				class="aspect-[3/2] w-full rounded-2xl object-cover shadow-lg"
+			/>
+		</div>
+	</section>
+
+	<section class="container-page py-12 lg:py-16">
+		<div class="grid gap-6 sm:grid-cols-3">
+			<div class="rounded-xl border border-slate-200 bg-white p-5">
+				<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('cities.region')}</p>
+				<p class="mt-1 font-semibold text-slate-900">{city.region[lang]}</p>
+			</div>
+			<div class="rounded-xl border border-slate-200 bg-white p-5">
+				<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('cities.airport')}</p>
+				<p class="mt-1 font-semibold text-slate-900">{city.airport.code} — {city.airport.name[lang]}</p>
+			</div>
+			<div class="rounded-xl border border-slate-200 bg-white p-5">
+				<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('cities.from')}</p>
+				<p class="mt-1 font-semibold text-slate-900">
+					{price(city.startingPrice)}
+					<span class="text-sm font-normal text-slate-500"> / {t('cities.perStay')}</span>
+				</p>
+			</div>
+		</div>
+
+		<div class="mt-10 max-w-3xl">
+			<p class="text-lg leading-relaxed text-slate-700">{city.intro[lang]}</p>
+		</div>
+
+		<div class="mt-14">
+			<h2 class="text-2xl font-bold text-slate-900">{t('cities.highlightsTitle')}</h2>
+			<div class="mt-6 grid gap-6 md:grid-cols-3">
+				{
+					city.highlights.map((highlight) => (
+						<div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+							<h3 class="font-bold text-slate-900">{highlight.title[lang]}</h3>
+							<p class="mt-2 text-sm leading-relaxed text-slate-600">{highlight.text[lang]}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="mt-14">
+			<h2 class="text-2xl font-bold text-slate-900">{t('cities.durationsTitle')}</h2>
+			<p class="mt-2 max-w-2xl text-slate-600">{t('cities.durationsText')}</p>
+			<div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{
+					durations.map((duration) => (
+						<div class="rounded-xl border border-slate-200 bg-white p-5">
+							<p class="text-lg font-bold text-brand-700">{duration.hours}</p>
+							<p class="mt-2 text-sm leading-relaxed text-slate-600">{duration.text}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		{
+			related.length > 0 && (
+				<div class="mt-14">
+					<h2 class="text-2xl font-bold text-slate-900">{relatedTitle}</h2>
+					<ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+						{related.map((post) => (
+							<li>
+								<BlogPostCard post={post} />
+							</li>
+						))}
+					</ul>
+				</div>
+			)
+		}
+
+		<div class="mt-14">
+			<h2 class="text-2xl font-bold text-slate-900">{t('cities.otherCities')}</h2>
+			<ul class="mt-6 flex flex-wrap gap-3">
+				{
+					otherCities.map((entry) => (
+						<li>
+							<a
+								href={cityHref(entry, lang)}
+								class="inline-flex items-center rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-brand-300 hover:text-brand-700"
+							>
+								{entry.name[lang]}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<div class="mt-14 flex flex-col items-center justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50 p-6 sm:flex-row sm:text-start">
+			<div>
+				<p class="font-semibold text-slate-900">
+					{t('cities.ctaTitle').replace('{city}', city.name[lang])}
+				</p>
+				<p class="mt-1 text-sm text-slate-600">{t('cities.ctaText')}</p>
+			</div>
+			<a
+				href={BOOKING_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex flex-none items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+			>
+				{t('cities.ctaButton')} <span aria-hidden="true" class="ms-1">{arrow}</span>
+			</a>
+		</div>
+	</section>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+import CityPage from '@/components/CityPage.astro';
+import { cities } from '@/lib/cities';
+
+export function getStaticPaths() {
+	return cities.map((city) => ({
+		params: { city: city.slug },
+		props: { city },
+	}));
+}
+
+const { city } = Astro.props;
+---
+
+<CityPage lang="ar" city={city} />

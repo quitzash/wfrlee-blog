@@ -1,0 +1,49 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import {
+	alternateHref,
+	getAllPosts,
+	getPostSlug,
+	getPosts,
+	relatedPosts,
+} from '@/lib/blog';
+
+export async function getStaticPaths() {
+	const posts = await getPosts('ar');
+	const all = await getAllPosts();
+
+	return posts.map((post, index) => ({
+		params: { slug: getPostSlug(post) },
+		props: {
+			post,
+			newer: posts[index - 1] ?? null,
+			older: posts[index + 1] ?? null,
+			related: relatedPosts(post, all),
+			alternateUrl: alternateHref(post, all),
+		},
+	}));
+}
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+	alternateUrl: string;
+	newer: CollectionEntry<'blog'> | null;
+	older: CollectionEntry<'blog'> | null;
+	related: CollectionEntry<'blog'>[];
+}
+
+const { post, alternateUrl, newer, older, related } = Astro.props;
+const { Content } = await render(post);
+---
+
+<ArticleLayout
+	post={post}
+	lang="ar"
+	alternateUrl={alternateUrl}
+	newer={newer}
+	older={older}
+	related={related}
+>
+	<Content />
+</ArticleLayout>

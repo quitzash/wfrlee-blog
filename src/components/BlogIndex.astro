@@ -1,0 +1,137 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { BOOKING_URL, SITE_DESCRIPTION, SITE_DESCRIPTION_AR, SITE_TITLE, SITE_TITLE_AR } from '@/consts';
+import {
+	formatDateShort,
+	getPosts,
+	homeHref,
+	postHref,
+	readingMinutes,
+} from '@/lib/blog';
+import { useTranslations, type Locale } from '@/i18n/ui';
+
+interface Props {
+	lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const posts = await getPosts(lang);
+const [featured, ...rest] = posts;
+
+const otherLang: Locale = lang === 'en' ? 'ar' : 'en';
+const alternateUrl = homeHref(otherLang);
+const arrow = lang === 'ar' ? '←' : '→';
+---
+
+<BaseLayout
+	lang={lang}
+	title={lang === 'ar' ? SITE_TITLE_AR : SITE_TITLE}
+	description={lang === 'ar' ? SITE_DESCRIPTION_AR : SITE_DESCRIPTION}
+	alternateUrl={alternateUrl}
+>
+	<JsonLd website lang={lang} description={t('home.intro')} />
+
+	<section class="border-b border-slate-200 bg-slate-50">
+		<div class="container-page py-12 lg:py-16">
+			<p class="text-sm font-semibold uppercase tracking-wide text-brand-700">
+				{t('home.kicker')}
+			</p>
+			<h1 class="mt-3 max-w-3xl text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl">
+				{t('home.title')}
+			</h1>
+			<p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">{t('home.intro')}</p>
+		</div>
+	</section>
+
+	<section id="guides" class="container-page scroll-mt-20 py-12 lg:py-16">
+		{
+			posts.length > 0 ? (
+				<>
+					{featured && (
+						<article class="grid gap-6 overflow-hidden rounded-2xl border border-slate-200 bg-white md:grid-cols-2">
+							<a
+								href={postHref(featured)}
+								tabindex="-1"
+								aria-hidden="true"
+								class="block overflow-hidden bg-slate-100"
+							>
+								<Image
+									src={featured.data.heroImage}
+									alt=""
+									width={800}
+									height={450}
+									loading="eager"
+									fetchpriority="high"
+									decoding="async"
+									class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+								/>
+							</a>
+							<div class="flex flex-col justify-center p-6 md:p-8">
+								<p class="text-xs font-semibold uppercase tracking-wide text-brand-700">
+									{t('home.latest')} · {featured.data.category}
+								</p>
+								<h2 class="mt-3 text-2xl font-bold leading-snug text-slate-900 sm:text-3xl">
+									<a href={postHref(featured)} class="hover:text-brand-700">
+										{featured.data.title}
+									</a>
+								</h2>
+								<p class="mt-3 leading-relaxed text-slate-600">
+									{featured.data.description}
+								</p>
+								<div class="mt-5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+									<time datetime={featured.data.pubDate.toISOString()}>
+										{formatDateShort(featured.data.pubDate, lang)}
+									</time>
+									<span aria-hidden="true">·</span>
+									<span>{readingMinutes(featured)} {t('card.readTime')}</span>
+								</div>
+								<a
+									href={postHref(featured)}
+									class="mt-5 inline-flex text-sm font-semibold text-brand-600 hover:text-brand-700"
+								>
+									{t('card.read')} <span aria-hidden="true" class="ms-1">{arrow}</span>
+								</a>
+							</div>
+						</article>
+					)}
+
+					{rest.length > 0 && (
+						<div class="mt-12">
+							<h2 class="text-xl font-bold text-slate-900">{t('home.more')}</h2>
+							<ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+								{rest.map((post) => (
+									<li>
+										<BlogPostCard post={post} />
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
+				</>
+			) : (
+				<div class="py-16 text-center">
+					<p class="text-slate-600">{t('home.empty')}</p>
+				</div>
+			)
+		}
+
+		<div class="mt-14 flex flex-col items-center justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50 p-6 sm:flex-row sm:text-start">
+			<div>
+				<p class="font-semibold text-slate-900">{t('home.ctaTitle')}</p>
+				<p class="mt-1 text-sm text-slate-600">{t('home.ctaText')}</p>
+			</div>
+			<a
+				href={BOOKING_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex flex-none items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+			>
+				{t('home.ctaButton')}
+			</a>
+		</div>
+	</section>
+</BaseLayout>

@@ -1,0 +1,206 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import { BOOKING_URL } from '@/consts';
+import { formatDate, homeHref, postHref, readingMinutes } from '@/lib/blog';
+import { useTranslations, type Locale } from '@/i18n/ui';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+	lang: Locale;
+	alternateUrl: string;
+	newer: CollectionEntry<'blog'> | null;
+	older: CollectionEntry<'blog'> | null;
+	related: CollectionEntry<'blog'>[];
+}
+
+const { post, lang, alternateUrl, newer, older, related } = Astro.props;
+const t = useTranslations(lang);
+
+const { title, description, pubDate, updatedDate, heroImage, author, category, tags } =
+	post.data;
+
+const href = postHref(post);
+const readTime = readingMinutes(post);
+const home = homeHref(lang);
+const guides = `${home}#guides`;
+const breadcrumbs = [
+	{ name: t('nav.home'), url: home },
+	{ name: t('nav.guides'), url: guides },
+	{ name: title, url: href },
+];
+
+const newerArrow = lang === 'ar' ? '→' : '←';
+const olderArrow = lang === 'ar' ? '←' : '→';
+---
+
+<BaseLayout
+	lang={lang}
+	title={title}
+	description={description}
+	image={heroImage}
+	type="article"
+	canonicalURL={href}
+	alternateUrl={alternateUrl}
+	publishedTime={pubDate}
+	modifiedTime={updatedDate}
+	author={author}
+>
+	<JsonLd post={post} breadcrumbs={breadcrumbs} />
+
+	<article class="container-page py-10 lg:py-14">
+		<nav aria-label="Breadcrumb" class="mx-auto max-w-3xl">
+			<ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+				{
+					breadcrumbs.map((crumb, index) => (
+						<li class="flex items-center gap-2">
+							{index > 0 && <span aria-hidden="true">/</span>}
+							{index === breadcrumbs.length - 1 ? (
+								<span class="font-medium text-slate-700">{crumb.name}</span>
+							) : (
+								<a href={crumb.url} class="hover:text-brand-700">
+									{crumb.name}
+								</a>
+							)}
+						</li>
+					))
+				}
+			</ol>
+		</nav>
+
+		<header class="mx-auto mt-8 max-w-3xl">
+			<p class="text-sm font-semibold uppercase tracking-wide text-brand-700">{category}</p>
+			<h1 class="mt-3 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
+				{title}
+			</h1>
+			<p class="mt-4 text-lg leading-relaxed text-slate-600">{description}</p>
+
+			<div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500">
+				<span class="font-medium text-slate-700">{author}</span>
+				<span aria-hidden="true">·</span>
+				<time datetime={pubDate.toISOString()}>{formatDate(pubDate, lang)}</time>
+				<span aria-hidden="true">·</span>
+				<span>{readTime} {t('card.readTime')}</span>
+				{updatedDate && (
+					<>
+						<span aria-hidden="true">·</span>
+						<span>{t('article.updated')} {formatDate(updatedDate, lang)}</span>
+					</>
+				)}
+			</div>
+		</header>
+
+		<div class="mx-auto mt-8 max-w-4xl">
+			<Image
+				src={heroImage}
+				alt={title}
+				width={1200}
+				height={630}
+				fetchpriority="high"
+				loading="eager"
+				decoding="async"
+				class="aspect-[1200/630] w-full rounded-2xl object-cover"
+			/>
+		</div>
+
+		<div
+			class="prose prose-slate mx-auto mt-10 max-w-3xl prose-headings:font-sans prose-headings:font-bold prose-a:font-medium prose-a:text-brand-700 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl"
+		>
+			<slot />
+		</div>
+
+		{
+			tags.length > 0 && (
+				<ul class="mx-auto mt-10 flex max-w-3xl flex-wrap gap-2">
+					{tags.map((tag) => (
+						<li class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+							#{tag}
+						</li>
+					))}
+				</ul>
+			)
+		}
+
+		<aside class="mx-auto mt-10 max-w-3xl rounded-xl border border-slate-200 bg-slate-50 p-6">
+			<div class="flex items-start gap-4">
+				<span class="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-brand-600 font-bold text-white">
+					W
+				</span>
+				<div>
+					<p class="text-sm font-semibold text-slate-900">{author}</p>
+					<p class="mt-1 text-sm text-slate-600">{t('article.authorBlurb')}</p>
+				</div>
+			</div>
+		</aside>
+
+		<div class="mx-auto mt-6 max-w-3xl rounded-xl border border-brand-100 bg-brand-50 p-6 text-center sm:text-start">
+			<p class="font-semibold text-slate-900">{t('article.ctaTitle')}</p>
+			<p class="mt-1 text-sm text-slate-600">{t('article.ctaText')}</p>
+			<a
+				href={BOOKING_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="mt-4 inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+			>
+				{t('article.ctaButton')}
+			</a>
+		</div>
+
+		{
+			(newer || older) && (
+				<nav aria-label={t('article.related')} class="mx-auto mt-10 max-w-3xl border-t border-slate-200 pt-8">
+					<ul class="grid gap-4 sm:grid-cols-2">
+						{newer && (
+							<li>
+								<a
+									href={postHref(newer)}
+									class="flex h-full flex-col rounded-xl border border-slate-200 p-4 transition-colors hover:border-brand-300"
+								>
+									<span class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+										<span aria-hidden="true">{newerArrow}</span> {t('article.newer')}
+									</span>
+									<span class="mt-2 font-semibold leading-snug text-slate-900">
+										{newer.data.title}
+									</span>
+								</a>
+							</li>
+						)}
+						{older && (
+							<li class={newer ? 'sm:text-end' : 'sm:col-start-2'}>
+								<a
+									href={postHref(older)}
+									class="flex h-full flex-col rounded-xl border border-slate-200 p-4 transition-colors hover:border-brand-300"
+								>
+									<span class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+										{t('article.older')} <span aria-hidden="true">{olderArrow}</span>
+									</span>
+									<span class="mt-2 font-semibold leading-snug text-slate-900">
+										{older.data.title}
+									</span>
+								</a>
+							</li>
+						)}
+					</ul>
+				</nav>
+			)
+		}
+
+		{
+			related.length > 0 && (
+				<section class="mx-auto mt-12 max-w-5xl">
+					<h2 class="text-xl font-bold text-slate-900">{t('article.related')}</h2>
+					<ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+						{related.map((relatedPost) => (
+							<li>
+								<BlogPostCard post={relatedPost} />
+							</li>
+						))}
+					</ul>
+				</section>
+			)
+		}
+	</article>
+</BaseLayout>

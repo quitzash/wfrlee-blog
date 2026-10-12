@@ -1,0 +1,107 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE_TITLE, SITE_URL, SITE_AUTHOR } from '@/consts';
+import { getPostLang, postHref } from '@/lib/blog';
+import type { Locale } from '@/i18n/ui';
+
+interface Crumb {
+	name: string;
+	url: string;
+}
+
+interface Props {
+	post?: CollectionEntry<'blog'>;
+	breadcrumbs?: Crumb[];
+	website?: boolean;
+	lang?: Locale;
+	description?: string;
+}
+
+const {
+	post,
+	breadcrumbs = [],
+	website = false,
+	lang = 'en',
+	description = 'Hourly micro-stay hotel booking for airport layovers and short stays in Saudi Arabia and the MENA region.',
+} = Astro.props;
+
+const toAbsolute = (path: string) => new URL(path, SITE_URL).toString();
+
+const schemas: Record<string, unknown>[] = [];
+
+const organization = {
+	'@type': 'Organization',
+	name: lang === 'ar' ? 'وفرلي.كوم' : 'Wfrlee.com',
+	url: SITE_URL,
+};
+
+if (website) {
+	schemas.push({
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: lang === 'ar' ? 'مدونة وفرلي.كوم' : SITE_TITLE,
+		url: lang === 'ar' ? toAbsolute('/ar/') : SITE_URL,
+		inLanguage: lang,
+		description,
+		publisher: organization,
+	});
+}
+
+if (post) {
+	const { title, description: postDescription, pubDate, updatedDate, author, heroImage, tags, category } =
+		post.data;
+	const postLang = getPostLang(post);
+
+	schemas.push({
+		'@context': 'https://schema.org',
+		'@type': 'BlogPosting',
+		headline: title,
+		description: postDescription,
+		image: [toAbsolute(heroImage)],
+		datePublished: pubDate.toISOString(),
+		dateModified: (updatedDate ?? pubDate).toISOString(),
+		author: {
+			'@type': 'Person',
+			name: author,
+		},
+		publisher: organization,
+		keywords: tags.join(', '),
+		articleSection: category,
+		inLanguage: postLang,
+		mainEntityOfPage: {
+			'@type': 'WebPage',
+			'@id': toAbsolute(postHref(post)),
+		},
+	});
+}
+
+if (breadcrumbs.length > 0) {
+	schemas.push({
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: breadcrumbs.map((crumb, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			name: crumb.name,
+			item: toAbsolute(crumb.url),
+		})),
+	});
+}
+
+// Fallback author reference keeps the schema valid even without a post.
+if (schemas.length === 0) {
+	schemas.push({
+		'@context': 'https://schema.org',
+		'@type': 'Organization',
+		name: SITE_TITLE,
+		url: SITE_URL,
+		founder: { '@type': 'Person', name: SITE_AUTHOR },
+	});
+}
+---
+
+{
+	schemas.map((schema) => (
+		<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
+	))
+}
