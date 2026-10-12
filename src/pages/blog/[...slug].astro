@@ -9,6 +9,8 @@ import {
 	relatedPosts,
 } from '@/lib/blog';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
 	const posts = await getPosts('en');
 	const all = await getAllPosts();

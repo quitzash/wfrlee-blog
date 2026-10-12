@@ -2,6 +2,8 @@
 import CityPage from '@/components/CityPage.astro';
 import { cities } from '@/lib/cities';
 
+export const prerender = true;
+
 export function getStaticPaths() {
 	return cities.map((city) => ({
 		params: { city: city.slug },
