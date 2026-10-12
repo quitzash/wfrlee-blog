@@ -1,6 +1,6 @@
 import { c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead, b as addAttribute } from '../chunks/astro/server_BYpsH1Ip.mjs';
 import 'piccolore';
-import { $ as $$BaseLayout } from '../chunks/BaseLayout_DFZy_VF1.mjs';
+import { $ as $$BaseLayout } from '../chunks/BaseLayout_JdXKQNSL.mjs';
 import { h as homeHref } from '../chunks/blog_BWAOoHv7.mjs';
 import { B as BOOKING_URL } from '../chunks/consts_BqY5v2Pi.mjs';
 export { renderers } from '../renderers.mjs';

@@ -1,6 +1,6 @@
 import { c as createComponent, r as renderComponent, a as renderTemplate } from '../chunks/astro/server_BYpsH1Ip.mjs';
 import 'piccolore';
-import { $ as $$WhyWfrlee$1 } from '../chunks/WhyWfrlee_CWYvep_o.mjs';
+import { $ as $$WhyWfrlee$1 } from '../chunks/WhyWfrlee_Dcnwi1p6.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$WhyWfrlee = createComponent(($$result, $$props, $$slots) => {

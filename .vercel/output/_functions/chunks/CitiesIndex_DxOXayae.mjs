@@ -1,7 +1,7 @@
 import { d as createAstro, c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead, b as addAttribute } from './astro/server_BYpsH1Ip.mjs';
 import 'piccolore';
 import { $ as $$Image } from './_astro_assets_QcFncbZ7.mjs';
-import { $ as $$BaseLayout, c as cities, e as cityHref, a as citiesHref } from './BaseLayout_DFZy_VF1.mjs';
+import { $ as $$BaseLayout, c as cities, e as cityHref, a as citiesHref } from './BaseLayout_JdXKQNSL.mjs';
 import { $ as $$JsonLd } from './JsonLd_C64jg7Vg.mjs';
 import { S as SITE_BRAND_AR, B as BOOKING_URL } from './consts_BqY5v2Pi.mjs';
 import { u as useTranslations } from './blog_BWAOoHv7.mjs';

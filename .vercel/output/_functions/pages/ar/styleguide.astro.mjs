@@ -1,6 +1,6 @@
 import { c as createComponent, r as renderComponent, a as renderTemplate } from '../../chunks/astro/server_BYpsH1Ip.mjs';
 import 'piccolore';
-import { $ as $$Styleguide$1 } from '../../chunks/Styleguide_c6MBXS4a.mjs';
+import { $ as $$Styleguide$1 } from '../../chunks/Styleguide_CbhHQ0FS.mjs';
 export { renderers } from '../../renderers.mjs';
 
 const $$Styleguide = createComponent(($$result, $$props, $$slots) => {
