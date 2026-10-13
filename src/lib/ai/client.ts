@@ -3,8 +3,12 @@
  *
  * Free-tier API keys can only use Flash-family models, and those frequently
  * return 429 (quota / paid-only) or 503 (high demand). Instead of failing a
- * publish, iterate through a model list — skip 400/401/403/404 (permanent
- * failures) but retry on transient errors like 429/500/503.
+ * publish, iterate through a model list:
+ *  - transport errors ("fetch failed", no HTTP status) get same-model retries
+ *    with backoff (first-request DNS/TLS blips after a cold start);
+ *  - 400/404 (bad model name on this key) skip to the next model;
+ *  - 429/500/503 skip to the next model after a brief pause;
+ *  - 401/403 (auth) throw — no other model will help.
  */
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { serverEnv } from '@/lib/env';
@@ -25,11 +29,19 @@ export function modelList(primaryEnv: string, defaultFallbacks: string[]): strin
   return list;
 }
 
-function isRetryable(status: number | undefined): boolean {
-  return status === 429 || status === 500 || status === 503;
+/** True when an HTTP error means "this model won't work on this key" — skip it. */
+function isModelLevelError(status: number | undefined): boolean {
+  return status === 400 || status === 404;
 }
 
-/** Call generateContent, falling back to the next model in `models` on transient errors. */
+/** True when the error is fatal and no other model can help. */
+function isFatal(status: number | undefined): boolean {
+  return status === 401 || status === 403;
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Call generateContent, retrying/falling back per the model list. */
 export async function generateText(options: {
   prompt: string;
   systemInstruction?: string;
@@ -40,20 +52,29 @@ export async function generateText(options: {
   let lastError: unknown = null;
 
   for (const modelName of options.models) {
-    try {
-      const model = genAI.getGenerativeModel({
-        model: modelName,
-        systemInstruction: options.systemInstruction,
-      });
-      const { response } = await model.generateContent(options.prompt);
-      return response.text();
-    } catch (error: any) {
-      lastError = error;
-      if (!isRetryable(Number(error?.status))) throw error;
-      // Transient: brief pause before trying the next model.
-      await new Promise((resolve) => setTimeout(resolve, 250));
+    const attempts = 3; // transport blips are common on cold-start DNS
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          systemInstruction: options.systemInstruction,
+          requestOptions: { timeout: 90_000 }, // fail fast so retry/fallback kicks in
+        });
+        const { response } = await model.generateContent(options.prompt);
+        return response.text();
+      } catch (error: any) {
+        lastError = error;
+        const status = Number(error?.status);
+        if (isFatal(Number.isNaN(status) ? undefined : status)) throw error;
+        if (isModelLevelError(Number.isNaN(status) ? undefined : status)) break; // next model
+        // Transient or transport error: back off, then retry the same model.
+        if (attempt < attempts) {
+          await sleep(300 * attempt);
+        }
+      }
     }
   }
+
   const detail = lastError instanceof Error ? lastError.message : String(lastError);
   throw new Error(
     `All Gemini models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}`,

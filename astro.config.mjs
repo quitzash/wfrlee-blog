@@ -27,6 +27,17 @@ export default defineConfig({
 		}),
 	],
 
+	// Admin page scripts must be real files: @astrojs/vercel inlines small
+	// scripts (< Vite's default 4KB assetsInlineLimit) directly into SSR HTML,
+	// and the admin CSP (script-src 'self') blocks inline scripts — which would
+	// silently kill the admin login button. Disable inlining so every script is
+	// served as a self-hosted static asset.
+	vite: {
+		build: {
+			assetsInlineLimit: 0,
+		},
+	},
+
 	experimental: {
 		fonts: [
 			{
