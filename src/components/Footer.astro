@@ -60,7 +60,13 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
 				<p class="text-lg font-bold text-white">{t('footer.newsletterTitle')}</p>
 				<p class="mt-1 text-sm text-brand-200">{t('footer.newsletterText')}</p>
 			</div>
-			<form class="w-full sm:w-auto" method="post" aria-label={t('footer.newsletterTitle')}>
+			<form
+				class="w-full sm:w-auto"
+				method="post"
+				action="/api/newsletter/subscribe"
+				aria-label={t('footer.newsletterTitle')}
+				data-subscribe-form
+			>
 				<div class="flex flex-col gap-2 sm:flex-row">
 					<label class="sr-only" for="footer-email">{t('footer.emailPlaceholder')}</label>
 					<input
@@ -69,17 +75,25 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
 						name="email"
 						required
 						autocomplete="email"
+						maxlength="254"
 						placeholder={t('footer.emailPlaceholder')}
 						class="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-brand-200 focus:border-white focus:outline-none sm:w-64"
 					/>
 					<button
 						type="submit"
-						class="flex-none rounded-lg bg-white px-4 py-2 text-sm font-semibold text-brand-800 transition-colors hover:bg-brand-50"
+						data-subscribe-btn
+						class="flex-none rounded-lg bg-white px-4 py-2 text-sm font-semibold text-brand-800 transition-colors hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-60"
 					>
 						{t('footer.subscribe')}
 					</button>
 				</div>
-				<p class="mt-2 text-xs text-brand-300">{t('footer.newsletterNote')}</p>
+				<p
+					data-subscribe-status
+					aria-live="polite"
+					class="mt-2 text-xs text-brand-300"
+				>
+					{t('footer.newsletterNote')}
+				</p>
 			</form>
 		</div>
 	</div>
@@ -229,3 +243,57 @@ const isExternal = (href: string) => /^https?:\/\//.test(href);
 		</div>
 	</div>
 </footer>
+
+<script>
+	const form = document.querySelector('[data-subscribe-form]') as HTMLFormElement | null;
+	const btn = document.querySelector('[data-subscribe-btn]') as HTMLButtonElement | null;
+	const status = document.querySelector('[data-subscribe-status]') as HTMLParagraphElement | null;
+
+	const isAr = document.documentElement.lang === 'ar';
+	const messages: Record<'ok' | 'invalid' | 'fail', string> = isAr
+		? { ok: 'شكرًا! تم الاشتراك بنجاح.', invalid: 'يرجى إدخال بريد إلكتروني صالح.', fail: 'حدث خطأ. حاول مرة أخرى لاحقًا.' }
+		: { ok: "Thanks! You're on the list.", invalid: 'Please enter a valid email address.', fail: 'Something went wrong. Please try again later.' };
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!btn || !status) return;
+		const emailInput = form.elements.namedItem('email') as HTMLInputElement | null;
+		const value = (emailInput?.value ?? '').trim();
+		if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+			status.textContent = messages.invalid;
+			status.classList.remove('text-brand-300');
+			status.classList.add('text-brand-50');
+			return;
+		}
+
+		btn.disabled = true;
+		const original = btn.textContent;
+		btn.textContent = isAr ? 'جاري الاشتراك…' : 'Subscribing…';
+
+		try {
+			const response = await fetch('/api/newsletter/subscribe', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ email: value, lang: isAr ? 'ar' : 'en' }),
+			});
+			const json = await response.json().catch(() => ({}));
+			if (response.ok && json.ok) {
+				status.textContent = messages.ok;
+				status.classList.remove('text-brand-300');
+				status.classList.add('text-brand-50');
+				if (emailInput) emailInput.value = '';
+			} else {
+				status.textContent = (json as { error?: string }).error === 'invalid_email' ? messages.invalid : messages.fail;
+				status.classList.remove('text-brand-300');
+				status.classList.add('text-brand-50');
+			}
+		} catch {
+			status.textContent = messages.fail;
+			status.classList.remove('text-brand-300');
+			status.classList.add('text-brand-50');
+		} finally {
+			btn.disabled = false;
+			btn.textContent = original;
+		}
+	});
+</script>

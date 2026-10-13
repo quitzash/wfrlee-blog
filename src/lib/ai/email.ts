@@ -1,15 +1,9 @@
-﻿import { GoogleGenerativeAI } from '@google/generative-ai';
-import { serverEnv } from '@/lib/env';
-
-const apiKey = serverEnv('GEMINI_API_KEY');
-const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
-const model = genAI ? genAI.getGenerativeModel({ model: serverEnv('GEMINI_FLASH_MODEL') ?? 'gemini-3.5-flash' }) : null;
+﻿import { generateText, modelList } from '@/lib/ai/client';
 
 export async function generateNewsletterEmail(opts: {
   lang: 'en' | 'ar';
   posts: Array<{ title: string; href: string; description: string }>;
 }) {
-  if (!model) throw new Error('GEMINI_API_KEY missing');
   const postsList = opts.posts
     .map((p, i) => `${i + 1}. ${p.title}\n   ${p.href}\n   ${p.description}`)
     .join('\n');
@@ -27,8 +21,11 @@ Rules:
 - Use only ${opts.lang}. Include a booking CTA to https://wfrlee.com.
 - Return ONLY valid JSON: {"subject":"...","preheader":"...","html":"...","text":"..."}`;
 
-  const r = await model.generateContent(prompt);
-  return JSON.parse(r.response.text()) as {
+  const raw = await generateText({
+    prompt,
+    models: modelList('GEMINI_FLASH_MODEL', ['gemini-3.5-flash', 'gemini-3-flash-preview', 'gemini-2.5-flash']),
+  });
+  return JSON.parse(raw) as {
     subject: string;
     preheader: string;
     html: string;

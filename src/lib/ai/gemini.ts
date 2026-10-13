@@ -1,8 +1,4 @@
-﻿import { GoogleGenerativeAI } from '@google/generative-ai';
-import { serverEnv } from '@/lib/env';
-
-const apiKey = serverEnv('GEMINI_API_KEY');
-const modelName = serverEnv('GEMINI_MODEL') ?? 'gemini-3.1-pro-preview';
+﻿import { generateText, modelList } from '@/lib/ai/client';
 
 const HERO_IMAGES = [
   '/images/og-default.jpg',
@@ -12,10 +8,7 @@ const HERO_IMAGES = [
   '/images/hourly-micro-stays.jpg',
 ];
 
-const model = apiKey
-  ? new GoogleGenerativeAI(apiKey).getGenerativeModel({
-      model: modelName,
-      systemInstruction: `You are the SEO editor for Wfrlee.com.
+const SYSTEM_INSTRUCTION = `You are the SEO editor for Wfrlee.com.
 
 Brand: Wfrlee.com (Arabic brand: وفرلي.كوم). Focus: hourly micro-stays, airport layovers, Saudi Arabia (Jeddah, Riyadh, Dammam, Al Khobar, Jazan, Al Madinah), MENA.
 
@@ -27,9 +20,7 @@ Rules:
 - Output ONLY the Markdown document. Never wrap it in a code fence and never add commentary before or after.
 - Frontmatter (Astro Content Collections): title, description, pubDate (ISO), updatedDate, heroImage, author, category, tags, primaryKeyword, translationKey, draft. Set draft: false so the post publishes immediately.
 - heroImage MUST be exactly one of: ${HERO_IMAGES.join(', ')}.
-- Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (concise, direct).`,
-    })
-  : null;
+- Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (concise, direct).`;
 
 /** Strip a surrounding code fence or any leading prose so the file starts with `---`. */
 function cleanMarkdown(raw: string): string {
@@ -51,7 +42,6 @@ export async function generateGuide(params: {
   tags?: string[];
   includeFaq?: boolean;
 }) {
-  if (!model) throw new Error('GEMINI_API_KEY missing');
   const prompt = `Generate a complete, publish-ready blog guide for Wfrlee.com.
 
 Language: ${params.lang}
@@ -70,6 +60,10 @@ Requirements:
 - For AR, use natural Saudi/MENA phrasing.
 - Output ONLY the Markdown document, no code fences, no extra commentary.`;
 
-  const { response } = await model.generateContent(prompt);
-  return cleanMarkdown(response.text());
+  const markdown = await generateText({
+    prompt,
+    systemInstruction: SYSTEM_INSTRUCTION,
+    models: modelList('GEMINI_MODEL', ['gemini-3.5-flash', 'gemini-3-flash-preview', 'gemini-2.5-flash']),
+  });
+  return cleanMarkdown(markdown);
 }

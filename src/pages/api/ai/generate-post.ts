@@ -94,23 +94,33 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return withSecurityHeaders(jsonResponse({ ok: false, error: 'Invalid request body.' }, 400));
   }
 
+  const today = new Date().toISOString().slice(0, 10);
+  const slug = toKebab(parsed.topic);
+  const filename = `${today}-${slug}.md`;
+  const targetPath = `src/content/blog/${parsed.lang}/${filename}`;
+
+  let content: string;
   try {
-    const today = new Date().toISOString().slice(0, 10);
-    const slug = toKebab(parsed.topic);
-    const filename = `${today}-${slug}.md`;
-    let content = await generateGuide(parsed);
-    content = setFrontmatterField(content, 'title', (value) => value.trim());
-    content = setFrontmatterField(content, 'description', fitDescription);
-    content = setFrontmatterField(content, 'primaryKeyword', (value) => value.trim());
-    content = setFrontmatterField(content, 'category', (value) => value.trim());
-    const targetPath = `src/content/blog/${parsed.lang}/${filename}`;
-    await commitMarkdownFile(
+    content = await generateGuide(parsed);
+  } catch (e: any) {
+    return withSecurityHeaders(jsonResponse({ ok: false, step: 'generate', error: e?.message ?? 'Generation failed' }, 500));
+  }
+
+  content = setFrontmatterField(content, 'title', (value) => value.trim());
+  content = setFrontmatterField(content, 'description', fitDescription);
+  content = setFrontmatterField(content, 'primaryKeyword', (value) => value.trim());
+  content = setFrontmatterField(content, 'category', (value) => value.trim());
+
+  try {
+    const { commitSha, branch } = await commitMarkdownFile(
       targetPath,
       content,
       `feat(ai): publish ${filename} (${parsed.lang})`,
     );
-    return withSecurityHeaders(jsonResponse({ ok: true, published: true, path: targetPath, filename }, 200));
+    return withSecurityHeaders(
+      jsonResponse({ ok: true, published: true, path: targetPath, filename, commitSha, branch }, 200),
+    );
   } catch (e: any) {
-    return withSecurityHeaders(jsonResponse({ ok: false, error: e?.message ?? 'error' }, 500));
+    return withSecurityHeaders(jsonResponse({ ok: false, step: 'publish', error: e?.message ?? 'Publish failed' }, 502));
   }
 };

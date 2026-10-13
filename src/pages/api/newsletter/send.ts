@@ -2,11 +2,12 @@
 import { z } from 'zod';
 import { getPosts, getPostSlug } from '@/lib/blog';
 import { generateNewsletterEmail } from '@/lib/ai/email';
-import { sendEmail } from '@/lib/email/resend';
+import { listSubscriberEmails, sendEmail } from '@/lib/email/resend';
 import { serverEnv } from '@/lib/env';
 import {
   SESSION_COOKIE,
   clientIp,
+  constantTimeEqual,
   isAdminAuthed,
   isRateLimited,
   isTrustedOrigin,
@@ -19,6 +20,8 @@ const sendSchema = z.object({
   lang: z.enum(['en', 'ar']),
 });
 
+const SEND_CHUNK_SIZE = 100;
+
 function jsonResponse(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -26,29 +29,41 @@ function jsonResponse(body: unknown, status: number): Response {
   });
 }
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+async function sendInChunks(recipients: string[], email: { subject: string; html: string; text: string }) {
+  for (let i = 0; i < recipients.length; i += SEND_CHUNK_SIZE) {
+    const chunk = recipients.slice(i, i + SEND_CHUNK_SIZE);
+    await sendEmail({ to: chunk, subject: email.subject, html: email.html, text: email.text });
+  }
+}
+
+/** Shared auth + send flow for both the admin action (POST) and Vercel cron (GET). */
+async function runSend(
+  request: Request,
+  cookies: { get(name: string): { value: string } | undefined },
+  lang: 'en' | 'ar',
+): Promise<Response> {
   if (!serverEnv('ADMIN_TOKEN')?.trim()) {
     return withSecurityHeaders(jsonResponse({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set on Vercel.' }, 500));
   }
 
-  const sessionCookie = cookies.get(SESSION_COOKIE)?.value ?? null;
-  if (!isAdminAuthed(request, sessionCookie)) {
-    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Unauthorized' }, 401));
-  }
-  if (!isTrustedOrigin(request)) {
-    return withSecurityHeaders(jsonResponse({ ok: false, error: 'forbidden' }, 403));
-  }
+  // Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>` automatically
+  // once CRON_SECRET is configured, so the weekly send can run unattended.
+  const cronSecret = serverEnv('CRON_SECRET')?.trim();
+  const authHeader = request.headers.get('authorization') ?? '';
+  const isCron = Boolean(cronSecret) && constantTimeEqual(authHeader, `Bearer ${cronSecret}`);
 
-  const ip = clientIp(request);
-  if (isRateLimited(`newsletter-send:${ip}`, 5, 60 * 60 * 1000)) {
-    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Too many requests. Try again later.' }, 429));
-  }
-
-  let lang: 'en' | 'ar';
-  try {
-    lang = sendSchema.parse(await request.json()).lang;
-  } catch {
-    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Invalid request body.' }, 400));
+  if (!isCron) {
+    const sessionCookie = cookies.get(SESSION_COOKIE)?.value ?? null;
+    if (!isAdminAuthed(request, sessionCookie)) {
+      return withSecurityHeaders(jsonResponse({ ok: false, error: 'Unauthorized' }, 401));
+    }
+    if (!isTrustedOrigin(request)) {
+      return withSecurityHeaders(jsonResponse({ ok: false, error: 'forbidden' }, 403));
+    }
+    const ip = clientIp(request);
+    if (isRateLimited(`newsletter-send:${ip}`, 5, 60 * 60 * 1000)) {
+      return withSecurityHeaders(jsonResponse({ ok: false, error: 'Too many requests. Try again later.' }, 429));
+    }
   }
 
   try {
@@ -61,15 +76,36 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       };
     });
     const email = await generateNewsletterEmail({ lang, posts });
-    const subscribers = (serverEnv('MANUAL_TEST_EMAILS') ?? '')
+
+    // Manual test recipients override the live subscriber list, so a dev send
+    // never spams real subscribers. Without it, send to everyone who signed up.
+    const manual = (serverEnv('MANUAL_TEST_EMAILS') ?? '')
       .split(',')
       .map((s: string) => s.trim())
       .filter(Boolean);
-    if (subscribers.length > 0) {
-      await sendEmail({ to: subscribers, subject: email.subject, html: email.html, text: email.text });
+    const recipients = manual.length > 0 ? manual : await listSubscriberEmails();
+
+    if (recipients.length > 0) {
+      await sendInChunks(recipients, email);
     }
-    return withSecurityHeaders(jsonResponse({ ok: true, sent: subscribers.length }, 200));
+    return withSecurityHeaders(jsonResponse({ ok: true, sent: recipients.length, lang }, 200));
   } catch (e: any) {
     return withSecurityHeaders(jsonResponse({ ok: false, error: e?.message ?? 'error' }, 500));
   }
+}
+
+export const POST: APIRoute = async ({ request, cookies }) => {
+  let lang: 'en' | 'ar';
+  try {
+    lang = sendSchema.parse(await request.json()).lang;
+  } catch {
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Invalid request body.' }, 400));
+  }
+  return runSend(request, cookies, lang);
+};
+
+/** Vercel cron entry point. Language comes from `?lang=` (defaults to English). */
+export const GET: APIRoute = async ({ request, cookies, url }) => {
+  const lang = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
+  return runSend(request, cookies, lang);
 };

@@ -259,13 +259,18 @@ const checks = [
 					return;
 				}
 				if (!response.ok || !json.ok) {
-					throw new Error(json.error ?? 'Request failed (' + response.status + ')');
+					const stepLabel = json.step === 'publish' ? 'GitHub publish failed.' : json.step === 'generate' ? 'Generation failed.' : 'Request failed.';
+					throw new Error(stepLabel + ' ' + (json.error ?? '(' + response.status + ')'));
 				}
 				showResult(
 					'ok',
 					'<strong>Published.</strong><br />File: <code class="rounded bg-white/60 px-1">' +
 						json.path +
-						'</code><br />Vercel is rebuilding now; the post will appear on the blog in a minute or two.',
+						'</code><br />Commit ' +
+						String(json.commitSha ?? '').slice(0, 7) +
+						' pushed to <code class="rounded bg-white/60 px-1">' +
+						(json.branch ?? '') +
+						'</code> — Vercel is rebuilding now; the post will appear on the blog in a minute or two.',
 				);
 				form.reset();
 			} catch (error) {
