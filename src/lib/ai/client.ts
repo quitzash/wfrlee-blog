@@ -55,9 +55,10 @@ export async function generateText(options: {
         const model = genAI.getGenerativeModel({
           model: modelName,
           systemInstruction: options.systemInstruction,
-          requestOptions: { timeout: 45_000 }, // fail fast so retry/fallback fits in maxDuration 60
         });
-        const { response } = await model.generateContent(options.prompt);
+        const { response } = await model.generateContent(options.prompt, {
+          timeout: 45_000, // fail fast so retry/fallback fits in maxDuration 60
+        });
         return response.text();
       } catch (error: any) {
         lastError = error;
@@ -74,6 +75,7 @@ export async function generateText(options: {
 
   const rawStatus = Number((lastError as any)?.status);
   const authStatus = Number.isNaN(rawStatus) ? undefined : rawStatus;
+  const detail = lastError instanceof Error ? lastError.message : String(lastError);
   const authHint =
     authStatus === 401 || authStatus === 403
       ? ' The last error was an auth rejection (HTTP ' +
