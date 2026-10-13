@@ -9,7 +9,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
 	site: 'https://wfrlee.com',
 	output: 'server',
-	adapter: vercel({ webAnalytics: { enabled: true } }),
+	adapter: vercel({ imageService: true, webAnalytics: { enabled: true } }),
 
 	i18n: {
 		defaultLocale: 'en',
