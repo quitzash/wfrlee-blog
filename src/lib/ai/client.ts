@@ -72,8 +72,17 @@ export async function generateText(options: {
     }
   }
 
-  const detail = lastError instanceof Error ? lastError.message : String(lastError);
+  const rawStatus = Number((lastError as any)?.status);
+  const authStatus = Number.isNaN(rawStatus) ? undefined : rawStatus;
+  const authHint =
+    authStatus === 401 || authStatus === 403
+      ? ' The last error was an auth rejection (HTTP ' +
+        authStatus +
+        ') on EVERY model — the GEMINI_API_KEY on this deployment is invalid, revoked, or restricted. Copy the exact value from the GEMINI_API_KEY line in your local .env.'
+      : authStatus === 429
+        ? ' The last error was "quota exceeded" (HTTP 429) — the key has no free quota left right now. Wait, or use a different GEMINI_API_KEY.'
+        : '';
   throw new Error(
-    `All Gemini models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}`,
+    `All Gemini models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}${authHint}`,
   );
 }
