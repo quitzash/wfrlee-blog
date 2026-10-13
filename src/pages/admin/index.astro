@@ -1,5 +1,15 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { serverEnv } from '@/lib/env';
+
+const adminTokenConfigured = Boolean(serverEnv('ADMIN_TOKEN'));
+const geminiConfigured = Boolean(serverEnv('GEMINI_API_KEY'));
+const githubConfigured = Boolean(serverEnv('GITHUB_TOKEN') && serverEnv('GITHUB_REPO'));
+const checks = [
+	{ label: 'ADMIN_TOKEN', ok: adminTokenConfigured },
+	{ label: 'GEMINI_API_KEY', ok: geminiConfigured },
+	{ label: 'GITHUB_TOKEN + GITHUB_REPO', ok: githubConfigured },
+];
 ---
 
 <BaseLayout lang="en" title="AI Content Studio" noindex>
@@ -16,6 +26,25 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 	</section>
 
 	<section class="container-page py-10">
+		<div class="mx-auto mb-8 max-w-2xl rounded-lg border border-slate-200 bg-white p-4 text-sm">
+			<p class="font-semibold text-slate-900">Server configuration (live)</p>
+			<ul class="mt-2 space-y-1">
+				{
+					checks.map((check) => (
+						<li class="flex items-center gap-2">
+							<span class={check.ok ? 'text-emerald-600' : 'text-red-600'}>
+								{check.ok ? '✓ configured' : '✗ MISSING'}
+							</span>
+							<span class="font-mono text-xs text-slate-600">{check.label}</span>
+						</li>
+					))
+				}
+			</ul>
+			<p class="mt-2 text-xs text-slate-500">
+				This reflects the values Vercel passes to the running deployment. Any “MISSING” entry must be added in
+				Vercel → Settings → Environment Variables, then redeployed.
+			</p>
+		</div>
 		<form id="generate-form" class="mx-auto max-w-2xl space-y-6">
 			<div>
 				<label for="admin-token" class="block text-sm font-semibold text-slate-900">Admin token</label>
