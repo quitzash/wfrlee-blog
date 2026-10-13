@@ -8,8 +8,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 			<p class="text-xs font-semibold uppercase tracking-wide text-brand-600">Wfrlee internal tool</p>
 			<h1 class="mt-2 text-3xl font-bold text-slate-900">AI Content Studio</h1>
 			<p class="mt-2 max-w-2xl text-slate-600">
-				Draft SEO guides with Gemini and commit them to the blog as drafts via GitHub. This page is not indexed
-				and is not linked from the public site.
+				Generate SEO guides with Gemini and publish them live to the blog via GitHub. Each post is committed to
+				the repo, which triggers a Vercel rebuild that puts it on the site. This page is not indexed and is not
+				linked from the public site.
 			</p>
 		</div>
 	</section>
@@ -112,7 +113,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 					id="submit-btn"
 					class="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
 				>
-					Generate &amp; commit draft
+					Generate &amp; publish
 				</button>
 				<button
 					type="button"
@@ -184,7 +185,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 		submitBtn.disabled = true;
 		const originalLabel = submitBtn.textContent;
 		submitBtn.textContent = 'Generating…';
-		showResult('ok', 'Generating the guide and committing it as a draft…');
+		showResult('ok', 'Generating the guide and publishing it to the site…');
 
 		try {
 			const response = await fetch('/api/ai/generate-post', {
@@ -201,9 +202,9 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 			}
 			showResult(
 				'ok',
-				'<strong>Draft committed.</strong><br />File: <code class="rounded bg-white/60 px-1">' +
+				'<strong>Published.</strong><br />File: <code class="rounded bg-white/60 px-1">' +
 					json.path +
-					'</code><br />It is saved as <code class="rounded bg-white/60 px-1">draft: true</code>, so it will not appear on the site until you publish it.',
+					'</code><br />Vercel is rebuilding now; the post will appear on the blog in a minute or two.',
 			);
 		} catch (error) {
 			const message = error instanceof Error ? error.message : 'Unexpected error';
