@@ -63,7 +63,7 @@ Requirements:
   const markdown = await generateText({
     prompt,
     systemInstruction: SYSTEM_INSTRUCTION,
-    models: modelList('GEMINI_MODEL', ['gemini-3.5-flash', 'gemini-3-flash-preview', 'gemini-2.5-flash']),
+    models: modelList('GEMINI_MODEL', ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.5-flash', 'gemini-3.1-flash-lite-preview']),
   });
   return cleanMarkdown(markdown);
 }
