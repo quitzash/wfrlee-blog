@@ -7,7 +7,7 @@ export async function commitMarkdownFile(path: string, content: string, message:
   if (!token) throw new Error('GITHUB_TOKEN missing');
   if (!repoEnv.includes('/')) throw new Error('GITHUB_REPO must be in format owner/repo');
   const [owner, repo] = repoEnv.split('/');
-  const branch = import.meta.env.GITHUB_BRANCH ?? 'main';
+  const branch = import.meta.env.GITHUB_BRANCH ?? 'master';
   const name = import.meta.env.GITHUB_COMMITTER_NAME ?? 'Wfrlee AI';
   const email = import.meta.env.GITHUB_COMMITTER_EMAIL ?? 'ai@wfrlee.com';
 

@@ -1,0 +1,216 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout lang="en" title="AI Content Studio" noindex>
+	<section class="border-b border-slate-200 bg-slate-50">
+		<div class="container-page py-10">
+			<p class="text-xs font-semibold uppercase tracking-wide text-brand-600">Wfrlee internal tool</p>
+			<h1 class="mt-2 text-3xl font-bold text-slate-900">AI Content Studio</h1>
+			<p class="mt-2 max-w-2xl text-slate-600">
+				Draft SEO guides with Gemini and commit them to the blog as drafts via GitHub. This page is not indexed
+				and is not linked from the public site.
+			</p>
+		</div>
+	</section>
+
+	<section class="container-page py-10">
+		<form id="generate-form" class="mx-auto max-w-2xl space-y-6">
+			<div>
+				<label for="admin-token" class="block text-sm font-semibold text-slate-900">Admin token</label>
+				<input
+					id="admin-token"
+					name="adminToken"
+					type="password"
+					autocomplete="off"
+					required
+					class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+					placeholder="ADMIN_TOKEN"
+				/>
+				<p class="mt-1 text-xs text-slate-500">
+					Sent as the <code class="rounded bg-slate-100 px-1">x-admin-token</code> header. Stored only in this
+					tab's session, never in the commit.
+				</p>
+			</div>
+
+			<div class="grid gap-4 sm:grid-cols-2">
+				<div>
+					<label for="lang" class="block text-sm font-semibold text-slate-900">Language</label>
+					<select
+						id="lang"
+						name="lang"
+						class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+					>
+						<option value="en">English (en)</option>
+						<option value="ar">العربية (ar)</option>
+					</select>
+				</div>
+				<div>
+					<label for="city" class="block text-sm font-semibold text-slate-900">
+						City <span class="font-normal text-slate-500">(optional)</span>
+					</label>
+					<input
+						id="city"
+						name="city"
+						type="text"
+						class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+						placeholder="Jeddah"
+					/>
+				</div>
+			</div>
+
+			<div>
+				<label for="topic" class="block text-sm font-semibold text-slate-900">Topic</label>
+				<input
+					id="topic"
+					name="topic"
+					type="text"
+					required
+					class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+					placeholder="Jeddah airport layover guide"
+				/>
+			</div>
+
+			<div>
+				<label for="primaryKeyword" class="block text-sm font-semibold text-slate-900">Primary keyword</label>
+				<input
+					id="primaryKeyword"
+					name="primaryKeyword"
+					type="text"
+					required
+					class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+					placeholder="jeddah airport layover"
+				/>
+			</div>
+
+			<div>
+				<label for="tags" class="block text-sm font-semibold text-slate-900">
+					Tags <span class="font-normal text-slate-500">(comma separated, optional)</span>
+				</label>
+				<input
+					id="tags"
+					name="tags"
+					type="text"
+					class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+					placeholder="layover, jeddah, micro-stay"
+				/>
+			</div>
+
+			<label class="flex items-center gap-2 text-sm text-slate-700">
+				<input
+					type="checkbox"
+					name="includeFaq"
+					checked
+					class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+				/>
+				Include FAQ section (Schema.org FAQPage)
+			</label>
+
+			<div class="flex items-center gap-4">
+				<button
+					type="submit"
+					id="submit-btn"
+					class="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+				>
+					Generate &amp; commit draft
+				</button>
+				<button
+					type="button"
+					id="clear-token"
+					class="text-sm font-medium text-slate-500 hover:text-slate-700"
+				>
+					Clear saved token
+				</button>
+			</div>
+		</form>
+
+		<div
+			id="result"
+			role="status"
+			aria-live="polite"
+			class="mx-auto mt-8 hidden max-w-2xl rounded-lg border p-4 text-sm"
+		>
+		</div>
+	</section>
+</BaseLayout>
+
+<script>
+	const form = document.getElementById('generate-form') as HTMLFormElement | null;
+	const tokenInput = document.getElementById('admin-token') as HTMLInputElement | null;
+	const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+	const clearBtn = document.getElementById('clear-token');
+	const result = document.getElementById('result');
+
+	const TOKEN_KEY = 'wfrlee_admin_token';
+
+	if (tokenInput) {
+		tokenInput.value = sessionStorage.getItem(TOKEN_KEY) ?? '';
+		tokenInput.addEventListener('input', () => {
+			sessionStorage.setItem(TOKEN_KEY, tokenInput.value);
+		});
+	}
+
+	clearBtn?.addEventListener('click', () => {
+		sessionStorage.removeItem(TOKEN_KEY);
+		if (tokenInput) tokenInput.value = '';
+	});
+
+	function showResult(kind: 'ok' | 'error', html: string) {
+		if (!result) return;
+		result.className =
+			'mx-auto mt-8 max-w-2xl rounded-lg border p-4 text-sm ' +
+			(kind === 'ok'
+				? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+				: 'border-red-200 bg-red-50 text-red-800');
+		result.innerHTML = html;
+		result.classList.remove('hidden');
+	}
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!tokenInput || !submitBtn) return;
+
+		const data = new FormData(form);
+		const tagsRaw = String(data.get('tags') ?? '').trim();
+		const payload = {
+			lang: String(data.get('lang') ?? 'en') as 'en' | 'ar',
+			topic: String(data.get('topic') ?? '').trim(),
+			city: String(data.get('city') ?? '').trim() || undefined,
+			primaryKeyword: String(data.get('primaryKeyword') ?? '').trim(),
+			tags: tagsRaw ? tagsRaw.split(',').map((tag) => tag.trim()).filter(Boolean) : undefined,
+			includeFaq: data.get('includeFaq') === 'on',
+		};
+
+		submitBtn.disabled = true;
+		const originalLabel = submitBtn.textContent;
+		submitBtn.textContent = 'Generating…';
+		showResult('ok', 'Generating the guide and committing it as a draft…');
+
+		try {
+			const response = await fetch('/api/ai/generate-post', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					'x-admin-token': tokenInput.value,
+				},
+				body: JSON.stringify(payload),
+			});
+			const json = await response.json().catch(() => ({}));
+			if (!response.ok || !json.ok) {
+				throw new Error(json.error ?? 'Request failed (' + response.status + ')');
+			}
+			showResult(
+				'ok',
+				'<strong>Draft committed.</strong><br />File: <code class="rounded bg-white/60 px-1">' +
+					json.path +
+					'</code><br />It is saved as <code class="rounded bg-white/60 px-1">draft: true</code>, so it will not appear on the site until you publish it.',
+			);
+		} catch (error) {
+			const message = error instanceof Error ? error.message : 'Unexpected error';
+			showResult('error', '<strong>Generation failed.</strong><br />' + message);
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.textContent = originalLabel;
+		}
+	});
+</script>
