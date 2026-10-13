@@ -221,7 +221,7 @@ const checks = [
 				method: 'POST',
 				headers: {
 					'content-type': 'application/json',
-					'x-admin-token': tokenInput.value,
+					'x-admin-token': tokenInput.value.trim(),
 				},
 				body: JSON.stringify(payload),
 			});
