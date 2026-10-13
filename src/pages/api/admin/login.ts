@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { serverEnv } from '@/lib/env';
 import {
   SESSION_COOKIE,
   clientIp,
@@ -15,6 +16,22 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
+  // Fail fast before the origin/rate-limit gates: a deployment with no
+  // ADMIN_TOKEN can never authenticate, and reporting that as "invalid
+  // credentials" just sends the user down the wrong path.
+  if (!serverEnv('ADMIN_TOKEN')?.trim()) {
+    return withSecurityHeaders(
+      new Response(
+        JSON.stringify({
+          ok: false,
+          error:
+            'Server misconfigured: ADMIN_TOKEN is not set in this deployment. Add it in Vercel → Settings → Environment Variables (Production), then redeploy.',
+        }),
+        { status: 500, headers: { 'content-type': 'application/json' } },
+      ),
+    );
+  }
+
   if (!isTrustedOrigin(request)) {
     return withSecurityHeaders(new Response(JSON.stringify({ ok: false, error: 'forbidden' }), { status: 403, headers: { 'content-type': 'application/json' } }));
   }
