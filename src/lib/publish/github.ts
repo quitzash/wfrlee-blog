@@ -10,27 +10,41 @@ async function resolveBranchSha(
   defaultBranch: string,
   requested: string | undefined,
 ): Promise<{ branch: string; sha: string }> {
+  let lastRefError: unknown = null;
   const tryRef = async (branch: string) => {
     try {
       const { data } = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });
       return data.object.sha;
-    } catch {
+    } catch (error) {
+      lastRefError = error;
       return null;
     }
   };
 
-  // Prefer the configured branch, but tolerate a stale value (e.g. "main" on a
-  // repo whose default is "master") by falling back to the repo's default branch.
-  if (requested) {
-    const sha = await tryRef(requested);
-    if (sha) return { branch: requested, sha };
+  // Commit to the repo's real default branch (authoritative). GITHUB_BRANCH is
+  // only an override for non-default workflows — a stale value like "main" is
+  // never allowed to fail the publish or shadow the actual branch.
+  const branchOrder = [defaultBranch];
+  if (requested && requested !== defaultBranch) branchOrder.push(requested);
+
+  // Report branchOrder, not the stale requested value, when everything fails.
+  const branchLabel = branchOrder.join('", "');
+  for (const branch of branchOrder) {
+    const sha = await tryRef(branch);
+    if (sha) return { branch, sha };
   }
 
-  const sha = await tryRef(defaultBranch);
-  if (!sha) {
-    throw new Error(`Could not resolve branch "${requested ?? defaultBranch}" on ${owner}/${repo}`);
-  }
-  return { branch: defaultBranch, sha };
+  const status = Number((lastRefError as any)?.status);
+  const hint = [401, 403].includes(status)
+    ? ' The token cannot read refs — give it "Contents: Read and write" access to this repository.'
+    : status === 404
+      ? ' The branch does not exist, or the token cannot read refs on this repository.'
+      : '';
+  throw new Error(
+    `Could not resolve branch "${branchLabel}" on ${owner}/${repo}` +
+      (status ? ` (HTTP ${status})` : '') +
+      hint,
+  );
 }
 
 export async function commitMarkdownFile(path: string, content: string, message: string) {
