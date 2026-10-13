@@ -2,7 +2,7 @@
 import { serverEnv } from '@/lib/env';
 
 const apiKey = serverEnv('GEMINI_API_KEY');
-const modelName = serverEnv('GEMINI_MODEL') ?? 'gemini-2.5-pro';
+const modelName = serverEnv('GEMINI_MODEL') ?? 'gemini-3.1-pro-preview';
 
 const HERO_IMAGES = [
   '/images/og-default.jpg',

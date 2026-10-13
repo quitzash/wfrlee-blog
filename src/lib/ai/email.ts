@@ -3,7 +3,7 @@ import { serverEnv } from '@/lib/env';
 
 const apiKey = serverEnv('GEMINI_API_KEY');
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
-const model = genAI ? genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }) : null;
+const model = genAI ? genAI.getGenerativeModel({ model: serverEnv('GEMINI_FLASH_MODEL') ?? 'gemini-3.5-flash' }) : null;
 
 export async function generateNewsletterEmail(opts: {
   lang: 'en' | 'ar';

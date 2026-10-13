@@ -149,7 +149,7 @@ const checks = [
 					id="clear-token"
 					class="text-sm font-medium text-slate-500 hover:text-slate-700"
 				>
-					Clear saved token
+					Clear token
 				</button>
 			</div>
 		</form>
@@ -171,18 +171,11 @@ const checks = [
 	const clearBtn = document.getElementById('clear-token');
 	const result = document.getElementById('result');
 
-	const TOKEN_KEY = 'wfrlee_admin_token';
-
-	if (tokenInput) {
-		tokenInput.value = sessionStorage.getItem(TOKEN_KEY) ?? '';
-		tokenInput.addEventListener('input', () => {
-			sessionStorage.setItem(TOKEN_KEY, tokenInput.value);
-		});
-	}
-
 	clearBtn?.addEventListener('click', () => {
-		sessionStorage.removeItem(TOKEN_KEY);
-		if (tokenInput) tokenInput.value = '';
+		if (tokenInput) {
+			tokenInput.value = '';
+			tokenInput.focus();
+		}
 	});
 
 	function showResult(kind: 'ok' | 'error', html: string) {
@@ -226,6 +219,13 @@ const checks = [
 				body: JSON.stringify(payload),
 			});
 			const json = await response.json().catch(() => ({}));
+			if (response.status === 401) {
+				showResult(
+					'error',
+					'<strong>Token mismatch.</strong><br />The server rejected the admin token. Enter the exact value of the <code class="rounded bg-white/60 px-1">ADMIN_TOKEN</code> set in Vercel, with no quotes or spaces.',
+				);
+				return;
+			}
 			if (!response.ok || !json.ok) {
 				throw new Error(json.error ?? 'Request failed (' + response.status + ')');
 			}
