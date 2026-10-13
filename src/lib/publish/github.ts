@@ -35,14 +35,16 @@ async function resolveBranchSha(
   }
 
   const status = Number((lastRefError as any)?.status);
+  const rawMessage = lastRefError instanceof Error ? lastRefError.message : String(lastRefError ?? '');
   const hint = [401, 403].includes(status)
     ? ' The token cannot read refs — give it "Contents: Read and write" access to this repository.'
     : status === 404
-      ? ' The branch does not exist, or the token cannot read refs on this repository.'
+      ? ' The branch does not exist, or the token cannot read refs on this repository (private repos need "Contents: Read and write").'
       : '';
   throw new Error(
     `Could not resolve branch "${branchLabel}" on ${owner}/${repo}` +
       (status ? ` (HTTP ${status})` : '') +
+      (rawMessage ? ` Detail: ${rawMessage.slice(0, 240)}` : '') +
       hint,
   );
 }
