@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/riyadh-airport-layover.jpg
 author: Wfrlee Travel Team
 category: "Travel Tips"
+city: "Riyadh"
 tags: [remote-work, riyadh, business-travel, micro-stays, day-use-hotels]
 primaryKeyword: "The Remote Worker’s Guide to Booking a Day Use Hotel Room in Riyadh"
 translationKey: remote-worker-guide-riyadh

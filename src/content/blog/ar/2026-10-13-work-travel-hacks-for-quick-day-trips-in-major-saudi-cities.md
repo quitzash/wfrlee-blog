@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: "/images/riyadh-airport-layover.jpg"
 author: "فريق وفرلي للسفر"
 category: "دليل المسافر"
+city: "Riyadh"
 tags: ["العمل عن بعد", "الرياض", "فنادق بالساعات", "سفر الأعمال"]
 primaryKeyword: "The Remote Worker’s Guide to Booking a Day Use Hotel Room in Riyadh"
 translationKey: "remote-worker-riyadh-day-use"

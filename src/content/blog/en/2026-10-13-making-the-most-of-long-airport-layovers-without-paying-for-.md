@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/ultimate-jeddah-layover-guide.jpg
 author: "Wfrlee Travel Team"
 category: "Travel Guides"
+city: "Jeddah"
 tags: ["Jeddah", "layover", "micro-stays", "travel tips"]
 primaryKeyword: "How to Turn a Long Layover in Jeddah into a Relaxing Mini Break"
 translationKey: "jeddah-layover-mini-break"

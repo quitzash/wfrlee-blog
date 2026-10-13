@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: Wfrlee Travel Team
 category: "Travel Tips"
+city: "Manama"
 tags: [Manama, budget travel, wfrlee.com, booking, micro-stays]
 primaryKeyword: "budget hourly hotel manama"
 translationKey: manama-budget-micro-stay-tips

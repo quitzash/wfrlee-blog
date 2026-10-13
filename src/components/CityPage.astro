@@ -34,9 +34,17 @@ const durations = [
 ];
 
 const allPosts = await getPosts(lang);
+
+// A post belongs to a city when its explicit `city` frontmatter matches this
+// city page. Posts that predate the field fall back to the older heuristic
+// (title/category/tags keywords) so nothing drops off the site.
+const normalize = (value: string) => value.toLowerCase().replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
+const cityLabels = new Set([normalize(city.slug), normalize(city.name.en)]);
+const needles = [city.slug.replace(/-/g, ' '), city.name.en.toLowerCase(), city.airport.code.toLowerCase(), ...city.tags];
 const cityPosts = allPosts.filter((post) => {
+	const postCity = (post.data as { city?: string }).city;
+	if (postCity) return cityLabels.has(normalize(postCity));
 	const hay = `${post.data.title} ${post.data.category} ${post.data.tags.join(' ')}`.toLowerCase();
-	const needles = [city.slug.replace(/-/g, ' '), city.name.en.toLowerCase(), city.airport.code.toLowerCase(), ...city.tags];
 	return needles.some((needle) => hay.includes(needle.toLowerCase()));
 });
 const isFallback = cityPosts.length === 0;

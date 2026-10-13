@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي للسفر"
 category: "نصائح السفر"
+city: "Saudi Arabia"
 tags: ["نصائح السفر", "السفر مع العائلة", "غرف بالساعة", "راحة المسافرين"]
 primaryKeyword: "السفر مع الأطفال"
 translationKey: "traveling-with-kids-hourly-stays"

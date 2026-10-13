@@ -18,7 +18,8 @@ Rules:
 - Include E-E-A-T: clear author (Wfrlee Travel Team), updated date, city/airport names, practical steps.
 - Use keyword intent (layover/transit/micro-stay). Include location terms + "by the hour".
 - Output ONLY the Markdown document. Never wrap it in a code fence and never add commentary before or after.
-- Frontmatter (Astro Content Collections): title, description, pubDate (ISO), updatedDate, heroImage, author, category, tags, primaryKeyword, translationKey, draft. Set draft: false so the post publishes immediately.
+- Frontmatter (Astro Content Collections): title, description, pubDate (ISO), updatedDate, heroImage, author, category, city, tags, primaryKeyword, translationKey, draft. Set draft: false so the post publishes immediately.
+- "city" MUST be the exact primary city value given below (e.g. "Jeddah"), or "Saudi Arabia" when the guide is not about one specific city.
 - heroImage MUST be exactly one of: ${HERO_IMAGES.join(', ')}.
 - Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (concise, direct).`;
 

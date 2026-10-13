@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "Wfrlee Travel Team"
 category: "Travel Tips"
+city: "Saudi Arabia"
 tags: ["micro-stays", "hourly-hotels", "business-travel", "saudi-arabia"]
 primaryKeyword: "Need a Few Hours Between Appointments? Quick Hotel Rest Made Easy"
 translationKey: "hourly-rest-between-appointments"

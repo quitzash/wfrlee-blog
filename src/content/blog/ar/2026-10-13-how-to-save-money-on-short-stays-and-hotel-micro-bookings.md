@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي"
 category: "نصائح السفر"
+city: "Saudi Arabia"
 tags: ["توفير", "فنادق بالساعة", "السعودية", "ترانزيت", "سفر اقتصادي"]
 primaryKeyword: "حجز فنادق بالساعات"
 translationKey: "hourly-hotel-booking-savings"

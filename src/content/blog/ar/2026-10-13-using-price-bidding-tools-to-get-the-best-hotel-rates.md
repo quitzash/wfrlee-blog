@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي للسفر"
 category: "نصائح السفر"
+city: "Saudi Arabia"
 tags: ["توفير", "حجوزات فندقية", "وفرلي", "السياحة في السعودية"]
 primaryKeyword: "How to Bid Your Own Price for Hotel Rooms and Get the Best Deal"
 translationKey: "how-to-bid-hotel-price"

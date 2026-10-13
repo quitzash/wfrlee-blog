@@ -6,6 +6,7 @@ updatedDate: 2026-03-05
 heroImage: "/images/riyadh-airport-layover.jpg"
 author: "فريق وفرلي.كوم للسفر"
 category: "أدلة الترانزيت"
+city: "Riyadh"
 tags: ["الرياض", "ترانزيت", "السعودية", "إقامة قصيرة", "أعمال"]
 primaryKeyword: "ترانزيت الرياض"
 translationKey: "riyadh-layover"

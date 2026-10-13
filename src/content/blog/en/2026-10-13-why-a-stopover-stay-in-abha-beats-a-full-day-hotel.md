@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: Wfrlee Travel Team
 category: "Travel Tips"
+city: "Abha"
 tags: [Abha, stopover, wfrlee.com, booking, micro-stay]
 primaryKeyword: "stopover hotel abha"
 translationKey: stopover-hotel-abha-benefits

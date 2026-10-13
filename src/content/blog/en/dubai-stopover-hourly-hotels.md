@@ -5,6 +5,7 @@ pubDate: 2026-03-10
 heroImage: "/images/dubai-stopover.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
+city: "Dubai"
 tags: ["Dubai", "Stopover", "UAE", "Micro-stay", "DXB"]
 primaryKeyword: "Dubai stopover"
 translationKey: "dubai-stopover"

@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: Wfrlee Travel Team
 category: "Travel Tips"
+city: "Saudi Arabia"
 tags: [travel-hacks, hotel-deals, micro-stays, budget-travel]
 primaryKeyword: "How to Bid Your Own Price for Hotel Rooms and Get the Best Deal"
 translationKey: bidding-hotel-rooms-guide

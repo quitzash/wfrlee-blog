@@ -5,6 +5,7 @@ pubDate: 2026-02-20
 heroImage: "/images/hourly-micro-stays.jpg"
 author: "Wfrlee Travel Team"
 category: "Micro-Stay Basics"
+city: "Saudi Arabia"
 tags: ["Micro-stay", "Hourly hotel", "Booking tips", "Saudi Arabia"]
 primaryKeyword: "hourly micro-stay"
 translationKey: "micro-stay-guide"

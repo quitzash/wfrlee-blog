@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/riyadh-airport-layover.jpg
 author: "فريق وفرلي للسفر"
 category: "دليل السفر"
+city: "Riyadh"
 tags: ["الرياض", "سياحة", "فعاليات الرياض", "حجز فندقي", "وفرلي"]
 primaryKeyword: "حضور فعالية في الرياض"
 translationKey: "riyadh-event-stays"

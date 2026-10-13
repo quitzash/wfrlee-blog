@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/riyadh-airport-layover.jpg
 author: Wfrlee Travel Team
 category: "Travel Guides"
+city: "Riyadh"
 tags: [Riyadh, hourly hotels, wfrlee.com, booking]
 primaryKeyword: "book hourly hotel in riyadh"
 translationKey: riyadh-hourly-hotels

@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: "/images/hourly-micro-stays.jpg"
 author: "فريق وفرلي"
 category: "أدلة السفر"
+city: "Makkah"
 tags: ["عمرة", "فنادق بالساعة", "مكة", "المدينة", "راحة الحجاج"]
 primaryKeyword: "فنادق بالساعة للحجاج والمعتمرين"
 translationKey: "pilgrim-micro-stays-guide"

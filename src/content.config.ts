@@ -16,6 +16,8 @@ const blog = defineCollection({
 		heroImage: z.string(),
 		author: z.string(),
 		category: z.string(),
+		/** Primary city the guide is about (e.g. "Jeddah"); "Saudi Arabia" for nationwide posts. */
+		city: z.string().max(40).optional(),
 		tags: z.array(z.string()).default([]),
 		primaryKeyword: z.string(),
 		// Links a post to its translation in the other language.

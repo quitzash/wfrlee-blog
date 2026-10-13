@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي للسفر"
 category: "دليل المسافر"
+city: "Saudi Arabia"
 tags: ["فنادق بالساعة", "راحة", "مواعيد طبية", "السعودية"]
 primaryKeyword: "تحتاج بضع ساعات بين المواعيد؟ استراحة فندقية سريعة بكل سهولة"
 translationKey: "hourly-stays-for-appointments"

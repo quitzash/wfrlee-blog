@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: Wfrlee Travel Team
 category: "Travel Guides"
+city: "Muscat"
 tags: [Muscat, stopover, wfrlee.com, booking, Oman travel]
 primaryKeyword: "book stopover hotel in muscat"
 translationKey: muscat-stopover-guide

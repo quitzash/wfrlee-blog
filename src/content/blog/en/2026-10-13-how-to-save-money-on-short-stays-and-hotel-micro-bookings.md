@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "Wfrlee Travel Team"
 category: "Travel Tips"
+city: "Saudi Arabia"
 tags: ["micro-stays", "travel-hacks", "budget-travel", "hourly-hotels"]
 primaryKeyword: "hourly hotel bookings"
 translationKey: "hourly-hotel-savings"

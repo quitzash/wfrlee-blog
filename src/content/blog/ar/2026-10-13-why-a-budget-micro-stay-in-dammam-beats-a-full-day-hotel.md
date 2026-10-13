@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي"
 category: "دليل السفر"
+city: "Dammam"
 tags: ["الدمام", "سياحة اقتصادية", "وفرلي", "فنادق بالساعة"]
 primaryKeyword: "wfrlee.com dammam budget hourly hotel"
 translationKey: "dammam-hourly-hotel-guide"

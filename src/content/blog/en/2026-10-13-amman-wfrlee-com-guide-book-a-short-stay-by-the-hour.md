@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: Wfrlee Travel Team
 category: "Travel Guides"
+city: "Amman"
 tags: [Amman, short stays, wfrlee.com, booking, layover]
 primaryKeyword: "short stay near amman airport"
 translationKey: amman-short-stay-guide

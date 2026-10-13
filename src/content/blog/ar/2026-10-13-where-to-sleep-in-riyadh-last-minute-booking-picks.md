@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/riyadh-airport-layover.jpg
 author: "فريق وفرلي"
 category: "دليل السفر"
+city: "Riyadh"
 tags: ["الرياض", "حجز فندقي", "وفرلي", "إقامة بالساعة"]
 primaryKeyword: "last-minute hotel riyadh"
 translationKey: "riyadh-last-minute-hotels"

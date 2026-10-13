@@ -6,6 +6,7 @@ updatedDate: 2026-03-02
 heroImage: "/images/ultimate-jeddah-layover-guide.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
+city: "Jeddah"
 tags: ["Jeddah", "Layover", "Saudi Arabia", "Micro-stay", "Airport"]
 primaryKeyword: "Jeddah layover"
 translationKey: "jeddah-layover"

@@ -38,6 +38,7 @@ const checks = [
 
 	{
 		authed ? (
+			<>
 			<section class="container-page py-10">
 				<div class="mx-auto mb-8 max-w-2xl rounded-lg border border-slate-200 bg-white p-4 text-sm">
 					<p class="font-semibold text-slate-900">Server configuration (live)</p>
@@ -185,6 +186,179 @@ const checks = [
 				>
 				</div>
 			</section>
+
+			<section class="border-t border-slate-200 bg-slate-50">
+				<div class="container-page py-10">
+					<div class="mx-auto max-w-3xl">
+						<div class="flex flex-wrap items-start justify-between gap-3">
+							<div>
+								<h2 class="text-2xl font-bold text-slate-900">Manage posts</h2>
+								<p class="mt-1 text-sm text-slate-600">
+									Edit, save, or delete published posts. Every change is committed to GitHub and triggers a
+									Vercel rebuild.
+								</p>
+							</div>
+							<div class="flex items-center gap-2">
+								<select
+									id="manage-lang"
+									class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+								>
+									<option value="en">English</option>
+									<option value="ar">العربية</option>
+								</select>
+								<button
+									type="button"
+									id="manage-refresh"
+									class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200"
+								>
+									Refresh
+								</button>
+							</div>
+						</div>
+
+						<div
+							id="manage-status"
+							role="status"
+							aria-live="polite"
+							class="mt-4 hidden rounded-lg border p-3 text-sm"
+						>
+						</div>
+
+						<ul
+							id="manage-list"
+							class="mt-4 divide-y divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white"
+						>
+						</ul>
+
+						<div id="manage-editor" class="mt-6 hidden rounded-lg border border-slate-200 bg-white p-5">
+							<div class="mb-4 flex items-start justify-between gap-3">
+								<div class="min-w-0">
+									<p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Editing</p>
+									<p id="manage-path" class="break-all font-mono text-xs text-slate-600"></p>
+								</div>
+								<button
+									type="button"
+									id="manage-close"
+									class="shrink-0 text-sm font-medium text-slate-500 hover:text-slate-700"
+								>
+									Close
+								</button>
+							</div>
+
+							<form id="manage-form" class="space-y-4">
+								<div>
+									<label for="m-title" class="block text-sm font-semibold text-slate-900">Title</label>
+									<input
+										id="m-title"
+										type="text"
+										class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+									/>
+								</div>
+
+								<div>
+									<label for="m-description" class="block text-sm font-semibold text-slate-900">Description</label>
+									<textarea
+										id="m-description"
+										rows="3"
+										class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+									></textarea>
+								</div>
+
+								<div class="grid gap-4 sm:grid-cols-2">
+									<div>
+										<label for="m-category" class="block text-sm font-semibold text-slate-900">Category</label>
+										<input
+											id="m-category"
+											type="text"
+											class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+										/>
+									</div>
+									<div>
+										<label for="m-city" class="block text-sm font-semibold text-slate-900">City</label>
+										<input
+											id="m-city"
+											type="text"
+											class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+										/>
+									</div>
+								</div>
+
+								<div class="grid gap-4 sm:grid-cols-2">
+									<div>
+										<label for="m-primaryKeyword" class="block text-sm font-semibold text-slate-900">
+											Primary keyword
+										</label>
+										<input
+											id="m-primaryKeyword"
+											type="text"
+											class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+										/>
+									</div>
+									<div>
+										<label for="m-pubDate" class="block text-sm font-semibold text-slate-900">Publish date</label>
+										<input
+											id="m-pubDate"
+											type="text"
+											placeholder="2026-01-01"
+											class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+										/>
+									</div>
+								</div>
+
+								<div>
+									<label for="m-tags" class="block text-sm font-semibold text-slate-900">
+										Tags <span class="font-normal text-slate-500">(comma separated)</span>
+									</label>
+									<input
+										id="m-tags"
+										type="text"
+										class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+									/>
+								</div>
+
+								<label class="flex items-center gap-2 text-sm text-slate-700">
+									<input
+										type="checkbox"
+										id="m-draft"
+										class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+									/>
+									Draft (hidden from the site)
+								</label>
+
+								<div>
+									<label for="m-body" class="block text-sm font-semibold text-slate-900">
+										Body <span class="font-normal text-slate-500">(Markdown)</span>
+									</label>
+									<textarea
+										id="m-body"
+										rows="18"
+										class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+									></textarea>
+								</div>
+
+								<div class="flex flex-wrap items-center gap-3">
+									<button
+										type="submit"
+										id="manage-save"
+										class="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+									>
+										Save
+									</button>
+									<button
+										type="button"
+										id="manage-delete"
+										class="inline-flex items-center rounded-lg border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50"
+									>
+										Delete
+									</button>
+									<span id="manage-editor-status" class="text-sm text-slate-500"></span>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</section>
+			</>
 		) : (
 			<section class="container-page py-10">
 				{
@@ -252,6 +426,7 @@ const checks = [
 		const topicInput = document.getElementById('topic') as HTMLInputElement | null;
 		const keywordInput = document.getElementById('primaryKeyword') as HTMLInputElement | null;
 		const tagsInput = document.getElementById('tags') as HTMLInputElement | null;
+		const cityInput = document.getElementById('city') as HTMLInputElement | null;
 		const randomBtn = document.getElementById('random-btn') as HTMLButtonElement | null;
 		const refillBtn = document.getElementById('refill-btn') as HTMLButtonElement | null;
 
@@ -325,14 +500,15 @@ const checks = [
 			if (topicInput) topicInput.value = topic;
 			if (keywordInput) keywordInput.value = keyword;
 			if (tagsInput) tagsInput.value = tags;
+			if (cityInput) cityInput.value = city.name;
 		}
 
 		randomBtn?.addEventListener('click', randomizeTopic);
 
 		// ---- "Refill last" ------------------------------------------------------
 		// Remembers the last brief that was actually submitted (topic, primary
-		// keyword, tags) so it can be restored after a reset or a page reload.
-		type LastBrief = { topic: string; primaryKeyword: string; tags: string };
+		// keyword, tags, city) so it can be restored after a reset or a page reload.
+		type LastBrief = { topic: string; primaryKeyword: string; tags: string; city: string };
 		const LAST_BRIEF_KEY = 'wfrlee:last-brief';
 
 		function readLastBrief(): LastBrief | null {
@@ -345,6 +521,7 @@ const checks = [
 					topic: parsed.topic ?? '',
 					primaryKeyword: parsed.primaryKeyword ?? '',
 					tags: parsed.tags ?? '',
+					city: parsed.city ?? '',
 				};
 			} catch {
 				return null;
@@ -370,10 +547,301 @@ const checks = [
 			if (topicInput) topicInput.value = brief.topic;
 			if (keywordInput) keywordInput.value = brief.primaryKeyword;
 			if (tagsInput) tagsInput.value = brief.tags;
+			if (cityInput) cityInput.value = brief.city;
 		}
 
 		refillBtn?.addEventListener('click', refillLastBrief);
 		syncRefillButton();
+
+		// ---- Manage posts: edit / save / delete --------------------------------
+		// Reads straight from GitHub (the source of truth), so a saved edit is
+		// visible here immediately — even before Vercel finishes rebuilding.
+		const manageLangSel = document.getElementById('manage-lang') as HTMLSelectElement | null;
+		const manageRefreshBtn = document.getElementById('manage-refresh') as HTMLButtonElement | null;
+		const manageList = document.getElementById('manage-list') as HTMLUListElement | null;
+		const manageStatus = document.getElementById('manage-status');
+		const manageEditor = document.getElementById('manage-editor');
+		const managePathLabel = document.getElementById('manage-path');
+		const manageForm = document.getElementById('manage-form') as HTMLFormElement | null;
+		const manageSaveBtn = document.getElementById('manage-save') as HTMLButtonElement | null;
+		const manageDeleteBtn = document.getElementById('manage-delete') as HTMLButtonElement | null;
+		const manageCloseBtn = document.getElementById('manage-close');
+		const manageEditorStatus = document.getElementById('manage-editor-status');
+
+		const mTitle = document.getElementById('m-title') as HTMLInputElement | null;
+		const mDescription = document.getElementById('m-description') as HTMLTextAreaElement | null;
+		const mCategory = document.getElementById('m-category') as HTMLInputElement | null;
+		const mCity = document.getElementById('m-city') as HTMLInputElement | null;
+		const mTags = document.getElementById('m-tags') as HTMLInputElement | null;
+		const mKeyword = document.getElementById('m-primaryKeyword') as HTMLInputElement | null;
+		const mPubDate = document.getElementById('m-pubDate') as HTMLInputElement | null;
+		const mDraft = document.getElementById('m-draft') as HTMLInputElement | null;
+		const mBody = document.getElementById('m-body') as HTMLTextAreaElement | null;
+
+		let editingPath: string | null = null;
+		let editingFrontmatter = '';
+
+		function setManageStatus(kind: 'info' | 'ok' | 'error', message: string) {
+			if (!manageStatus) return;
+			const tone =
+				kind === 'ok'
+					? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+					: kind === 'error'
+						? 'border-red-200 bg-red-50 text-red-800'
+						: 'border-slate-200 bg-white text-slate-600';
+			manageStatus.className = `mt-4 rounded-lg border p-3 text-sm ${tone}`;
+			manageStatus.textContent = message;
+			manageStatus.classList.remove('hidden');
+		}
+
+		function esc(value: string): string {
+			return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+		}
+
+		function splitFrontmatter(text: string): { raw: string; body: string } | null {
+			const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+			return match ? { raw: match[1], body: match[2] ?? '' } : null;
+		}
+
+		function fieldRaw(raw: string, key: string): string | undefined {
+			const lines = raw.split(/\r?\n/);
+			const index = lines.findIndex((line) => new RegExp(`^${key}\\s*:`).test(line.trim()));
+			if (index === -1) return undefined;
+			return lines[index].slice(lines[index].indexOf(':') + 1).trim();
+		}
+
+		function unquote(value: string): string {
+			const match = value.match(/^(["'])([\s\S]*)\1$/);
+			return match ? match[2] : value;
+		}
+
+		function fieldString(raw: string, key: string): string {
+			const value = fieldRaw(raw, key);
+			return value === undefined ? '' : unquote(value);
+		}
+
+		function fieldBool(raw: string, key: string): boolean {
+			return /^true$/i.test(fieldRaw(raw, key) ?? '');
+		}
+
+		function fieldArray(raw: string, key: string): string[] {
+			const value = fieldRaw(raw, key);
+			if (!value) return [];
+			const inner = value.replace(/^\[/, '').replace(/\]$/, '').trim();
+			if (!inner) return [];
+			return inner
+				.split(',')
+				.map((part) => unquote(part.trim()))
+				.filter(Boolean);
+		}
+
+		function setField(raw: string, key: string, line: string): string {
+			const lines = raw.split(/\r?\n/);
+			const index = lines.findIndex((l) => new RegExp(`^${key}\\s*:`).test(l.trim()));
+			if (index === -1) lines.push(line);
+			else lines[index] = line;
+			return lines.join('\n');
+		}
+
+		type PostSummary = {
+			path: string;
+			name: string;
+			title?: string;
+			city?: string;
+			category?: string;
+			pubDate?: string;
+			draft?: boolean;
+		};
+
+		function renderPosts(posts: PostSummary[]) {
+			if (!manageList) return;
+			manageList.innerHTML = '';
+			if (!posts.length) {
+				const empty = document.createElement('li');
+				empty.className = 'px-4 py-3 text-sm text-slate-500';
+				empty.textContent = 'No posts found.';
+				manageList.appendChild(empty);
+				return;
+			}
+			for (const post of posts) {
+				const li = document.createElement('li');
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.className = 'flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-slate-50';
+
+				const left = document.createElement('span');
+				left.className = 'min-w-0';
+				const title = document.createElement('span');
+				title.className = 'block truncate text-sm font-semibold text-slate-900';
+				title.textContent = post.title || post.name;
+				const meta = document.createElement('span');
+				meta.className = 'mt-0.5 block truncate text-xs text-slate-500';
+				meta.textContent = [post.city, post.category, post.pubDate].filter(Boolean).join(' · ');
+				left.appendChild(title);
+				left.appendChild(meta);
+
+				const right = document.createElement('span');
+				right.className = 'shrink-0';
+				if (post.draft) {
+					const badge = document.createElement('span');
+					badge.className = 'rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800';
+					badge.textContent = 'Draft';
+					right.appendChild(badge);
+				}
+
+				button.appendChild(left);
+				button.appendChild(right);
+				button.addEventListener('click', () => openEditor(post.path));
+				li.appendChild(button);
+				manageList.appendChild(li);
+			}
+		}
+
+		async function loadPosts() {
+			if (!manageLangSel) return;
+			const lang = manageLangSel.value;
+			setManageStatus('info', 'Loading posts…');
+			try {
+				const response = await fetch(`/api/admin/posts?lang=${encodeURIComponent(lang)}`);
+				const json = await response.json().catch(() => ({}));
+				if (response.status === 401) {
+					setManageStatus('error', 'Session expired. Reload the page and log back in.');
+					return;
+				}
+				if (!response.ok || !json.ok) throw new Error(json.error ?? 'Could not load posts.');
+				renderPosts(json.posts ?? []);
+				setManageStatus('ok', `${json.posts?.length ?? 0} post(s) in ${lang.toUpperCase()}.`);
+			} catch (error) {
+				setManageStatus('error', error instanceof Error ? error.message : 'Could not load posts.');
+			}
+		}
+
+		function fillEditor(path: string, content: string) {
+			const split = splitFrontmatter(content);
+			if (!split) {
+				setManageStatus('error', 'That file has no YAML frontmatter and cannot be edited here.');
+				return;
+			}
+			editingPath = path;
+			editingFrontmatter = split.raw;
+			if (managePathLabel) managePathLabel.textContent = path;
+			if (mTitle) mTitle.value = fieldString(split.raw, 'title');
+			if (mDescription) mDescription.value = fieldString(split.raw, 'description');
+			if (mCategory) mCategory.value = fieldString(split.raw, 'category');
+			if (mCity) mCity.value = fieldString(split.raw, 'city');
+			if (mKeyword) mKeyword.value = fieldString(split.raw, 'primaryKeyword');
+			if (mPubDate) mPubDate.value = fieldString(split.raw, 'pubDate');
+			if (mTags) mTags.value = fieldArray(split.raw, 'tags').join(', ');
+			if (mDraft) mDraft.checked = fieldBool(split.raw, 'draft');
+			if (mBody) mBody.value = split.body.replace(/^\n+/, '');
+			if (manageEditorStatus) manageEditorStatus.textContent = '';
+			manageEditor?.classList.remove('hidden');
+			manageEditor?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+
+		async function openEditor(path: string) {
+			setManageStatus('info', `Opening ${path}…`);
+			try {
+				const response = await fetch(`/api/admin/posts?path=${encodeURIComponent(path)}`);
+				const json = await response.json().catch(() => ({}));
+				if (response.status === 401) {
+					setManageStatus('error', 'Session expired. Reload the page and log back in.');
+					return;
+				}
+				if (!response.ok || !json.ok) throw new Error(json.error ?? 'Could not open the file.');
+				fillEditor(path, json.content);
+				setManageStatus('ok', `Editing ${path}`);
+			} catch (error) {
+				setManageStatus('error', error instanceof Error ? error.message : 'Could not open the file.');
+			}
+		}
+
+		function buildContent(): string {
+			const today = new Date().toISOString().slice(0, 10);
+			let raw = editingFrontmatter;
+			raw = setField(raw, 'title', `title: "${esc(mTitle?.value.trim() ?? '')}"`);
+			raw = setField(raw, 'description', `description: "${esc(mDescription?.value.trim() ?? '')}"`);
+			raw = setField(raw, 'category', `category: "${esc(mCategory?.value.trim() ?? '')}"`);
+			const cityValue = mCity?.value.trim() ?? '';
+			if (cityValue) raw = setField(raw, 'city', `city: "${esc(cityValue)}"`);
+			raw = setField(raw, 'primaryKeyword', `primaryKeyword: "${esc(mKeyword?.value.trim() ?? '')}"`);
+			const tags = (mTags?.value ?? '')
+				.split(',')
+				.map((tag) => tag.trim())
+				.filter(Boolean);
+			raw = setField(raw, 'tags', `tags: [${tags.map((tag) => `"${esc(tag)}"`).join(', ')}]`);
+			const pubDate = mPubDate?.value.trim() ?? '';
+			if (pubDate) raw = setField(raw, 'pubDate', `pubDate: ${pubDate}`);
+			raw = setField(raw, 'updatedDate', `updatedDate: ${today}`);
+			raw = setField(raw, 'draft', `draft: ${mDraft?.checked ? 'true' : 'false'}`);
+			const body = (mBody?.value ?? '').replace(/^\n+/, '').replace(/\s+$/, '');
+			return `---\n${raw}\n---\n\n${body}\n`;
+		}
+
+		manageRefreshBtn?.addEventListener('click', loadPosts);
+		manageLangSel?.addEventListener('change', loadPosts);
+		manageCloseBtn?.addEventListener('click', () => {
+			manageEditor?.classList.add('hidden');
+			editingPath = null;
+		});
+
+		manageForm?.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			if (!editingPath || !manageSaveBtn) return;
+			const content = buildContent();
+			manageSaveBtn.disabled = true;
+			if (manageEditorStatus) manageEditorStatus.textContent = 'Saving…';
+			try {
+				const response = await fetch('/api/admin/posts', {
+					method: 'PUT',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ path: editingPath, content }),
+				});
+				const json = await response.json().catch(() => ({}));
+				if (response.status === 401) {
+					if (manageEditorStatus) manageEditorStatus.textContent = 'Session expired.';
+					return;
+				}
+				if (!response.ok || !json.ok) throw new Error(json.error ?? 'Save failed.');
+				if (manageEditorStatus) {
+					manageEditorStatus.textContent = `Saved · commit ${String(json.commitSha ?? '').slice(0, 7)}`;
+				}
+				setManageStatus('ok', `Saved ${editingPath} — Vercel is rebuilding.`);
+				await loadPosts();
+			} catch (error) {
+				const message = error instanceof Error ? error.message : 'Save failed.';
+				if (manageEditorStatus) manageEditorStatus.textContent = '';
+				setManageStatus('error', message);
+			} finally {
+				manageSaveBtn.disabled = false;
+			}
+		});
+
+		manageDeleteBtn?.addEventListener('click', async () => {
+			if (!editingPath) return;
+			if (!window.confirm(`Delete ${editingPath}? This commits a deletion and cannot be undone here.`)) return;
+			try {
+				const response = await fetch('/api/admin/posts', {
+					method: 'DELETE',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ path: editingPath }),
+				});
+				const json = await response.json().catch(() => ({}));
+				if (response.status === 401) {
+					setManageStatus('error', 'Session expired. Reload the page and log back in.');
+					return;
+				}
+				if (!response.ok || !json.ok) throw new Error(json.error ?? 'Delete failed.');
+				setManageStatus('ok', `Deleted ${editingPath} — Vercel is rebuilding.`);
+				manageEditor?.classList.add('hidden');
+				editingPath = null;
+				await loadPosts();
+			} catch (error) {
+				setManageStatus('error', error instanceof Error ? error.message : 'Delete failed.');
+			}
+		});
+
+		loadPosts();
 
 		function showResult(kind: 'ok' | 'error', html: string) {
 			if (!result) return;
@@ -401,7 +869,7 @@ const checks = [
 				includeFaq: data.get('includeFaq') === 'on',
 			};
 
-			saveLastBrief({ topic: payload.topic, primaryKeyword: payload.primaryKeyword, tags: tagsRaw });
+			saveLastBrief({ topic: payload.topic, primaryKeyword: payload.primaryKeyword, tags: tagsRaw, city: payload.city ?? '' });
 
 			submitBtn.disabled = true;
 			const originalLabel = submitBtn.textContent;

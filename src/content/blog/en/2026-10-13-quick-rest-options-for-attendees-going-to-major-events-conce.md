@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/riyadh-airport-layover.jpg
 author: Wfrlee Travel Team
 category: "Travel Guides"
+city: "Riyadh"
 tags: [Riyadh, micro-stays, event travel, hourly hotels, Saudi Arabia]
 primaryKeyword: "Attending an Event in Riyadh"
 translationKey: attending-event-riyadh-guide

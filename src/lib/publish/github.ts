@@ -49,7 +49,16 @@ async function resolveBranchSha(
   );
 }
 
-export async function commitMarkdownFile(path: string, content: string, message: string) {
+interface RepoContext {
+  octokit: OctokitClient;
+  owner: string;
+  repo: string;
+  branch: string;
+  headSha: string;
+}
+
+/** Validate config + token, resolve the target branch, and return a ready client. */
+async function repoContext(): Promise<RepoContext> {
   const token = serverEnv('GITHUB_TOKEN')?.trim();
   const repoEnv = (serverEnv('GITHUB_REPO') ?? '').trim();
   if (!token) throw new Error('GITHUB_TOKEN is not set');
@@ -90,10 +99,21 @@ export async function commitMarkdownFile(path: string, content: string, message:
     defaultBranch,
     serverEnv('GITHUB_BRANCH')?.trim(),
   );
-  const name = serverEnv('GITHUB_COMMITTER_NAME') ?? 'Wfrlee AI';
-  const email = serverEnv('GITHUB_COMMITTER_EMAIL') ?? 'info@wfrlee.com';
+  return { octokit, owner, repo, branch, headSha: sha };
+}
 
-  const { data: commit } = await octokit.rest.git.getCommit({ owner, repo, commit_sha: sha });
+function committer() {
+  return {
+    name: serverEnv('GITHUB_COMMITTER_NAME') ?? 'Wfrlee AI',
+    email: serverEnv('GITHUB_COMMITTER_EMAIL') ?? 'info@wfrlee.com',
+  };
+}
+
+export async function commitMarkdownFile(path: string, content: string, message: string) {
+  const { octokit, owner, repo, branch, headSha } = await repoContext();
+  const { name, email } = committer();
+
+  const { data: commit } = await octokit.rest.git.getCommit({ owner, repo, commit_sha: headSha });
   const { data: blob } = await octokit.rest.git.createBlob({ owner, repo, content, encoding: 'utf-8' });
   const { data: tree } = await octokit.rest.git.createTree({
     owner,
@@ -106,7 +126,51 @@ export async function commitMarkdownFile(path: string, content: string, message:
     repo,
     message,
     tree: tree.sha,
-    parents: [sha],
+    parents: [headSha],
+    author: { name, email },
+    committer: { name, email },
+  });
+  await octokit.rest.git.updateRef({ owner, repo, ref: `heads/${branch}`, sha: newCommit.sha });
+  return { commitSha: newCommit.sha, branch };
+}
+
+/** List the markdown files directly inside a repository directory. */
+export async function listMarkdownFiles(dir: string): Promise<{ path: string; name: string }[]> {
+  const { octokit, owner, repo, branch } = await repoContext();
+  const { data } = await octokit.rest.repos.getContent({ owner, repo, path: dir, ref: branch });
+  if (!Array.isArray(data)) throw new Error(`Expected a directory at "${dir}"`);
+  return data
+    .filter((entry) => entry.type === 'file' && /\.(md|mdx)$/i.test(entry.name))
+    .map((entry) => ({ path: entry.path, name: entry.name }));
+}
+
+/** Read a single file's raw text content. */
+export async function readMarkdownFile(path: string): Promise<string> {
+  const { octokit, owner, repo, branch } = await repoContext();
+  const { data } = await octokit.rest.repos.getContent({ owner, repo, path, ref: branch });
+  if (Array.isArray(data) || data.type !== 'file') throw new Error(`Expected a file at "${path}"`);
+  return Buffer.from(data.content, 'base64').toString('utf-8');
+}
+
+/** Commit the deletion of a file from the branch. */
+export async function deleteMarkdownFile(path: string, message: string) {
+  const { octokit, owner, repo, branch, headSha } = await repoContext();
+  const { name, email } = committer();
+
+  const { data: commit } = await octokit.rest.git.getCommit({ owner, repo, commit_sha: headSha });
+  const { data: tree } = await octokit.rest.git.createTree({
+    owner,
+    repo,
+    base_tree: commit.tree.sha,
+    // A null sha removes the path from the tree.
+    tree: [{ path, mode: '100644', type: 'blob', sha: null as unknown as string }],
+  });
+  const { data: newCommit } = await octokit.rest.git.createCommit({
+    owner,
+    repo,
+    message,
+    tree: tree.sha,
+    parents: [headSha],
     author: { name, email },
     committer: { name, email },
   });

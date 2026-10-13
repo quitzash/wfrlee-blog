@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/riyadh-airport-layover.jpg
 author: فريق وفرلي للسفر
 category: "أدلة السفر"
+city: "Riyadh"
 tags: [الرياض, ترانزيت, فنادق بالساعات, وفرلي, سياحة اقتصادية]
 primaryKeyword: "book budget hourly hotel in riyadh"
 translationKey: riyadh-stopover-guide

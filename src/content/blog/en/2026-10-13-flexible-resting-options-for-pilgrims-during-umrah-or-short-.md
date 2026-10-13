@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: Wfrlee Travel Team
 category: "Travel Guides"
+city: "Makkah"
 tags: [Umrah, Makkah, Madinah, micro-stays, Saudi travel]
 primaryKeyword: "Flexible resting options for pilgrims during Umrah or short visits to Makkah/Mad"
 translationKey: umrah-flexible-resting-options

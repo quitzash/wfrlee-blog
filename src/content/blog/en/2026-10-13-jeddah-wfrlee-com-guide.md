@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: "/images/ultimate-jeddah-layover-guide.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Guides"
+city: "Jeddah"
 tags: ["Jeddah", "layover", "micro-stays", "travel tips"]
 primaryKeyword: "Jeddah Wfrlee.com Guide"
 translationKey: "jeddah-wfrlee-guide"

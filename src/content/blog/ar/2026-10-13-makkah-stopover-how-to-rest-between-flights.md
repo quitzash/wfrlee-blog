@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي"
 category: "دليل السفر"
+city: "Makkah"
 tags: ["مكة", "سفر اقتصادي", "وفرلي", "حجز فنادق"]
 primaryKeyword: "budget hourly hotel makkah"
 translationKey: "makkah-stopover-guide"

@@ -53,6 +53,23 @@ function setFrontmatterField(
   return markdown.replace(match[1], lines.join('\n'));
 }
 
+/** Set a frontmatter field, inserting it after `category` when the model omitted it. */
+function upsertFrontmatterField(markdown: string, field: string, value: string): string {
+  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return markdown;
+  const lines = match[1].split(/\r?\n/);
+  const quoted = `${field}: "${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  const index = lines.findIndex((line) => new RegExp(`^${field}\\s*:`).test(line.trim()));
+  if (index !== -1) {
+    lines[index] = quoted;
+  } else {
+    const after = lines.findIndex((line) => /^category\s*:/.test(line.trim()));
+    if (after === -1) lines.push(quoted);
+    else lines.splice(after + 1, 0, quoted);
+  }
+  return markdown.replace(match[1], lines.join('\n'));
+}
+
 /** Keep the meta description inside the schema's 150-160 character window. */
 function fitDescription(value: string): string {
   const suffix = ' Book hourly rooms with Wfrlee.com.';
@@ -110,6 +127,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   content = setFrontmatterField(content, 'description', fitDescription);
   content = setFrontmatterField(content, 'primaryKeyword', (value) => value.trim());
   content = setFrontmatterField(content, 'category', (value) => value.trim());
+  if (parsed.city) content = upsertFrontmatterField(content, 'city', parsed.city);
 
   try {
     const { commitSha, branch } = await commitMarkdownFile(

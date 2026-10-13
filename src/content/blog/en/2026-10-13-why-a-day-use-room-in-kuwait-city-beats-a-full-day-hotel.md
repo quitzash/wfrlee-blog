@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "Wfrlee Travel Team"
 category: "Travel Tips"
+city: "Kuwait City"
 tags: ["Kuwait City", "day-use rooms", "wfrlee.com", "booking", "micro-stays"]
 primaryKeyword: "wfrlee.com kuwait city day-use room"
 translationKey: "kuwait-day-use-vs-full-day"

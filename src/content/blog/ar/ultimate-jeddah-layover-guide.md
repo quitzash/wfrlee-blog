@@ -6,6 +6,7 @@ updatedDate: 2026-03-02
 heroImage: "/images/ultimate-jeddah-layover-guide.jpg"
 author: "فريق وفرلي.كوم للسفر"
 category: "أدلة الترانزيت"
+city: "Jeddah"
 tags: ["جدة", "ترانزيت", "السعودية", "إقامة قصيرة", "المطار"]
 primaryKeyword: "ترانزيت جدة"
 translationKey: "jeddah-layover"

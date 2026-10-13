@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "Wfrlee Travel Team"
 category: "Travel Tips"
+city: "Saudi Arabia"
 tags: ["family travel", "layover", "micro-stay", "airport transit"]
 primaryKeyword: "Traveling with Kids: Why a 6-Hour Hotel Stay Beats Waiting at the Airport"
 translationKey: "traveling-with-kids-layover"

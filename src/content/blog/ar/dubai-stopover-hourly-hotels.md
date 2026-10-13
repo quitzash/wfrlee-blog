@@ -5,6 +5,7 @@ pubDate: 2026-03-10
 heroImage: "/images/dubai-stopover.jpg"
 author: "فريق وفرلي.كوم للسفر"
 category: "أدلة الترانزيت"
+city: "Dubai"
 tags: ["دبي", "توقف", "الإمارات", "إقامة قصيرة", "مطار دبي"]
 primaryKeyword: "توقف في دبي"
 translationKey: "dubai-stopover"

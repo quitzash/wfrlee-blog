@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: /images/hourly-micro-stays.jpg
 author: "فريق وفرلي للسفر"
 category: "دليل السفر"
+city: "Saudi Arabia"
 tags: ["رحلات برية", "السعودية", "إقامة بالساعة", "راحة المسافرين"]
 primaryKeyword: "رحلات برية في السعودية"
 translationKey: "road-trip-saudi-rest-guide"

@@ -5,6 +5,7 @@ pubDate: 2026-02-20
 heroImage: "/images/hourly-micro-stays.jpg"
 author: "فريق وفرلي.كوم للسفر"
 category: "أساسيات الإقامة القصيرة"
+city: "Saudi Arabia"
 tags: ["إقامة قصيرة", "فندق بالساعة", "نصائح الحجز", "السعودية"]
 primaryKeyword: "إقامة قصيرة بالساعة"
 translationKey: "micro-stay-guide"

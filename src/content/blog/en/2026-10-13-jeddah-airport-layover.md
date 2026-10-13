@@ -6,6 +6,7 @@ updatedDate: 2025-02-18
 heroImage: "/images/ultimate-jeddah-layover-guide.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Guides"
+city: "Jeddah"
 tags: ["jeddah airport layover", "hourly hotels", "transit guide", "jeddah"]
 primaryKeyword: "jeddah airport layover"
 translationKey: "jeddah-airport-layover-guide"
