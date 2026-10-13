@@ -87,7 +87,16 @@ const checks = [
 					</div>
 
 					<div>
-						<label for="topic" class="block text-sm font-semibold text-slate-900">Topic</label>
+						<div class="flex items-center justify-between">
+							<label for="topic" class="block text-sm font-semibold text-slate-900">Topic</label>
+							<button
+								type="button"
+								id="random-btn"
+								class="inline-flex items-center rounded-md border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-100 focus:outline-none focus:ring-2 focus:ring-brand-200"
+							>
+								Random topic &amp; keywords
+							</button>
+						</div>
 						<input
 							id="topic"
 							name="topic"
@@ -97,6 +106,10 @@ const checks = [
 							class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
 							placeholder="Jeddah airport layover guide"
 						/>
+						<p class="mt-1 text-xs text-slate-500">
+							Fills Topic, Primary keyword and Tags with an on-brand Wfrlee idea (layovers, micro-stays,
+							hourly bookings). Keep clicking for another idea.
+						</p>
 					</div>
 
 					<div>
@@ -222,6 +235,89 @@ const checks = [
 			await fetch('/api/admin/logout', { method: 'POST' });
 			window.location.reload();
 		});
+
+		// ---- Random topic & keyword generator -----------------------------------
+		// On-brand combinations for Wfrlee.com: hourly micro-stays, layovers and
+		// short bookings across Saudi Arabia and the Gulf. Pure client-side so it
+		// is instant and never depends on the Gemini key.
+		const topicInput = document.getElementById('topic') as HTMLInputElement | null;
+		const keywordInput = document.getElementById('primaryKeyword') as HTMLInputElement | null;
+		const tagsInput = document.getElementById('tags') as HTMLInputElement | null;
+		const randomBtn = document.getElementById('random-btn') as HTMLButtonElement | null;
+
+		const stayCities = [
+			{ name: 'Jeddah', area: 'Jeddah airport' },
+			{ name: 'Riyadh', area: 'Riyadh airport' },
+			{ name: 'Dammam', area: 'Dammam airport' },
+			{ name: 'Makkah', area: 'the Haram' },
+			{ name: 'Madinah', area: 'Madinah airport' },
+			{ name: 'Abha', area: 'Abha airport' },
+			{ name: 'Dubai', area: 'Dubai airport' },
+			{ name: 'Abu Dhabi', area: 'Abu Dhabi airport' },
+			{ name: 'Doha', area: 'Doha airport' },
+			{ name: 'Kuwait City', area: 'Kuwait airport' },
+			{ name: 'Manama', area: 'Bahrain airport' },
+			{ name: 'Muscat', area: 'Muscat airport' },
+			{ name: 'Amman', area: 'Amman airport' },
+			{ name: 'Cairo', area: 'Cairo airport' },
+		];
+
+		const stayStyles = [
+			{ label: 'hourly micro-stay', keyword: 'micro-stay', tag: 'micro-stays' },
+			{ label: 'hourly hotel', keyword: 'hourly hotel', tag: 'hourly hotels' },
+			{ label: 'day-use room', keyword: 'day-use room', tag: 'day-use rooms' },
+			{ label: 'layover stay', keyword: 'layover hotel', tag: 'layover' },
+			{ label: 'stopover stay', keyword: 'stopover hotel', tag: 'stopover' },
+			{ label: 'short stay', keyword: 'short stay', tag: 'short stays' },
+			{ label: 'airport rest stop', keyword: 'airport hotel', tag: 'airport hotel' },
+			{ label: 'last-minute booking', keyword: 'last-minute hotel', tag: 'last-minute booking' },
+			{ label: 'work-friendly stay', keyword: 'work-friendly hotel', tag: 'business travel' },
+			{ label: 'family layover stay', keyword: 'family-friendly hotel', tag: 'family travel' },
+			{ label: 'budget micro-stay', keyword: 'budget hourly hotel', tag: 'budget travel' },
+		];
+
+		type City = { name: string; area: string };
+		type Style = { label: string; keyword: string; tag: string };
+
+		// "an hourly hotel" / "an airport rest stop" but "a short stay".
+		const article = (word: string): string => (/^([aeiou]|hour)/i.test(word) ? 'an' : 'a');
+
+		const topicPatterns: Array<(city: City, style: Style) => string> = [
+			(city, style) => `${city.name} ${style.label} guide for travelers`,
+			(city, style) => `How to book ${article(style.label)} ${style.label} in ${city.name}`,
+			(city, style) => `Best ${style.label} options in ${city.name}`,
+			(city, style) => `${city.name} ${style.label} tips: a traveler's checklist`,
+			(city, style) => `Why ${article(style.label)} ${style.label} in ${city.name} beats a full-day hotel`,
+			(city, style) => `${city.name} Wfrlee.com guide: book ${article(style.label)} ${style.label} by the hour`,
+			(city, style) => `Booking ${article(style.label)} ${style.label} in ${city.name} with Wfrlee.com`,
+			(city, style) => `${city.name} layover guide: ${style.label} essentials`,
+			(city) => `${city.name} stopover: how to rest between flights`,
+			(city, style) => `Where to sleep in ${city.name}: ${style.label} picks`,
+		];
+
+		const keywordPatterns: Array<(city: City, style: Style) => string> = [
+			(city, style) => `${city.name} ${style.keyword}`,
+			(city, style) => `${style.keyword} ${city.name}`,
+			(city, style) => `book ${style.keyword} in ${city.name}`,
+			(city, style) => `${style.keyword} near ${city.area}`,
+			(city, style) => `wfrlee.com ${city.name} ${style.keyword}`,
+		];
+
+		const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
+
+		function randomizeTopic() {
+			const city = pick(stayCities);
+			const style = pick(stayStyles);
+			const topic = pick(topicPatterns)(city, style).slice(0, 80);
+			const keyword = pick(keywordPatterns)(city, style).toLowerCase().slice(0, 80);
+			const tags = Array.from(new Set([city.name, style.tag, 'wfrlee.com', 'booking'])).join(', ');
+
+			if (topicInput) topicInput.value = topic;
+			if (keywordInput) keywordInput.value = keyword;
+			if (tagsInput) tagsInput.value = tags;
+		}
+
+		randomBtn?.addEventListener('click', randomizeTopic);
 
 		function showResult(kind: 'ok' | 'error', html: string) {
 			if (!result) return;
