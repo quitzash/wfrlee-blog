@@ -12,9 +12,27 @@ export function serverEnv(name: string): string | undefined {
       ? process.env[name]
       : (import.meta as unknown as { env?: Record<string, string | undefined> }).env?.[name];
   if (raw === undefined) return undefined;
-  // Vercel stores values literally, so trim whitespace and strip quotes that are
-  // often included by accident when pasting from a .env file.
-  const trimmed = raw.trim();
-  const unquoted = /^(["']).*\1$/.test(trimmed) ? trimmed.slice(1, -1).trim() : trimmed;
-  return unquoted.length > 0 ? unquoted : undefined;
+  return normalize(name, raw);
+}
+
+/**
+ * Vercel stores values literally, so clean up the sloppy-but-common mistakes
+ * that happen when pasting from a .env file: surrounding whitespace, wrapping
+ * quotes, and a leading `NAME=` prefix (e.g. a value of
+ * `GEMINI_MODEL=gemini-3.1-pro-preview`).
+ */
+function normalize(name: string, raw: string): string | undefined {
+  const stripQuotes = (value: string) => {
+    const match = value.match(/^(["'])(.*)\1$/);
+    return match ? match[2].trim() : value;
+  };
+
+  let value = stripQuotes(raw.trim());
+
+  const prefix = `${name.toUpperCase()}=`;
+  if (value.toUpperCase().startsWith(prefix)) {
+    value = stripQuotes(value.slice(prefix.length).trim());
+  }
+
+  return value.length > 0 ? value : undefined;
 }
