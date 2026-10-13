@@ -1,6 +1,7 @@
 ﻿import { GoogleGenerativeAI } from '@google/generative-ai';
+import { serverEnv } from '@/lib/env';
 
-const apiKey = import.meta.env.GEMINI_API_KEY;
+const apiKey = serverEnv('GEMINI_API_KEY');
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 const model = genAI ? genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }) : null;
 

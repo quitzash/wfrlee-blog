@@ -1,15 +1,16 @@
 ﻿import { Octokit } from '@octokit/rest';
+import { serverEnv } from '@/lib/env';
 
-const token = import.meta.env.GITHUB_TOKEN;
-const repoEnv = import.meta.env.GITHUB_REPO ?? '';
+const token = serverEnv('GITHUB_TOKEN');
+const repoEnv = serverEnv('GITHUB_REPO') ?? '';
 
 export async function commitMarkdownFile(path: string, content: string, message: string) {
   if (!token) throw new Error('GITHUB_TOKEN missing');
   if (!repoEnv.includes('/')) throw new Error('GITHUB_REPO must be in format owner/repo');
   const [owner, repo] = repoEnv.split('/');
-  const branch = import.meta.env.GITHUB_BRANCH ?? 'master';
-  const name = import.meta.env.GITHUB_COMMITTER_NAME ?? 'Wfrlee AI';
-  const email = import.meta.env.GITHUB_COMMITTER_EMAIL ?? 'ai@wfrlee.com';
+  const branch = serverEnv('GITHUB_BRANCH') ?? 'master';
+  const name = serverEnv('GITHUB_COMMITTER_NAME') ?? 'Wfrlee AI';
+  const email = serverEnv('GITHUB_COMMITTER_EMAIL') ?? 'ai@wfrlee.com';
 
   const octokit = new Octokit({ auth: token });
   const { data: ref } = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });

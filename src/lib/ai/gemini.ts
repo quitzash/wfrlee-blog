@@ -1,7 +1,8 @@
 ﻿import { GoogleGenerativeAI } from '@google/generative-ai';
+import { serverEnv } from '@/lib/env';
 
-const apiKey = import.meta.env.GEMINI_API_KEY;
-const modelName = import.meta.env.GEMINI_MODEL ?? 'gemini-2.5-pro';
+const apiKey = serverEnv('GEMINI_API_KEY');
+const modelName = serverEnv('GEMINI_MODEL') ?? 'gemini-2.5-pro';
 
 const HERO_IMAGES = [
   '/images/og-default.jpg',

@@ -1,6 +1,7 @@
 ﻿import type { APIRoute } from 'astro';
 import { generateGuide } from '@/lib/ai/gemini';
 import { commitMarkdownFile } from '@/lib/publish/github';
+import { serverEnv } from '@/lib/env';
 import { toKebab } from '@/lib/utils';
 
 export const prerender = false;
@@ -39,7 +40,7 @@ function fitDescription(value: string): string {
 
 export const POST: APIRoute = async ({ request }) => {
   const token = request.headers.get('x-admin-token');
-  if (token !== import.meta.env.ADMIN_TOKEN) return new Response('Unauthorized', { status: 401 });
+  if (token !== serverEnv('ADMIN_TOKEN')) return new Response('Unauthorized', { status: 401 });
   try {
     const body = (await request.json()) as {
       lang: 'en' | 'ar';

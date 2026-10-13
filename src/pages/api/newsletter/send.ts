@@ -2,12 +2,13 @@
 import { getPosts, getPostSlug } from '@/lib/blog';
 import { generateNewsletterEmail } from '@/lib/ai/email';
 import { sendEmail } from '@/lib/email/resend';
+import { serverEnv } from '@/lib/env';
 
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   const token = request.headers.get('x-admin-token');
-  if (token !== import.meta.env.ADMIN_TOKEN) return new Response('Unauthorized', { status: 401 });
+  if (token !== serverEnv('ADMIN_TOKEN')) return new Response('Unauthorized', { status: 401 });
   try {
     const body = await request.json() as { lang: 'en' | 'ar' };
     const lang = body.lang;
@@ -20,7 +21,7 @@ export const POST: APIRoute = async ({ request }) => {
       };
     });
     const email = await generateNewsletterEmail({ lang, posts });
-    const subscribers = ((import.meta.env.MANUAL_TEST_EMAILS as string) ?? '')
+    const subscribers = (serverEnv('MANUAL_TEST_EMAILS') ?? '')
       .split(',')
       .map((s: string) => s.trim())
       .filter(Boolean);
