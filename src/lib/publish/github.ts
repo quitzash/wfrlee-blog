@@ -3,10 +3,11 @@ import { serverEnv } from '@/lib/env';
 
 type OctokitClient = InstanceType<typeof Octokit>;
 
-async function resolveBranch(
+async function resolveBranchSha(
   octokit: OctokitClient,
   owner: string,
   repo: string,
+  defaultBranch: string,
   requested: string | undefined,
 ): Promise<{ branch: string; sha: string }> {
   const tryRef = async (branch: string) => {
@@ -25,26 +26,54 @@ async function resolveBranch(
     if (sha) return { branch: requested, sha };
   }
 
-  const { data: repoData } = await octokit.rest.repos.get({ owner, repo });
-  const fallback = repoData.default_branch;
-  const sha = await tryRef(fallback);
+  const sha = await tryRef(defaultBranch);
   if (!sha) {
-    throw new Error(`Could not resolve branch "${requested ?? fallback}" on ${owner}/${repo}`);
+    throw new Error(`Could not resolve branch "${requested ?? defaultBranch}" on ${owner}/${repo}`);
   }
-  return { branch: fallback, sha };
+  return { branch: defaultBranch, sha };
 }
 
 export async function commitMarkdownFile(path: string, content: string, message: string) {
   const token = serverEnv('GITHUB_TOKEN')?.trim();
   const repoEnv = (serverEnv('GITHUB_REPO') ?? '').trim();
   if (!token) throw new Error('GITHUB_TOKEN is not set');
-  if (!repoEnv.includes('/')) throw new Error('GITHUB_REPO must be in format owner/repo');
 
-  const [owner, repo] = repoEnv.split('/').map((part) => part.trim());
-  if (!owner || !repo) throw new Error('GITHUB_REPO must be in format owner/repo');
+  const parts = repoEnv.split('/').map((part) => part.trim()).filter(Boolean);
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    throw new Error('GITHUB_REPO must be in format "owner/repo" (e.g. quitzash/wfrlee-blog)');
+  }
+  const [owner, repo] = parts;
 
   const octokit = new Octokit({ auth: token });
-  const { branch, sha } = await resolveBranch(octokit, owner, repo, serverEnv('GITHUB_BRANCH')?.trim());
+
+  // Validate the repo + token up front so access problems are reported clearly.
+  let defaultBranch: string;
+  try {
+    const { data } = await octokit.rest.repos.get({ owner, repo });
+    defaultBranch = data.default_branch;
+  } catch (e: any) {
+    const status = Number(e?.status);
+    if (status === 404) {
+      throw new Error(
+        `Repository "${owner}/${repo}" was not found or GITHUB_TOKEN cannot access it. ` +
+          `Check GITHUB_REPO, and make sure the token has access to this repository ` +
+          `(fine-grained tokens must list it under Repository access with "Contents: Read and write").`,
+      );
+    }
+    if (status === 401) throw new Error('GITHUB_TOKEN is invalid or expired. Generate a new token.');
+    if (status === 403) {
+      throw new Error('GITHUB_TOKEN is missing a required permission (needs "Contents: Read and write").');
+    }
+    throw new Error(`GitHub repo lookup failed for ${owner}/${repo}: ${e?.message ?? e}`);
+  }
+
+  const { branch, sha } = await resolveBranchSha(
+    octokit,
+    owner,
+    repo,
+    defaultBranch,
+    serverEnv('GITHUB_BRANCH')?.trim(),
+  );
   const name = serverEnv('GITHUB_COMMITTER_NAME') ?? 'Wfrlee AI';
   const email = serverEnv('GITHUB_COMMITTER_EMAIL') ?? 'info@wfrlee.com';
 
