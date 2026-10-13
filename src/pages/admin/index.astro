@@ -89,13 +89,22 @@ const checks = [
 					<div>
 						<div class="flex items-center justify-between">
 							<label for="topic" class="block text-sm font-semibold text-slate-900">Topic</label>
-							<button
-								type="button"
-								id="random-btn"
-								class="inline-flex items-center rounded-md border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-100 focus:outline-none focus:ring-2 focus:ring-brand-200"
-							>
-								Random topic &amp; keywords
-							</button>
+							<div class="flex items-center gap-2">
+								<button
+									type="button"
+									id="refill-btn"
+									class="inline-flex items-center rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+								>
+									Refill last
+								</button>
+								<button
+									type="button"
+									id="random-btn"
+									class="inline-flex items-center rounded-md border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 transition-colors hover:bg-brand-100 focus:outline-none focus:ring-2 focus:ring-brand-200"
+								>
+									Random topic &amp; keywords
+								</button>
+							</div>
 						</div>
 						<input
 							id="topic"
@@ -244,6 +253,7 @@ const checks = [
 		const keywordInput = document.getElementById('primaryKeyword') as HTMLInputElement | null;
 		const tagsInput = document.getElementById('tags') as HTMLInputElement | null;
 		const randomBtn = document.getElementById('random-btn') as HTMLButtonElement | null;
+		const refillBtn = document.getElementById('refill-btn') as HTMLButtonElement | null;
 
 		const stayCities = [
 			{ name: 'Jeddah', area: 'Jeddah airport' },
@@ -319,6 +329,52 @@ const checks = [
 
 		randomBtn?.addEventListener('click', randomizeTopic);
 
+		// ---- "Refill last" ------------------------------------------------------
+		// Remembers the last brief that was actually submitted (topic, primary
+		// keyword, tags) so it can be restored after a reset or a page reload.
+		type LastBrief = { topic: string; primaryKeyword: string; tags: string };
+		const LAST_BRIEF_KEY = 'wfrlee:last-brief';
+
+		function readLastBrief(): LastBrief | null {
+			try {
+				const raw = localStorage.getItem(LAST_BRIEF_KEY);
+				if (!raw) return null;
+				const parsed = JSON.parse(raw) as Partial<LastBrief>;
+				if (!parsed.topic && !parsed.primaryKeyword && !parsed.tags) return null;
+				return {
+					topic: parsed.topic ?? '',
+					primaryKeyword: parsed.primaryKeyword ?? '',
+					tags: parsed.tags ?? '',
+				};
+			} catch {
+				return null;
+			}
+		}
+
+		function saveLastBrief(brief: LastBrief) {
+			try {
+				localStorage.setItem(LAST_BRIEF_KEY, JSON.stringify(brief));
+			} catch {
+				// Storage unavailable (private mode / disabled) — refill just won't persist.
+			}
+			syncRefillButton();
+		}
+
+		function syncRefillButton() {
+			if (refillBtn) refillBtn.disabled = readLastBrief() === null;
+		}
+
+		function refillLastBrief() {
+			const brief = readLastBrief();
+			if (!brief) return;
+			if (topicInput) topicInput.value = brief.topic;
+			if (keywordInput) keywordInput.value = brief.primaryKeyword;
+			if (tagsInput) tagsInput.value = brief.tags;
+		}
+
+		refillBtn?.addEventListener('click', refillLastBrief);
+		syncRefillButton();
+
 		function showResult(kind: 'ok' | 'error', html: string) {
 			if (!result) return;
 			result.className =
@@ -344,6 +400,8 @@ const checks = [
 				tags: tagsRaw ? tagsRaw.split(',').map((tag) => tag.trim()).filter(Boolean) : undefined,
 				includeFaq: data.get('includeFaq') === 'on',
 			};
+
+			saveLastBrief({ topic: payload.topic, primaryKeyword: payload.primaryKeyword, tags: tagsRaw });
 
 			submitBtn.disabled = true;
 			const originalLabel = submitBtn.textContent;
