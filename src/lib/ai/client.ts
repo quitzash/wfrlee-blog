@@ -58,7 +58,7 @@ export async function generateText(options: {
         const model = genAI.getGenerativeModel({
           model: modelName,
           systemInstruction: options.systemInstruction,
-          requestOptions: { timeout: 90_000 }, // fail fast so retry/fallback kicks in
+          requestOptions: { timeout: 45_000 }, // fail fast so retry/fallback fits in maxDuration 60
         });
         const { response } = await model.generateContent(options.prompt);
         return response.text();
