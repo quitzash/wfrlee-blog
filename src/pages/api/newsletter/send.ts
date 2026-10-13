@@ -1,24 +1,57 @@
 ﻿import type { APIRoute } from 'astro';
+import { z } from 'zod';
 import { getPosts, getPostSlug } from '@/lib/blog';
 import { generateNewsletterEmail } from '@/lib/ai/email';
 import { sendEmail } from '@/lib/email/resend';
 import { serverEnv } from '@/lib/env';
+import {
+  SESSION_COOKIE,
+  clientIp,
+  isAdminAuthed,
+  isRateLimited,
+  isTrustedOrigin,
+  withSecurityHeaders,
+} from '@/lib/auth';
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
-  const expected = serverEnv('ADMIN_TOKEN')?.trim();
-  if (!expected) {
-    return new Response(
-      JSON.stringify({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set on Vercel.' }),
-      { status: 500, headers: { 'content-type': 'application/json' } },
-    );
+const sendSchema = z.object({
+  lang: z.enum(['en', 'ar']),
+});
+
+function jsonResponse(body: unknown, status: number): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json' },
+  });
+}
+
+export const POST: APIRoute = async ({ request, cookies }) => {
+  if (!serverEnv('ADMIN_TOKEN')?.trim()) {
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set on Vercel.' }, 500));
   }
-  const token = request.headers.get('x-admin-token')?.trim();
-  if (token !== expected) return new Response('Unauthorized', { status: 401 });
+
+  const sessionCookie = cookies.get(SESSION_COOKIE)?.value ?? null;
+  if (!isAdminAuthed(request, sessionCookie)) {
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Unauthorized' }, 401));
+  }
+  if (!isTrustedOrigin(request)) {
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'forbidden' }, 403));
+  }
+
+  const ip = clientIp(request);
+  if (isRateLimited(`newsletter-send:${ip}`, 5, 60 * 60 * 1000)) {
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Too many requests. Try again later.' }, 429));
+  }
+
+  let lang: 'en' | 'ar';
   try {
-    const body = await request.json() as { lang: 'en' | 'ar' };
-    const lang = body.lang;
+    lang = sendSchema.parse(await request.json()).lang;
+  } catch {
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Invalid request body.' }, 400));
+  }
+
+  try {
     const posts = (await getPosts(lang)).slice(0, 4).map((p) => {
       const slug = getPostSlug(p);
       return {
@@ -35,8 +68,8 @@ export const POST: APIRoute = async ({ request }) => {
     if (subscribers.length > 0) {
       await sendEmail({ to: subscribers, subject: email.subject, html: email.html, text: email.text });
     }
-    return new Response(JSON.stringify({ ok: true, sent: subscribers.length }), { status: 200, headers: { 'content-type': 'application/json' } });
+    return withSecurityHeaders(jsonResponse({ ok: true, sent: subscribers.length }, 200));
   } catch (e: any) {
-    return new Response(JSON.stringify({ ok: false, error: e?.message ?? 'error' }), { status: 500, headers: { 'content-type': 'application/json' } });
+    return withSecurityHeaders(jsonResponse({ ok: false, error: e?.message ?? 'error' }, 500));
   }
 };
