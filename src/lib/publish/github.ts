@@ -10,7 +10,7 @@ export async function commitMarkdownFile(path: string, content: string, message:
   const [owner, repo] = repoEnv.split('/');
   const branch = serverEnv('GITHUB_BRANCH') ?? 'master';
   const name = serverEnv('GITHUB_COMMITTER_NAME') ?? 'Wfrlee AI';
-  const email = serverEnv('GITHUB_COMMITTER_EMAIL') ?? 'ai@wfrlee.com';
+  const email = serverEnv('GITHUB_COMMITTER_EMAIL') ?? 'info@wfrlee.com';
 
   const octokit = new Octokit({ auth: token });
   const { data: ref } = await octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` });

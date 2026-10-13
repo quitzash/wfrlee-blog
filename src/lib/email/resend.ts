@@ -12,7 +12,7 @@ export async function sendEmail(opts: {
   replyTo?: string;
 }) {
   if (!resend) throw new Error('RESEND_API_KEY missing');
-  const from = serverEnv('EMAIL_FROM') ?? 'Wfrlee.com <news@wfrlee.com>';
+  const from = serverEnv('EMAIL_FROM') ?? 'Wfrlee.com <info@wfrlee.com>';
   return resend.emails.send({
     from,
     to: opts.to,
