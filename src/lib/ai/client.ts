@@ -6,9 +6,9 @@
  * publish, iterate through a model list:
  *  - transport errors ("fetch failed", no HTTP status) get same-model retries
  *    with backoff (first-request DNS/TLS blips after a cold start);
- *  - 400/404 (bad model name on this key) skip to the next model;
- *  - 429/500/503 skip to the next model after a brief pause;
- *  - 401/403 (auth) throw — no other model will help.
+ *  - 400/401/403/404 skip to the next model (a model that needs OAuth, is
+ *    paid-only, or doesn't exist on this key must never abort the chain);
+ *  - 429/500/503 retry the same model a few times, then skip to the next one.
  */
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { serverEnv } from '@/lib/env';
@@ -29,14 +29,11 @@ export function modelList(primaryEnv: string, defaultFallbacks: string[]): strin
   return list;
 }
 
-/** True when an HTTP error means "this model won't work on this key" — skip it. */
+/** True when this one model won't work on this key — skip to the next model. */
 function isModelLevelError(status: number | undefined): boolean {
-  return status === 400 || status === 404;
-}
-
-/** True when the error is fatal and no other model can help. */
-function isFatal(status: number | undefined): boolean {
-  return status === 401 || status === 403;
+  // 400/404: bad model name. 401/403: needs OAuth (pro/paid-only) or is not
+  // usable with an API key — the key itself may still be fine for flash models.
+  return status === 400 || status === 401 || status === 403 || status === 404;
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -64,10 +61,10 @@ export async function generateText(options: {
         return response.text();
       } catch (error: any) {
         lastError = error;
-        const status = Number(error?.status);
-        if (isFatal(Number.isNaN(status) ? undefined : status)) throw error;
-        if (isModelLevelError(Number.isNaN(status) ? undefined : status)) break; // next model
-        // Transient or transport error: back off, then retry the same model.
+        const rawStatus = Number(error?.status);
+        const status = Number.isNaN(rawStatus) ? undefined : rawStatus;
+        if (isModelLevelError(status)) break; // next model
+        // Transient: back off, then retry the same model.
         if (attempt < attempts) {
           await sleep(300 * attempt);
         }
