@@ -193,7 +193,8 @@ const checks = [
 					<h2 class="mt-2 text-2xl font-bold text-slate-900">Weekly auto-post</h2>
 					<p class="mt-1 text-sm text-slate-600">
 						Researches high-ranking, trending, high-visibility keywords and publishes a guide automatically
-						every Monday. Run it now to publish this week's post — the language alternates EN/AR each week.
+						every Monday — one English and one Arabic post each week. Run it now to publish this week's
+						posts (each language is generated separately to stay within the serverless time limit).
 					</p>
 					<div class="mt-4 flex flex-wrap items-end gap-3">
 						<div>
@@ -202,9 +203,9 @@ const checks = [
 								id="weekly-lang"
 								class="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
 							>
-								<option value="auto">Auto (alternates weekly)</option>
-								<option value="en">English</option>
-								<option value="ar">العربية</option>
+								<option value="both">Both (English + العربية)</option>
+								<option value="en">English only</option>
+								<option value="ar">العربية only</option>
 							</select>
 						</div>
 						<button
@@ -954,74 +955,125 @@ const checks = [
 
 		// ---- Weekly auto-post --------------------------------------------------
 		// Researches high-ranking / trending / high-visibility keywords on the
-		// server and publishes one guide. Same flow the Monday cron runs.
+		// server and publishes one guide per language. Same flow the Monday cron
+		// runs (two cron entries: one English, one Arabic). Each language is a
+		// separate request so neither exceeds the serverless time limit.
 		const weeklyLangSel = document.getElementById('weekly-lang') as HTMLSelectElement | null;
 		const weeklyBtn = document.getElementById('weekly-btn') as HTMLButtonElement | null;
 		const weeklyResult = document.getElementById('weekly-result');
 
+		type WeeklyJson = {
+			ok?: boolean;
+			lang?: string;
+			keyword?: string;
+			scores?: { overall?: number; ranking?: number; trend?: number; visibility?: number };
+			reason?: string;
+			path?: string;
+			commitSha?: string;
+			step?: string;
+			error?: string;
+		};
+
+		async function publishWeekly(lang: 'en' | 'ar'): Promise<WeeklyJson> {
+			const response = await fetch('/api/ai/weekly-post', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ lang }),
+			});
+			const json = (await response.json().catch(() => ({}))) as WeeklyJson;
+			if (response.status === 401) {
+				throw new Error('Session expired. Reload the page and log back in.');
+			}
+			if (!response.ok || !json.ok) {
+				const stepLabel =
+					json.step === 'research'
+						? 'Keyword research failed.'
+						: json.step === 'generate'
+							? 'Generation failed.'
+							: json.step === 'publish'
+								? 'GitHub publish failed.'
+								: 'Request failed.';
+				throw new Error(stepLabel + ' ' + (json.error ?? '(' + response.status + ')'));
+			}
+			return json;
+		}
+
+		function weeklyRow(lang: string, json: WeeklyJson): string {
+			const s = json.scores ?? {};
+			return (
+				'<li><strong>' +
+				lang.toUpperCase() +
+				':</strong> <code class="rounded bg-white/60 px-1">' +
+				json.keyword +
+				'</code><br />ranking ' +
+				(s.ranking ?? '?') +
+				', trend ' +
+				(s.trend ?? '?') +
+				', visibility ' +
+				(s.visibility ?? '?') +
+				' (overall ' +
+				(s.overall ?? '?') +
+				')<br />File: <code class="rounded bg-white/60 px-1">' +
+				json.path +
+				'</code> · commit ' +
+				String(json.commitSha ?? '').slice(0, 7) +
+				'</li>'
+			);
+		}
+
 		weeklyBtn?.addEventListener('click', async () => {
 			if (!weeklyBtn) return;
-			const lang = weeklyLangSel?.value ?? 'auto';
+			const choice = weeklyLangSel?.value ?? 'both';
+			const langs: Array<'en' | 'ar'> = choice === 'both' ? ['en', 'ar'] : [choice as 'en' | 'ar'];
+
 			weeklyBtn.disabled = true;
 			const originalLabel = weeklyBtn.textContent;
 			weeklyBtn.textContent = 'Researching…';
 			if (weeklyResult) {
 				weeklyResult.className = 'mt-4 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600';
 				weeklyResult.textContent =
-					'Researching keywords, then generating and publishing the guide. This can take up to a minute…';
+					'Researching keywords, then generating and publishing ' +
+					(langs.length === 2 ? 'both guides' : 'the guide') +
+					'. This can take up to a minute per language…';
 				weeklyResult.classList.remove('hidden');
 			}
-			try {
-				const response = await fetch('/api/ai/weekly-post', {
-					method: 'POST',
-					headers: { 'content-type': 'application/json' },
-					body: JSON.stringify({ lang }),
-				});
-				const json = await response.json().catch(() => ({}));
-				if (response.status === 401) {
-					throw new Error('Session expired. Reload the page and log back in.');
+
+			const rows: string[] = [];
+			const failures: string[] = [];
+			for (const lang of langs) {
+				if (langs.length === 2) weeklyBtn.textContent = `Publishing ${lang.toUpperCase()}…`;
+				try {
+					const json = await publishWeekly(lang);
+					rows.push(weeklyRow(lang, json));
+				} catch (error) {
+					failures.push(
+						lang.toUpperCase() + ': ' + (error instanceof Error ? error.message : 'Unexpected error'),
+					);
 				}
-				if (!response.ok || !json.ok) {
-					const stepLabel =
-						json.step === 'research'
-							? 'Keyword research failed.'
-							: json.step === 'publish'
-								? 'GitHub publish failed.'
-								: 'Request failed.';
-					throw new Error(stepLabel + ' ' + (json.error ?? '(' + response.status + ')'));
-				}
-				const scores = json.scores ?? {};
-				if (weeklyResult) {
+			}
+
+			if (weeklyResult) {
+				if (rows.length && !failures.length) {
 					weeklyResult.className = 'mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800';
 					weeklyResult.innerHTML =
-						'<strong>Published.</strong> Keyword: <code class="rounded bg-white/60 px-1">' +
-						json.keyword +
-						'</code> (' +
-						String(json.lang ?? '').toUpperCase() +
-						')<br />Scores — ranking ' +
-						(scores.ranking ?? '?') +
-						', trend ' +
-						(scores.trend ?? '?') +
-						', visibility ' +
-						(scores.visibility ?? '?') +
-						' (overall ' +
-						(scores.overall ?? '?') +
-						')<br />File: <code class="rounded bg-white/60 px-1">' +
-						json.path +
-						'</code> · commit ' +
-						String(json.commitSha ?? '').slice(0, 7) +
-						'<br />Vercel is rebuilding; the post appears in a minute or two.';
-				}
-			} catch (error) {
-				const message = error instanceof Error ? error.message : 'Unexpected error';
-				if (weeklyResult) {
+						'<strong>Published.</strong><ul class="mt-1 list-disc space-y-1 pl-5">' +
+						rows.join('') +
+						'</ul>Vercel is rebuilding; the posts appear in a minute or two.';
+				} else if (rows.length && failures.length) {
+					weeklyResult.className = 'mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900';
+					weeklyResult.innerHTML =
+						'<strong>Partly published.</strong><ul class="mt-1 list-disc space-y-1 pl-5">' +
+						rows.join('') +
+						'</ul><strong>Failed:</strong><br />' +
+						failures.join('<br />');
+				} else {
 					weeklyResult.className = 'mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800';
-					weeklyResult.innerHTML = '<strong>Weekly post failed.</strong><br />' + message;
+					weeklyResult.innerHTML = '<strong>Weekly post failed.</strong><br />' + failures.join('<br />');
 				}
-			} finally {
-				weeklyBtn.disabled = false;
-				weeklyBtn.textContent = originalLabel;
 			}
+
+			weeklyBtn.disabled = false;
+			weeklyBtn.textContent = originalLabel;
 		});
 	} else {
 		const loginForm = document.getElementById('login-form') as HTMLFormElement | null;

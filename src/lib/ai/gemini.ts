@@ -59,8 +59,8 @@ Requirements:
 - Return valid Markdown with YAML frontmatter matching the src/content/blog/${params.lang}/ schema (pubDate today, updatedDate today, draft: false, category suggested, translationKey kebab-case).
 - The description field MUST be 150-160 characters long and wrapped in double quotes.
 - heroImage MUST be exactly one of: ${HERO_IMAGES.join(', ')}.
-- Suggested word count 800-1200. Include intro, comparison table, highlights, practical plan, CTA linking to https://wfrlee.com, internal links to relevant city pages, and FAQ (3-5 Qs).
-- Be concise and efficient: no filler, no repeated sections.
+- Suggested word count 600-900. Include intro, a comparison table (2-3 rows), highlights, a short practical plan, CTA linking to https://wfrlee.com, internal links to relevant city pages, and FAQ (3 Qs).
+- Be concise and efficient: no filler, no repeated sections. Keep generation fast.
 - SEO: write compelling title (<=60 chars) + meta description, include alt text suggestions for the hero image.
 - For AR, use natural Saudi/MENA phrasing.
 - Output ONLY the Markdown document, no code fences, no extra commentary.`;

@@ -1,22 +1,23 @@
 /**
  * Keyword research for the weekly auto-publish job.
  *
- * Goal: surface one keyword per week that is likely to (a) rank — long-tail and
- * on-brand, (b) be trending — current demand/momentum, and (c) be high-visibility
- * — a query real travellers actually type.
+ * Criteria: surface a keyword that is likely to (a) rank — long-tail and
+ * on-brand, (b) be trending — current/seasonal interest, and (c) be
+ * high-visibility — a query real travellers actually type.
  *
  * Pipeline:
  *  1. Build on-brand seed phrases (cities x stay styles), rotated by week so
  *     different weeks explore different corners of the niche.
  *  2. Expand each seed with Google's free autocomplete endpoint — a real signal
- *     of what people search (visibility), with no API key required.
- *  3. Ask Gemini to generate a few additional rising keywords and score every
- *     candidate on ranking difficulty, trend, and visibility, returning a
- *     ranked JSON list.
- *  4. Fall back to a local heuristic score if Gemini is unavailable, so the
- *     cron never hard-fails on a quota hiccup.
+ *     of what people search (visibility) and how prominent it is (its rank in
+ *     the suggestion list).
+ *  3. Score every candidate locally on ranking / trend / visibility and return
+ *     a ranked list.
+ *
+ * No AI call happens here on purpose: the weekly job must fit inside the 60s
+ * serverless limit (Vercel Hobby) with a single Gemini call left for the guide
+ * itself. An extra scoring round-trip made the whole job time out.
  */
-import { generateText, modelList } from '@/lib/ai/client';
 import { cities } from '@/lib/cities';
 import { toKebab } from '@/lib/utils';
 
@@ -78,6 +79,41 @@ const GENERIC_SEEDS_AR = [
   'إقامة قريبة من الحرم',
 ];
 
+/** Season/event words that signal current, higher-momentum demand. */
+const TREND_BOOSTERS_EN = [
+  'umrah',
+  'hajj',
+  'eid',
+  'ramadan',
+  'summer',
+  'winter',
+  'holiday',
+  'riyadh season',
+  'f1',
+  'grand prix',
+  'expo',
+  'world cup',
+  'new year',
+  '2026',
+];
+
+const TREND_BOOSTERS_AR = [
+  'عمرة',
+  'حج',
+  'عيد',
+  'رمضان',
+  'الصيف',
+  'الشتاء',
+  'العطلات',
+  'موسم الرياض',
+  'كأس',
+  'معرض',
+  'رأس السنة',
+];
+
+const INTENT_TERMS_EN = ['layover', 'airport', 'hourly', 'hour', 'micro', 'transit', 'stopover', 'day use', 'day-use'];
+const INTENT_TERMS_AR = ['ترانزيت', 'بالساعة', 'مطار', 'قصيرة', 'نهاري', 'توقف'];
+
 /** Rotate the seed list by week so consecutive runs don't chase the same terms. */
 function seedKeywords(lang: KeywordLang, weekIndex: number): string[] {
   const cityNames = cities.map((city) => (lang === 'ar' ? city.name.ar : city.name.en));
@@ -128,131 +164,93 @@ async function fetchGoogleSuggest(seed: string, lang: KeywordLang): Promise<stri
   }
 }
 
-function uniqueCandidates(items: string[], limit = MAX_CANDIDATES): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const item of items) {
-    const key = item.trim().toLowerCase();
-    if (!key || seen.has(key)) continue;
-    seen.add(key);
-    out.push(item.trim());
-    if (out.length >= limit) break;
-  }
-  return out;
+interface RawCandidate {
+  keyword: string;
+  /** Best (lowest) position across all suggestion lists; lower = more popular. */
+  bestIndex: number;
+  fromSuggest: boolean;
 }
 
-function clampScore(value: unknown): number {
-  const num = Math.round(Number(value));
-  if (!Number.isFinite(num)) return 0;
-  return Math.max(0, Math.min(100, num));
+function collectCandidates(suggestLists: string[][], seeds: string[]): RawCandidate[] {
+  const byKey = new Map<string, RawCandidate>();
+  const consider = (keyword: string, index: number, fromSuggest: boolean) => {
+    const trimmed = keyword.trim();
+    const key = trimmed.toLowerCase();
+    if (!trimmed) return;
+    const existing = byKey.get(key);
+    if (existing) {
+      if (fromSuggest && index < existing.bestIndex) {
+        existing.bestIndex = index;
+        existing.fromSuggest = true;
+      }
+      return;
+    }
+    if (byKey.size >= MAX_CANDIDATES) return;
+    byKey.set(key, { keyword: trimmed, bestIndex: index, fromSuggest });
+  };
+
+  for (const list of suggestLists) {
+    list.forEach((keyword, index) => consider(keyword, index, true));
+  }
+  // Seeds themselves are always candidates (cover offline / empty-suggest runs).
+  for (const seed of seeds) consider(seed, 20, false);
+
+  return Array.from(byKey.values());
 }
 
-/** Parse a JSON array of scored keywords out of a possibly fenced model reply. */
-function parseScored(raw: string): ScoredKeyword[] {
-  let text = raw.trim();
-  const fence = text.match(/```[a-zA-Z]*\s*([\s\S]*?)\s*```/);
-  if (fence) text = fence[1].trim();
-  const start = text.indexOf('[');
-  const end = text.lastIndexOf(']');
-  if (start === -1 || end === -1 || end < start) return [];
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(text.slice(start, end + 1));
-  } catch {
-    return [];
-  }
-  if (!Array.isArray(parsed)) return [];
-  const results: ScoredKeyword[] = [];
-  for (const entry of parsed) {
-    if (!entry || typeof entry !== 'object') continue;
-    const record = entry as Record<string, unknown>;
-    const keyword = typeof record.keyword === 'string' ? record.keyword.trim() : '';
-    if (!keyword) continue;
-    const ranking = clampScore(record.ranking);
-    const trend = clampScore(record.trend);
-    const visibility = clampScore(record.visibility);
-    const score = clampScore(record.score) || Math.round(ranking * 0.45 + trend * 0.25 + visibility * 0.3);
-    results.push({
-      keyword,
+function clampScore(value: number): number {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+/** Local, dependency-free three-axis score. */
+function scoreCandidates(candidates: RawCandidate[], lang: KeywordLang): ScoredKeyword[] {
+  const cityTerms = cities
+    .map((city) => (lang === 'ar' ? city.name.ar : city.name.en).toLowerCase())
+    .concat(cities.map((city) => city.slug));
+  const intentTerms = lang === 'ar' ? INTENT_TERMS_AR : INTENT_TERMS_EN;
+  const boosters = lang === 'ar' ? TREND_BOOSTERS_AR : TREND_BOOSTERS_EN;
+
+  return candidates.map((candidate) => {
+    const lower = candidate.keyword.toLowerCase();
+    const words = lower.split(/\s+/).filter(Boolean).length;
+    const hasCity = cityTerms.some((term) => lower.includes(term));
+    const hasIntent = intentTerms.some((term) => lower.includes(term));
+    const booster = boosters.find((term) => lower.includes(term));
+
+    // Ranking potential: long-tail + city + intent is the sweet spot to rank.
+    const ranking = clampScore(
+      45 + (hasCity ? 22 : 0) + (hasIntent ? 18 : 0) + (words >= 4 ? 10 : 0) - (words <= 2 ? 15 : 0),
+    );
+
+    // Visibility: how prominent the query is in autocomplete (lower index wins).
+    const prominence = candidate.fromSuggest ? clampScore(100 - candidate.bestIndex * 8) : 45;
+    const visibility = clampScore(prominence * 0.7 + (hasIntent ? 20 : 0) + (hasCity ? 10 : 0));
+
+    // Trend: season/event keywords get a momentum boost, otherwise neutral.
+    const trend = clampScore(50 + (booster ? 25 : 0) + (hasIntent ? 5 : 0));
+
+    const score = clampScore(ranking * 0.45 + trend * 0.25 + visibility * 0.3);
+    const reasonBits = [
+      candidate.fromSuggest ? `Google suggest #${candidate.bestIndex + 1}` : 'seed term',
+      hasCity ? 'city match' : '',
+      hasIntent ? 'intent match' : '',
+      booster ? `trend: ${booster}` : '',
+    ].filter(Boolean);
+    return {
+      keyword: candidate.keyword,
       score,
       ranking,
       trend,
       visibility,
-      intent: typeof record.intent === 'string' ? record.intent.slice(0, 40) : '',
-      reason: typeof record.reason === 'string' ? record.reason.slice(0, 240) : '',
-    });
-  }
-  return results;
-}
-
-/** Local, dependency-free score used when Gemini is unavailable. */
-function heuristicScore(candidates: string[], lang: KeywordLang): ScoredKeyword[] {
-  const cityTerms = cities
-    .map((city) => (lang === 'ar' ? city.name.ar : city.name.en).toLowerCase())
-    .concat(cities.map((city) => city.slug));
-  const intentTerms = ['layover', 'airport', 'hourly', 'hour', 'micro', 'transit', 'stopover', 'day use', 'ترانزيت', 'بالساعة', 'مطار'];
-
-  return candidates.map((keyword) => {
-    const lower = keyword.toLowerCase();
-    const words = lower.split(/\s+/).filter(Boolean).length;
-    const hasCity = cityTerms.some((term) => lower.includes(term));
-    const hasIntent = intentTerms.some((term) => lower.includes(term));
-    // Long-tail (3-6 words) with a city + intent signal is the sweet spot.
-    const ranking = Math.min(100, 40 + (hasCity ? 25 : 0) + (hasIntent ? 20 : 0) + (words >= 4 ? 10 : 0));
-    const visibility = Math.min(100, 35 + (hasIntent ? 25 : 0) + (words <= 5 ? 15 : 0) + (hasCity ? 15 : 0));
-    const trend = 50;
-    const score = Math.round(ranking * 0.45 + trend * 0.25 + visibility * 0.3);
-    return { keyword, score, ranking, trend, visibility, intent: '', reason: 'heuristic (Gemini unavailable)' };
+      intent: hasIntent ? 'transactional' : 'informational',
+      reason: reasonBits.join(' · '),
+    };
   });
-}
-
-/** Ask Gemini to add trending candidates and score the whole pool. */
-async function scoreWithGemini(
-  candidates: string[],
-  lang: KeywordLang,
-  existing: string[],
-): Promise<ScoredKeyword[]> {
-  const list = candidates.map((keyword, i) => `${i + 1}. ${keyword}`).join('\n');
-  const coverage = existing.slice(0, 40).join(', ') || '(none)';
-  const prompt = `You are the SEO strategist for Wfrlee.com, which sells hourly micro-stays and day-use rooms for airport layovers across Saudi Arabia and MENA.
-
-Language of the keyword set: ${lang}
-Coverage already published (do NOT return these): ${coverage}
-
-Candidate keywords collected from Google autocomplete:
-${list}
-
-Task:
-1. Add up to 8 additional RISING/trending keyword ideas in ${lang} that fit the niche and are not in the coverage list.
-2. Score every candidate (the autocomplete list plus your additions) on three 0-100 axes:
-   - "ranking": how realistic it is for Wfrlee to rank (favour long-tail, on-brand, low-competition terms).
-   - "trend": current momentum and seasonality.
-   - "visibility": estimated search demand.
-   - also give "score" (0-100 overall), a short "intent" label, and a one-sentence "reason".
-
-Return ONLY a JSON array of the top 12 by score, no prose, no code fence. Each item:
-{"keyword":"...","score":0,"ranking":0,"trend":0,"visibility":0,"intent":"...","reason":"..."}`;
-
-  const raw = await generateText({
-    prompt,
-    models: modelList('GEMINI_FLASH_MODEL', [
-      'gemini-3.6-flash',
-      'gemini-3.5-flash',
-      'gemini-3.8-flash',
-      'gemini-3.7-flash',
-      'gemini-3.1-flash-lite-preview',
-    ]),
-    // Keyword scoring returns a short JSON list, so a small budget keeps the
-    // whole weekly job (research + guide) inside the 60s serverless limit.
-    budgetMs: 12_000,
-    timeoutMs: 10_000,
-  });
-  return parseScored(raw);
 }
 
 export interface ResearchOptions {
   lang: KeywordLang;
-  /** Filenames/slugs of posts already published, used to avoid duplicates. */
+  /** Slugs of posts already published, used to avoid duplicates. */
   existingKeywords?: string[];
   limit?: number;
   /** Used for deterministic seed rotation; defaults to the current week. */
@@ -272,8 +270,8 @@ function alreadyCovered(keyword: string, existing: string[]): boolean {
 
 /**
  * Run the full pipeline and return ranked keywords. Always resolves to a
- * non-empty list when the niche has any seeds (heuristic fallback), so callers
- * can safely publish `results[0]`.
+ * non-empty list when the niche has any seeds, so callers can safely publish
+ * `results[0]`.
  */
 export async function researchKeywords(options: ResearchOptions): Promise<ScoredKeyword[]> {
   const { lang } = options;
@@ -283,30 +281,15 @@ export async function researchKeywords(options: ResearchOptions): Promise<Scored
 
   const seeds = seedKeywords(lang, weekIndex);
   const suggestResults = await Promise.allSettled(seeds.map((seed) => fetchGoogleSuggest(seed, lang)));
-  const fromSuggest = suggestResults.flatMap((result) => (result.status === 'fulfilled' ? result.value : []));
+  const suggestLists = suggestResults
+    .filter((result): result is PromiseFulfilledResult<string[]> => result.status === 'fulfilled')
+    .map((result) => result.value);
 
-  // Seeds themselves are always candidates (cover offline / empty-suggest runs).
-  const candidates = uniqueCandidates([...fromSuggest, ...seeds]);
+  const candidates = collectCandidates(suggestLists, seeds);
   if (candidates.length === 0) return [];
 
-  let scored: ScoredKeyword[];
-  try {
-    scored = await scoreWithGemini(candidates, lang, existing);
-  } catch {
-    scored = [];
-  }
-  const basePool = scored.length > 0 ? scored : heuristicScore(candidates, lang);
-
-  // Merge anything Gemini dropped back in with a heuristic score so the pool is
-  // complete, then filter duplicates and rank.
-  const scoredKeys = new Set(basePool.map((entry) => entry.keyword.toLowerCase()));
-  const remainder = heuristicScore(
-    candidates.filter((candidate) => !scoredKeys.has(candidate.toLowerCase())),
-    lang,
-  );
-  const merged = [...basePool, ...remainder]
+  return scoreCandidates(candidates, lang)
     .filter((entry) => !alreadyCovered(entry.keyword, existing))
-    .sort((a, b) => b.score - a.score);
-
-  return merged.slice(0, limit);
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
 }

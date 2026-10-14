@@ -87,6 +87,17 @@ export function prepareGeneratedPost(content: string, opts: { city?: string } = 
   return out;
 }
 
+/** A generation or publish failure, tagged so callers can report the right step. */
+export interface PostPublishError extends Error {
+  step: 'generate' | 'publish';
+}
+
+function tagStep(error: unknown, step: 'generate' | 'publish'): PostPublishError {
+  const tagged = (error instanceof Error ? error : new Error(String(error))) as PostPublishError;
+  tagged.step = step;
+  return tagged;
+}
+
 /** Generate a guide for the brief and commit it to the content collection. */
 export async function generateAndPublishPost(
   params: GeneratePostParams,
@@ -97,11 +108,21 @@ export async function generateAndPublishPost(
   const filename = `${today}-${slug}.md`;
   const path = `src/content/blog/${params.lang}/${filename}`;
 
-  const content = prepareGeneratedPost(await generateGuide(params, opts), { city: params.city });
-  const { commitSha, branch } = await commitMarkdownFile(
-    path,
-    content,
-    `feat(ai): publish ${filename} (${params.lang})`,
-  );
-  return { content, filename, path, commitSha, branch };
+  let content: string;
+  try {
+    content = prepareGeneratedPost(await generateGuide(params, opts), { city: params.city });
+  } catch (error) {
+    throw tagStep(error, 'generate');
+  }
+
+  try {
+    const { commitSha, branch } = await commitMarkdownFile(
+      path,
+      content,
+      `feat(ai): publish ${filename} (${params.lang})`,
+    );
+    return { content, filename, path, commitSha, branch };
+  } catch (error) {
+    throw tagStep(error, 'publish');
+  }
 }
