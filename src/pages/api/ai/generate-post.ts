@@ -1,6 +1,7 @@
 ﻿import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { generateGuide } from '@/lib/ai/gemini';
+import { prepareGeneratedPost } from '@/lib/ai/post';
 import { commitMarkdownFile } from '@/lib/publish/github';
 import { toKebab } from '@/lib/utils';
 import { serverEnv } from '@/lib/env';
@@ -15,8 +16,6 @@ import {
 
 export const prerender = false;
 
-const MIN_DESC = 150;
-const MAX_DESC = 160;
 const MAX_BODY_BYTES = 10_000;
 
 const generateSchema = z.object({
@@ -33,52 +32,6 @@ function jsonResponse(body: unknown, status: number): Response {
     status,
     headers: { 'content-type': 'application/json' },
   });
-}
-
-/** Rewrite a top-level frontmatter field, always quoting the value for YAML safety. */
-function setFrontmatterField(
-  markdown: string,
-  field: string,
-  transform: (value: string) => string,
-): string {
-  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return markdown;
-  const lines = match[1].split(/\r?\n/);
-  const index = lines.findIndex((line) => new RegExp(`^${field}\\s*:`).test(line.trim()));
-  if (index === -1) return markdown;
-  let value = lines[index].slice(lines[index].indexOf(':') + 1).trim();
-  if (/^(["']).*\1$/.test(value)) value = value.slice(1, -1);
-  value = transform(value);
-  lines[index] = `${field}: "${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-  return markdown.replace(match[1], lines.join('\n'));
-}
-
-/** Set a frontmatter field, inserting it after `category` when the model omitted it. */
-function upsertFrontmatterField(markdown: string, field: string, value: string): string {
-  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return markdown;
-  const lines = match[1].split(/\r?\n/);
-  const quoted = `${field}: "${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-  const index = lines.findIndex((line) => new RegExp(`^${field}\\s*:`).test(line.trim()));
-  if (index !== -1) {
-    lines[index] = quoted;
-  } else {
-    const after = lines.findIndex((line) => /^category\s*:/.test(line.trim()));
-    if (after === -1) lines.push(quoted);
-    else lines.splice(after + 1, 0, quoted);
-  }
-  return markdown.replace(match[1], lines.join('\n'));
-}
-
-/** Keep the meta description inside the schema's 150-160 character window. */
-function fitDescription(value: string): string {
-  const suffix = ' Book hourly rooms with Wfrlee.com.';
-  let out = value.trim();
-  if (out.length > MAX_DESC) out = out.slice(0, MAX_DESC).trim();
-  while (out.length < MIN_DESC) out += suffix;
-  if (out.length > MAX_DESC) out = `${out.slice(0, MAX_DESC - 3).trimEnd()}...`;
-  while (out.length < MIN_DESC) out += suffix;
-  return out;
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -123,11 +76,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return withSecurityHeaders(jsonResponse({ ok: false, step: 'generate', error: e?.message ?? 'Generation failed' }, 500));
   }
 
-  content = setFrontmatterField(content, 'title', (value) => value.trim());
-  content = setFrontmatterField(content, 'description', fitDescription);
-  content = setFrontmatterField(content, 'primaryKeyword', (value) => value.trim());
-  content = setFrontmatterField(content, 'category', (value) => value.trim());
-  if (parsed.city) content = upsertFrontmatterField(content, 'city', parsed.city);
+  content = prepareGeneratedPost(content, { city: parsed.city });
 
   try {
     const { commitSha, branch } = await commitMarkdownFile(

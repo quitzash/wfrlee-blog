@@ -35,14 +35,17 @@ function cleanMarkdown(raw: string): string {
   return text.endsWith('\n') ? text : `${text}\n`;
 }
 
-export async function generateGuide(params: {
-  lang: 'en' | 'ar';
-  topic: string;
-  city?: string;
-  primaryKeyword: string;
-  tags?: string[];
-  includeFaq?: boolean;
-}) {
+export async function generateGuide(
+  params: {
+    lang: 'en' | 'ar';
+    topic: string;
+    city?: string;
+    primaryKeyword: string;
+    tags?: string[];
+    includeFaq?: boolean;
+  },
+  opts: { budgetMs?: number; timeoutMs?: number } = {},
+) {
   const prompt = `Generate a complete, publish-ready blog guide for Wfrlee.com.
 
 Language: ${params.lang}
@@ -56,7 +59,8 @@ Requirements:
 - Return valid Markdown with YAML frontmatter matching the src/content/blog/${params.lang}/ schema (pubDate today, updatedDate today, draft: false, category suggested, translationKey kebab-case).
 - The description field MUST be 150-160 characters long and wrapped in double quotes.
 - heroImage MUST be exactly one of: ${HERO_IMAGES.join(', ')}.
-- Suggested word count 800-1500. Include intro, comparison table, highlights, practical plan, CTA linking to https://wfrlee.com, internal links to relevant city pages, and FAQ (3-6 Qs).
+- Suggested word count 800-1200. Include intro, comparison table, highlights, practical plan, CTA linking to https://wfrlee.com, internal links to relevant city pages, and FAQ (3-5 Qs).
+- Be concise and efficient: no filler, no repeated sections.
 - SEO: write compelling title (<=60 chars) + meta description, include alt text suggestions for the hero image.
 - For AR, use natural Saudi/MENA phrasing.
 - Output ONLY the Markdown document, no code fences, no extra commentary.`;
@@ -65,6 +69,8 @@ Requirements:
     prompt,
     systemInstruction: SYSTEM_INSTRUCTION,
     models: modelList('GEMINI_MODEL', ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite-preview']),
+    budgetMs: opts.budgetMs ?? 45_000,
+    timeoutMs: opts.timeoutMs ?? 30_000,
   });
   return cleanMarkdown(markdown);
 }

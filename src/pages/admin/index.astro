@@ -187,6 +187,44 @@ const checks = [
 				</div>
 			</section>
 
+			<section class="container-page py-10">
+				<div class="mx-auto max-w-2xl rounded-lg border border-slate-200 bg-white p-6">
+					<p class="text-xs font-semibold uppercase tracking-wide text-brand-600">Automation</p>
+					<h2 class="mt-2 text-2xl font-bold text-slate-900">Weekly auto-post</h2>
+					<p class="mt-1 text-sm text-slate-600">
+						Researches high-ranking, trending, high-visibility keywords and publishes a guide automatically
+						every Monday. Run it now to publish this week's post — the language alternates EN/AR each week.
+					</p>
+					<div class="mt-4 flex flex-wrap items-end gap-3">
+						<div>
+							<label for="weekly-lang" class="block text-sm font-semibold text-slate-900">Language</label>
+							<select
+								id="weekly-lang"
+								class="mt-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+							>
+								<option value="auto">Auto (alternates weekly)</option>
+								<option value="en">English</option>
+								<option value="ar">العربية</option>
+							</select>
+						</div>
+						<button
+							type="button"
+							id="weekly-btn"
+							class="inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+						>
+							Publish this week's post
+						</button>
+					</div>
+					<div
+						id="weekly-result"
+						role="status"
+						aria-live="polite"
+						class="mt-4 hidden rounded-lg border p-4 text-sm"
+					>
+					</div>
+				</div>
+			</section>
+
 			<section class="border-t border-slate-200 bg-slate-50">
 				<div class="container-page py-10">
 					<div class="mx-auto max-w-3xl">
@@ -911,6 +949,78 @@ const checks = [
 			} finally {
 				submitBtn.disabled = false;
 				submitBtn.textContent = originalLabel;
+			}
+		});
+
+		// ---- Weekly auto-post --------------------------------------------------
+		// Researches high-ranking / trending / high-visibility keywords on the
+		// server and publishes one guide. Same flow the Monday cron runs.
+		const weeklyLangSel = document.getElementById('weekly-lang') as HTMLSelectElement | null;
+		const weeklyBtn = document.getElementById('weekly-btn') as HTMLButtonElement | null;
+		const weeklyResult = document.getElementById('weekly-result');
+
+		weeklyBtn?.addEventListener('click', async () => {
+			if (!weeklyBtn) return;
+			const lang = weeklyLangSel?.value ?? 'auto';
+			weeklyBtn.disabled = true;
+			const originalLabel = weeklyBtn.textContent;
+			weeklyBtn.textContent = 'Researching…';
+			if (weeklyResult) {
+				weeklyResult.className = 'mt-4 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600';
+				weeklyResult.textContent =
+					'Researching keywords, then generating and publishing the guide. This can take up to a minute…';
+				weeklyResult.classList.remove('hidden');
+			}
+			try {
+				const response = await fetch('/api/ai/weekly-post', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ lang }),
+				});
+				const json = await response.json().catch(() => ({}));
+				if (response.status === 401) {
+					throw new Error('Session expired. Reload the page and log back in.');
+				}
+				if (!response.ok || !json.ok) {
+					const stepLabel =
+						json.step === 'research'
+							? 'Keyword research failed.'
+							: json.step === 'publish'
+								? 'GitHub publish failed.'
+								: 'Request failed.';
+					throw new Error(stepLabel + ' ' + (json.error ?? '(' + response.status + ')'));
+				}
+				const scores = json.scores ?? {};
+				if (weeklyResult) {
+					weeklyResult.className = 'mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800';
+					weeklyResult.innerHTML =
+						'<strong>Published.</strong> Keyword: <code class="rounded bg-white/60 px-1">' +
+						json.keyword +
+						'</code> (' +
+						String(json.lang ?? '').toUpperCase() +
+						')<br />Scores — ranking ' +
+						(scores.ranking ?? '?') +
+						', trend ' +
+						(scores.trend ?? '?') +
+						', visibility ' +
+						(scores.visibility ?? '?') +
+						' (overall ' +
+						(scores.overall ?? '?') +
+						')<br />File: <code class="rounded bg-white/60 px-1">' +
+						json.path +
+						'</code> · commit ' +
+						String(json.commitSha ?? '').slice(0, 7) +
+						'<br />Vercel is rebuilding; the post appears in a minute or two.';
+				}
+			} catch (error) {
+				const message = error instanceof Error ? error.message : 'Unexpected error';
+				if (weeklyResult) {
+					weeklyResult.className = 'mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800';
+					weeklyResult.innerHTML = '<strong>Weekly post failed.</strong><br />' + message;
+				}
+			} finally {
+				weeklyBtn.disabled = false;
+				weeklyBtn.textContent = originalLabel;
 			}
 		});
 	} else {

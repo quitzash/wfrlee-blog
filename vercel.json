@@ -3,6 +3,10 @@
     {
       "path": "/api/newsletter/send",
       "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/ai/weekly-post",
+      "schedule": "0 7 * * 1"
     }
   ]
 }

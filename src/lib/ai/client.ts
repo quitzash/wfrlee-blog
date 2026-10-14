@@ -38,26 +38,52 @@ function isModelLevelError(status: number | undefined): boolean {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/**
+ * Total wall-clock budget shared across every model and retry. Vercel Hobby
+ * kills a function at 60s, so we stop ourselves a little early and throw a
+ * readable error instead of letting the platform return an opaque 504.
+ */
+const DEFAULT_BUDGET_MS = 45_000;
+/** Ceiling for a single generateContent request. */
+const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+/** Never start another request with less than this much budget left. */
+const MIN_ATTEMPT_MS = 1_500;
+
 /** Call generateContent, retrying/falling back per the model list. */
 export async function generateText(options: {
   prompt: string;
   systemInstruction?: string;
   models: string[];
+  /** Total wall-clock budget across every model and retry (default 45s). */
+  budgetMs?: number;
+  /** Per-request timeout ceiling (default 30s). */
+  timeoutMs?: number;
 }): Promise<string> {
   if (!apiKey) throw new Error('GEMINI_API_KEY missing');
   const genAI = new GoogleGenerativeAI(apiKey);
+  const budgetMs = options.budgetMs ?? DEFAULT_BUDGET_MS;
+  const requestTimeoutMs = options.timeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS;
+  const deadline = Date.now() + budgetMs;
   let lastError: unknown = null;
+  let exhausted = false;
 
   for (const modelName of options.models) {
+    if (exhausted) break;
     const attempts = 3; // transport blips are common on cold-start DNS
     for (let attempt = 1; attempt <= attempts; attempt++) {
+      const remaining = deadline - Date.now();
+      if (remaining < MIN_ATTEMPT_MS) {
+        exhausted = true;
+        break;
+      }
       try {
         const model = genAI.getGenerativeModel({
           model: modelName,
           systemInstruction: options.systemInstruction,
         });
         const { response } = await model.generateContent(options.prompt, {
-          timeout: 45_000, // fail fast so retry/fallback fits in maxDuration 60
+          // Fail fast so retry/fallback fits in the 60s function limit.
+          timeout: Math.min(requestTimeoutMs, remaining),
         });
         return response.text();
       } catch (error: any) {
@@ -65,12 +91,25 @@ export async function generateText(options: {
         const rawStatus = Number(error?.status);
         const status = Number.isNaN(rawStatus) ? undefined : rawStatus;
         if (isModelLevelError(status)) break; // next model
-        // Transient: back off, then retry the same model.
+        // Transient: back off, then retry the same model — but only if the
+        // backoff still leaves room for another request.
         if (attempt < attempts) {
-          await sleep(300 * attempt);
+          const backoff = 300 * attempt;
+          if (Date.now() + backoff + MIN_ATTEMPT_MS >= deadline) {
+            exhausted = true;
+            break;
+          }
+          await sleep(backoff);
         }
       }
     }
+  }
+
+  if (!lastError) {
+    throw new Error(
+      `Gemini did not finish within ${Math.round(budgetMs / 1000)}s (tried: ${options.models.join(', ')}). ` +
+        'The serverless function has a 60s limit — try again shortly.',
+    );
   }
 
   const rawStatus = Number((lastError as any)?.status);
@@ -84,7 +123,10 @@ export async function generateText(options: {
       : authStatus === 429
         ? ' The last error was "quota exceeded" (HTTP 429) — the key has no free quota left right now. Wait, or use a different GEMINI_API_KEY.'
         : '';
+  const budgetHint = exhausted
+    ? ' The time budget ran out before any model finished — the serverless function has a 60s limit, so try again shortly.'
+    : '';
   throw new Error(
-    `All Gemini models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}${authHint}`,
+    `All Gemini models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}${authHint}${budgetHint}`,
   );
 }
