@@ -14,7 +14,7 @@ import { serverEnv } from '@/lib/env';
 import { SITE_URL } from '@/consts';
 
 export const SESSION_COOKIE = 'admin_session';
-const SESSION_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours
+const SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes
 
 /** Hash both sides to equalize length so timing can't leak the token size. */
 export function constantTimeEqual(a: string, b: string): boolean {

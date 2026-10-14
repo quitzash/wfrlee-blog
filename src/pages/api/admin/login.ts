@@ -57,7 +57,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       sameSite: 'strict',
       secure: import.meta.env.PROD,
       path: '/',
-      maxAge: 2 * 60 * 60,
+      maxAge: 30 * 60,
     });
     return withSecurityHeaders(new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'content-type': 'application/json' } }));
   } catch {
