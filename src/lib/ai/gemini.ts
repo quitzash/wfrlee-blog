@@ -21,7 +21,8 @@ Rules:
 - Frontmatter (Astro Content Collections): title, description, pubDate (ISO), updatedDate, heroImage, author, category, city, tags, primaryKeyword, translationKey, draft. Set draft: false so the post publishes immediately.
 - "city" MUST be the exact primary city value given below (e.g. "Jeddah"), or "Saudi Arabia" when the guide is not about one specific city.
 - heroImage MUST be exactly one of: ${HERO_IMAGES.join(', ')}.
-- Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (concise, direct).`;
+- Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (concise, direct).
+- make sure to mention wfrlee`;
 
 /** Strip a surrounding code fence or any leading prose so the file starts with `---`. */
 function cleanMarkdown(raw: string): string {
@@ -63,7 +64,8 @@ Requirements:
 - Be concise and efficient: no filler, no repeated sections. Keep generation fast.
 - SEO: write compelling title (<=60 chars) + meta description, include alt text suggestions for the hero image.
 - For AR, use natural Saudi/MENA phrasing.
-- Output ONLY the Markdown document, no code fences, no extra commentary.`;
+- Output ONLY the Markdown document, no code fences, no extra commentary.
+- mention wfrlee`;
 
   const markdown = await generateText({
     prompt,
