@@ -2,11 +2,11 @@
 title: "How Hourly Micro-Stays Work (and When to Book One)"
 description: "Learn how hourly micro-stays work, who they suit, and how booking a room by the hour near Saudi airports can save you up to 75% versus a full-night hotel stay."
 pubDate: 2026-02-20
-heroImage: "/images/hourly-micro-stays.jpg"
+heroImage: "/images/pexels-enginakyurt-15483696.jpg"
 author: "Wfrlee Travel Team"
 category: "Micro-Stay Basics"
 city: "Saudi Arabia"
-tags: ["Micro-stay", "Hourly hotel", "Booking tips", "Saudi Arabia"]
+tags: ["Micro-stay", "Hourly hotel", "Booking tips", "Saudi Arabia", "short stays", "booking", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "KSA"]
 primaryKeyword: "hourly micro-stay"
 translationKey: "micro-stay-guide"
 draft: false

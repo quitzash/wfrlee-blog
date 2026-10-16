@@ -3,16 +3,16 @@ title: "Best Madinah Budget Hourly Hotels: A Guide for Travelers"
 description: "Looking for a budget-friendly way to rest in Madinah? Discover the best hourly micro-stay options with Wfrlee.com to save money during your Saudi travels."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-konevi-34246946.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
-tags: [Madinah, budget travel, wfrlee.com, booking, hourly hotels]
+tags: ["Madinah", "budget travel", "wfrlee.com", "booking", "hourly hotels", "short stays", "day-use rooms", "micro-stays", "Saudi Arabia", "KSA"]
 primaryKeyword: "madinah budget hourly hotel"
 translationKey: madinah-budget-hourly-hotels
 draft: false
 ---
 
-![Traveler resting in a modern, clean hotel room with warm lighting](https://wfrlee.com/images/hourly-micro-stays.jpg)
+![Traveler resting in a modern, clean hotel room with warm lighting](/images/hourly-micro-stays.jpg)
 
 # Best Madinah Budget Hourly Hotels: Your Guide to Smart Stays
 

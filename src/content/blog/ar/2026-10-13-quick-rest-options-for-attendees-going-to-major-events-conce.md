@@ -3,13 +3,13 @@ title: "حضور فعالية في الرياض؟ احجز غرفتك بالسا
 description: "هل تخطط لحضور حفل موسيقي أو مباراة في الرياض؟ وفرلي.كوم تقدم لك حلاً ذكياً: احجز غرفتك بالساعات واستمتع براحة تامة قبل وبعد الحدث. اكتشف خياراتنا المريحة الآن."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/riyadh-airport-layover.jpg
+heroImage: "/images/pexels-grbr-snts-323519936-33763650.jpg"
 author: "فريق وفرلي للسفر"
 category: "دليل السفر"
 city: "Riyadh"
-tags: ["الرياض", "سياحة", "فعاليات الرياض", "حجز فندقي", "وفرلي"]
+tags: ["الرياض", "سياحة", "فعاليات الرياض", "حجز فندقي", "وفرلي", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "السعودية"]
 primaryKeyword: "حضور فعالية في الرياض"
-translationKey: "riyadh-event-stays"
+translationKey: attending-event-riyadh-guide
 draft: false
 ---
 

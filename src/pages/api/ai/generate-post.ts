@@ -1,6 +1,6 @@
 ﻿import type { APIRoute } from 'astro';
 import { z } from 'zod';
-import { generateGuide } from '@/lib/ai/gemini';
+import { generateGuide } from '@/lib/ai/guide';
 import { prepareGeneratedPost } from '@/lib/ai/post';
 import { commitMarkdownFile } from '@/lib/publish/github';
 import { toKebab } from '@/lib/utils';

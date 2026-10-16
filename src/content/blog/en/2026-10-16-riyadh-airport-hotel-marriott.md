@@ -3,7 +3,7 @@ title: "Riyadh Airport Hotel Marriott: Layover & Stay Guide"
 description: "Looking for a Riyadh airport hotel Marriott stay? Discover transit options, hourly micro-stays, and top amenities near King Khalid Airport with Wfrlee today."
 pubDate: 2025-05-15T08:00:00Z
 updatedDate: 2025-05-15T08:00:00Z
-heroImage: "/images/riyadh-airport-layover.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Guides"
 city: "Riyadh"

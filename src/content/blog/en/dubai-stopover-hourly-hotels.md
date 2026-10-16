@@ -6,7 +6,7 @@ heroImage: "/images/dubai-stopover.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
 city: "Dubai"
-tags: ["Dubai", "Stopover", "UAE", "Micro-stay", "DXB"]
+tags: ["Dubai", "Stopover", "UAE", "Micro-stay", "DXB", "short stays", "booking", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "Gulf"]
 primaryKeyword: "Dubai stopover"
 translationKey: "dubai-stopover"
 draft: false

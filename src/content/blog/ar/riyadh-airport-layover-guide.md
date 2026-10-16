@@ -7,7 +7,7 @@ heroImage: "/images/riyadh-airport-layover.jpg"
 author: "فريق وفرلي.كوم للسفر"
 category: "أدلة الترانزيت"
 city: "Riyadh"
-tags: ["الرياض", "ترانزيت", "السعودية", "إقامة قصيرة", "أعمال"]
+tags: ["الرياض", "ترانزيت", "السعودية", "إقامة قصيرة", "أعمال", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي"]
 primaryKeyword: "ترانزيت الرياض"
 translationKey: "riyadh-layover"
 draft: false

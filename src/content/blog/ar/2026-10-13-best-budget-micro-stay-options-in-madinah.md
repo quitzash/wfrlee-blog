@@ -3,12 +3,12 @@ title: "أفضل خيارات فنادق بالساعة في المدينة ال
 description: "تبحث عن خيارات فنادق بالساعة في المدينة المنورة بميزانية محدودة؟ اكتشف أفضل طرق الحجز عبر وفرلي.كوم لضمان الراحة والخصوصية خلال رحلتك في المدينة المنورة."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/hourly-micro-stays.jpg"
+heroImage: "/images/pexels-konevi-34246946.jpg"
 author: "فريق وفرلي للسفر"
 category: "نصائح السفر"
-tags: ["المدينة المنورة", "سفر اقتصادي", "وفرلي.كوم", "حجوزات"]
+tags: ["المدينة المنورة", "سفر اقتصادي", "وفرلي.كوم", "حجوزات", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "السعودية"]
 primaryKeyword: "madinah budget hourly hotel"
-translationKey: "madinah-budget-hourly-hotel"
+translationKey: madinah-budget-hourly-hotels
 draft: false
 ---
 
@@ -86,4 +86,4 @@ draft: false
 ---
 *تم كتابة هذا المحتوى بواسطة فريق وفرلي للسفر. للحجز والاستفسار، تفضل بزيارة [Wfrlee.com](https://wfrlee.com).*
 
-![فنادق بالساعة - وفرلي](https://wfrlee.com/images/hourly-micro-stays.jpg "إقامة اقتصادية بالساعة في المدينة المنورة عبر وفرلي")
+![فنادق بالساعة - وفرلي](/images/hourly-micro-stays.jpg "إقامة اقتصادية بالساعة في المدينة المنورة عبر وفرلي")

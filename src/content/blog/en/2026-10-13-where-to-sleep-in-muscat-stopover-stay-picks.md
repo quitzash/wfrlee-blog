@@ -3,17 +3,17 @@ title: "Where to Sleep in Muscat: The Ultimate Stopover Guide"
 description: "Need a place to rest in Oman? Discover the best ways to book a stopover hotel in Muscat by the hour with our expert guide for a seamless transit experience."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-katianaidenko-7512139.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Muscat"
-tags: [Muscat, stopover, wfrlee.com, booking, Oman travel]
+tags: ["Muscat", "stopover", "wfrlee.com", "booking", "Oman travel", "short stays", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "Oman", "Gulf"]
 primaryKeyword: "book stopover hotel in muscat"
 translationKey: muscat-stopover-guide
 draft: false
 ---
 
-![Traveler resting in a comfortable hotel room during a transit stopover in Muscat.](alt: Traveler resting in a hotel room in Muscat after a long flight)
+![Traveler resting in a comfortable hotel room during a transit stopover in Muscat.](/images/hourly-micro-stays.jpg "Traveler resting in a hotel room in Muscat after a long flight")
 
 # Where to Sleep in Muscat: The Ultimate Stopover Guide
 

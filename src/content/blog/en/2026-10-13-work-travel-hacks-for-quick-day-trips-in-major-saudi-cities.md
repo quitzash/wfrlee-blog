@@ -3,12 +3,12 @@ title: "The Remote Worker’s Guide to Booking a Day Use Hotel Room in Riyadh"
 description: "Need a professional workspace in Riyadh? Discover how to book a day-use hotel room for remote work, privacy, and productivity. Your ultimate guide with Wfrlee."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/riyadh-airport-layover.jpg
+heroImage: "/images/pexels-pavel-danilyuk-7654190.jpg"
 author: Wfrlee Travel Team
 category: "Travel Tips"
 city: "Riyadh"
-tags: [remote-work, riyadh, business-travel, micro-stays, day-use-hotels]
-primaryKeyword: "The Remote Worker’s Guide to Booking a Day Use Hotel Room in Riyadh"
+tags: ["remote-work", "riyadh", "business-travel", "micro-stays", "day-use-hotels", "short stays", "booking", "hourly hotels", "day-use rooms", "budget travel", "Saudi Arabia", "KSA"]
+primaryKeyword: "Remote Worker's Guide to Day-Use Hotel Rooms"
 translationKey: remote-worker-guide-riyadh
 draft: false
 ---

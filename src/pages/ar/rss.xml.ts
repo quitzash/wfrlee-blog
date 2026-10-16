@@ -2,6 +2,8 @@ import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getPostSlug, getPosts } from '@/lib/blog';
 
+export const prerender = true;
+
 export async function GET(context: APIContext) {
 	const posts = await getPosts('ar');
 

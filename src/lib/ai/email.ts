@@ -23,7 +23,7 @@ Rules:
 
   const raw = await generateText({
     prompt,
-    models: modelList('GEMINI_FLASH_MODEL', ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite-preview']),
+    models: modelList('CLAUDE_FAST_MODEL', ['claude-haiku-5-5', 'claude-sonnet-5-5', 'claude-sonnet-5']),
   });
   return JSON.parse(raw) as {
     subject: string;

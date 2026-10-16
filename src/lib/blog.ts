@@ -53,10 +53,15 @@ export function findTranslation(post: Post, all: Post[]): Post | undefined {
 	);
 }
 
-/** Where the language switcher should point for a given post. */
-export function alternateHref(post: Post, all: Post[]): string {
+/**
+ * URL of the post's translation in the other language, or `undefined` when no
+ * translation exists. Callers must only use this for hreflang annotations:
+ * pointing hreflang at the other language's homepage would declare a false
+ * equivalence to Google.
+ */
+export function alternateHref(post: Post, all: Post[]): string | undefined {
 	const translation = findTranslation(post, all);
-	return translation ? postHref(translation) : homeHref(getPostLang(post) === 'en' ? 'ar' : 'en');
+	return translation ? postHref(translation) : undefined;
 }
 
 export function formatDate(date: Date, lang: Locale): string {

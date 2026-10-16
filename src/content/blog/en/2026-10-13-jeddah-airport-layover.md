@@ -3,11 +3,11 @@ title: "Jeddah Airport Layover Guide: Rest, Transit & City"
 description: "Maximize your Jeddah airport layover. Discover transit visa rules, hourly hotels, luggage storage, and top things to do near King Abdulaziz International."
 pubDate: 2025-02-18
 updatedDate: 2025-02-18
-heroImage: "/images/ultimate-jeddah-layover-guide.jpg"
+heroImage: "/images/pexels-nicolas-rueda-175965148-12639108.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Guides"
 city: "Jeddah"
-tags: ["jeddah airport layover", "hourly hotels", "transit guide", "jeddah"]
+tags: ["jeddah airport layover", "hourly hotels", "transit guide", "jeddah", "short stays", "booking", "day-use rooms", "micro-stays", "budget travel", "Saudi Arabia", "KSA"]
 primaryKeyword: "jeddah airport layover"
 translationKey: "jeddah-airport-layover-guide"
 draft: false

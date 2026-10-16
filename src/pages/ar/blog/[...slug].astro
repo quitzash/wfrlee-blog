@@ -29,7 +29,7 @@ export async function getStaticPaths() {
 
 interface Props {
 	post: CollectionEntry<'blog'>;
-	alternateUrl: string;
+	alternateUrl: string | undefined;
 	newer: CollectionEntry<'blog'> | null;
 	older: CollectionEntry<'blog'> | null;
 	related: CollectionEntry<'blog'>[];

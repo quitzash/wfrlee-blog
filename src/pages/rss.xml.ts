@@ -3,6 +3,8 @@ import type { APIContext } from 'astro';
 import { getPostSlug, getPosts } from '@/lib/blog';
 import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts';
 
+export const prerender = true;
+
 export async function GET(context: APIContext) {
 	const posts = await getPosts('en');
 

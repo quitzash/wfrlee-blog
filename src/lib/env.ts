@@ -19,7 +19,7 @@ export function serverEnv(name: string): string | undefined {
  * Vercel stores values literally, so clean up the sloppy-but-common mistakes
  * that happen when pasting from a .env file: surrounding whitespace, wrapping
  * quotes, and a leading `NAME=` prefix (e.g. a value of
- * `GEMINI_MODEL=gemini-3.1-pro-preview`).
+ * `CLAUDE_MODEL=claude-sonnet-5-5`).
  */
 function normalize(name: string, raw: string): string | undefined {
   const stripQuotes = (value: string) => {

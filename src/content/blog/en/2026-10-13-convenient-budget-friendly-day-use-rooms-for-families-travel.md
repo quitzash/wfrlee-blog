@@ -3,12 +3,12 @@ title: "Traveling with Kids: Why a 6-Hour Hotel Stay Beats Waiting"
 description: "Traveling with kids? Discover why booking a 6-hour micro-stay with Wfrlee is the smartest way to recharge during a layover. Save money and boost your comfort."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-katianaidenko-7512139.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Tips"
 city: "Saudi Arabia"
-tags: ["family travel", "layover", "micro-stay", "airport transit"]
-primaryKeyword: "Traveling with Kids: Why a 6-Hour Hotel Stay Beats Waiting at the Airport"
+tags: ["family travel", "layover", "micro-stay", "airport transit", "short stays", "booking", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "Saudi Arabia", "KSA"]
+primaryKeyword: "Hotel Day-Use Rooms for Families"
 translationKey: "traveling-with-kids-layover"
 draft: false
 ---

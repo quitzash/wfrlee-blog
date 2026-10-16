@@ -3,11 +3,11 @@ title: "How to Book a Budget Hourly Hotel Near Dammam Airport"
 description: "Need a rest during your transit? Discover how to book a budget hourly hotel near Dammam airport with Wfrlee.com. Save money on flexible micro-stays today."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Guides"
 city: "Dammam"
-tags: ["Dammam", "budget travel", "wfrlee.com", "booking"]
+tags: ["Dammam", "budget travel", "wfrlee.com", "booking", "short stays", "hourly hotels", "day-use rooms", "micro-stays", "Saudi Arabia", "KSA"]
 primaryKeyword: "budget hourly hotel near dammam airport"
 translationKey: "dammam-hourly-hotels-guide"
 draft: false

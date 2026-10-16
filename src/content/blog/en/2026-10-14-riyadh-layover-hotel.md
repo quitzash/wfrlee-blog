@@ -1,13 +1,13 @@
 ---
 title: "Ultimate Guide to Finding a Riyadh Layover Hotel by the Hour"
-description: "Planning a trip? Find the best Riyadh layover hotel options by the hour on Wfrlee.com. Rest, recharge, and stay close to the airport with our guide. Book hou..."
+description: "Planning a trip? Find the best Riyadh layover hotel options by the hour on Wfrlee.com. Rest, recharge, and stay close to the airport with our guide. Book now."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/riyadh-airport-layover.jpg
+heroImage: "/images/riyadh-airport-layover.jpg"
 author: Wfrlee Travel Team
 category: "Travel Tips"
 city: "Riyadh"
-tags: [riyadh, layover, wfrlee.com]
+tags: ["riyadh", "layover", "wfrlee.com", "short stays", "booking", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "Saudi Arabia", "KSA"]
 primaryKeyword: "riyadh layover hotel"
 translationKey: riyadh-layover-guide
 draft: false

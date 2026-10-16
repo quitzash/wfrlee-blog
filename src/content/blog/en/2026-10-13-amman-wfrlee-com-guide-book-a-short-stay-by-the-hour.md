@@ -3,17 +3,17 @@ title: "Short Stay Near Amman Airport: Book by the Hour with Wfrlee"
 description: "Need a short stay near Amman airport? Discover how Wfrlee.com helps you book flexible micro-stays by the hour for a stress-free layover in Jordan today."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-katianaidenko-7512139.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Amman"
-tags: [Amman, short stays, wfrlee.com, booking, layover]
+tags: ["Amman", "short stays", "wfrlee.com", "booking", "layover", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "Jordan", "Middle East"]
 primaryKeyword: "short stay near amman airport"
 translationKey: amman-short-stay-guide
 draft: false
 ---
 
-![Traveler relaxing in a modern micro-stay room during a long layover]( /images/hourly-micro-stays.jpg "Comfortable short stay near Amman airport for transit travelers")
+![Traveler relaxing in a modern micro-stay room during a long layover](/images/hourly-micro-stays.jpg "Comfortable short stay near Amman airport for transit travelers")
 
 # The Ultimate Guide to Booking a Short Stay Near Amman Airport
 

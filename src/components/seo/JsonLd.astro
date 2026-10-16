@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { SITE_TITLE, SITE_URL, SITE_AUTHOR } from '@/consts';
+import { SITE_TITLE, SITE_URL, SITE_AUTHOR, SOCIAL_LINKS, DEFAULT_OG_IMAGE, siteKeywords } from '@/consts';
 import { getPostLang, postHref } from '@/lib/blog';
 import type { Locale } from '@/i18n/ui';
 
@@ -33,6 +33,13 @@ const organization = {
 	'@type': 'Organization',
 	name: lang === 'ar' ? 'وفرلي.كوم' : 'Wfrlee.com',
 	url: SITE_URL,
+	logo: {
+		'@type': 'ImageObject',
+		url: toAbsolute(DEFAULT_OG_IMAGE),
+		width: 1200,
+		height: 630,
+	},
+	sameAs: SOCIAL_LINKS.map((link) => link.href),
 };
 
 if (website) {
@@ -43,6 +50,7 @@ if (website) {
 		url: lang === 'ar' ? toAbsolute('/ar/') : SITE_URL,
 		inLanguage: lang,
 		description,
+		keywords: siteKeywords(lang).join(', '),
 		publisher: organization,
 	});
 }
@@ -51,6 +59,12 @@ if (post) {
 	const { title, description: postDescription, pubDate, updatedDate, author, heroImage, tags, category } =
 		post.data;
 	const postLang = getPostLang(post);
+
+	// Shared base keywords first, then the post's own tags (de-duplicated).
+	const postKeywords = [...siteKeywords(postLang), ...tags].filter(
+		(keyword, index, list) =>
+			list.findIndex((entry) => entry.toLowerCase() === keyword.toLowerCase()) === index,
+	);
 
 	schemas.push({
 		'@context': 'https://schema.org',
@@ -65,7 +79,7 @@ if (post) {
 			name: author,
 		},
 		publisher: organization,
-		keywords: tags.join(', '),
+		keywords: postKeywords.join(', '),
 		articleSection: category,
 		inLanguage: postLang,
 		mainEntityOfPage: {

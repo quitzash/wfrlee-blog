@@ -15,6 +15,12 @@ interface Props {
 const { lang, alternateUrl } = Astro.props;
 const t = useTranslations(lang);
 
+const otherLang: Locale = lang === 'en' ? 'ar' : 'en';
+// hreflang annotations only emit a real translation URL, but the header's
+// language switcher should always be reachable: fall back to the other
+// language's homepage when no translated counterpart exists yet.
+const switchHref = alternateUrl ?? homeHref(otherLang);
+
 const navLinks = [
 	{ href: homeHref(lang), label: t('nav.home') },
 	{ href: citiesHref(lang), label: t('nav.destinations') },
@@ -84,32 +90,30 @@ const isActive = (href: string) => {
 
 		<div class="flex items-center gap-2">
 			{
-				alternateUrl && (
-					<a
-						href={alternateUrl}
-						lang={lang === 'en' ? 'ar' : 'en'}
-						class="hidden items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:border-brand-300 hover:text-brand-700 sm:inline-flex"
+				<a
+					href={switchHref}
+					lang={otherLang}
+					class="hidden items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:border-brand-300 hover:text-brand-700 sm:inline-flex"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							aria-hidden="true"
-						>
-							<circle cx="12" cy="12" r="10"></circle>
-							<path d="M2 12h20"></path>
-							<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
-							></path>
-						</svg>
-						{t('lang.switch')}
-					</a>
-				)
+						<circle cx="12" cy="12" r="10"></circle>
+						<path d="M2 12h20"></path>
+						<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+						></path>
+					</svg>
+					{t('lang.switch')}
+				</a>
 			}
 
 			<a
@@ -166,19 +170,15 @@ const isActive = (href: string) => {
 								{t('nav.book')}
 							</a>
 						</li>
-						{
-							alternateUrl && (
-								<li>
-									<a
-										href={alternateUrl}
-										lang={lang === 'en' ? 'ar' : 'en'}
-										class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-700"
-									>
-										{t('lang.switch')}
-									</a>
-								</li>
-							)
-						}
+						<li class="mt-1 border-t border-slate-100 pt-1">
+							<a
+								href={switchHref}
+								lang={otherLang}
+								class="block rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-700"
+							>
+								{t('lang.switch')}
+							</a>
+						</li>
 					</ul>
 				</div>
 			</details>

@@ -3,13 +3,13 @@ title: "دليل الموظف عن بعد: حجز فنادق بالساعات ف
 description: "هل تعمل عن بُعد في الرياض؟ اكتشف كيف توفر وقتك وجهدك عبر حجز فنادق للاستخدام اليومي بالساعات مع وفرلي.كوم. دليل عملي للمحترفين لزيادة الإنتاجية والراحة."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/riyadh-airport-layover.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-7654190.jpg"
 author: "فريق وفرلي للسفر"
 category: "دليل المسافر"
 city: "Riyadh"
-tags: ["العمل عن بعد", "الرياض", "فنادق بالساعات", "سفر الأعمال"]
-primaryKeyword: "The Remote Worker’s Guide to Booking a Day Use Hotel Room in Riyadh"
-translationKey: "remote-worker-riyadh-day-use"
+tags: ["العمل عن بعد", "الرياض", "فنادق بالساعات", "سفر الأعمال", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "السعودية"]
+primaryKeyword: "غرف استخدام يومي للعاملين عن بعد"
+translationKey: remote-worker-guide-riyadh
 draft: false
 ---
 

@@ -12,6 +12,42 @@ export const SITE_DESCRIPTION =
 /** Arabic site description, shown on /ar/ pages only. */
 export const SITE_DESCRIPTION_AR =
 	'أدلة الإقامات القصيرة ونصائح التوقف في المطارات والتنقّل للمسافرين في السعودية ومنطقة الشرق الأوسط.';
+
+/**
+ * Site-wide SEO keywords. Emitted as `<meta name="keywords">` on every page and
+ * merged into the BlogPosting JSON-LD `keywords`, so each guide always carries a
+ * shared base set of high-value terms alongside its own tags.
+ */
+export const SITE_KEYWORDS = [
+	'short stays',
+	'booking',
+	'hourly hotels',
+	'micro-stay hotels',
+	'day-use rooms',
+	'airport layover hotels',
+	'Saudi Arabia',
+	'KSA',
+	'budget travel',
+	'transit hotels',
+];
+
+/** Arabic equivalent of {@link SITE_KEYWORDS}. */
+export const SITE_KEYWORDS_AR = [
+	'إقامة قصيرة',
+	'حجز فنادق',
+	'فنادق بالساعة',
+	'إقامة بالساعة',
+	'غرف استخدام يومي',
+	'حجز فندق بالمطار',
+	'السعودية',
+	'سفر اقتصادي',
+	'فنادق الترانزيت',
+];
+
+/** The base keyword list for a given locale. */
+export function siteKeywords(lang: 'en' | 'ar'): string[] {
+	return lang === 'ar' ? SITE_KEYWORDS_AR : SITE_KEYWORDS;
+}
 export const SITE_TAGLINE = 'Pay as you stay';
 export const SITE_AUTHOR = 'Wfrlee Travel Team';
 export const TWITTER_HANDLE = '@wfrlee';

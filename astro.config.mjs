@@ -12,7 +12,7 @@ export default defineConfig({
 	adapter: vercel({
 		imageService: true,
 		webAnalytics: { enabled: true },
-		// Gemini guide generation commonly takes 20-60s; without this, Vercel
+		// Claude guide generation commonly takes 20-60s; without this, Vercel
 		// (Hobby default ~10s) kills the function mid-request and the browser
 		// shows "Failed to fetch". 60s is the Hobby ceiling, Pro allows more.
 		maxDuration: 60,
@@ -30,7 +30,10 @@ export default defineConfig({
 		mdx(),
 		tailwind({ applyBaseStyles: false }),
 		sitemap({
-			filter: (page) => !page.includes('/drafts/') && !page.includes('styleguide'),
+			filter: (page) =>
+				!page.includes('/drafts/') &&
+				!page.includes('styleguide') &&
+				!page.includes('/admin'),
 		}),
 	],
 

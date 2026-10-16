@@ -3,11 +3,11 @@ title: "دليل ترانزيت الرياض: كيف تحجز فندق بالس�
 description: "هل لديك رحلة ترانزيت في مطار الرياض؟ اكتشف كيف يمكنك حجز فندق بالساعات في الرياض عبر وفرلي لترتاح وتجدد نشاطك بأسعار اقتصادية وبدون دفع تكاليف ليلة كاملة."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/riyadh-airport-layover.jpg
+heroImage: "/images/pexels-planespotter-geneva-1877406873-29894746.jpg"
 author: فريق وفرلي للسفر
 category: "أدلة السفر"
 city: "Riyadh"
-tags: [الرياض, ترانزيت, فنادق بالساعات, وفرلي, سياحة اقتصادية]
+tags: ["الرياض", "ترانزيت", "فنادق بالساعات", "وفرلي", "سياحة اقتصادية", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "السعودية"]
 primaryKeyword: "book budget hourly hotel in riyadh"
 translationKey: riyadh-stopover-guide
 draft: false

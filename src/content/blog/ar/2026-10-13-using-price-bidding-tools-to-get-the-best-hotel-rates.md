@@ -3,13 +3,13 @@ title: "كيف تقدم عرض سعر خاص بك لحجز الفنادق وتح
 description: "اكتشف كيف يمكنك تقديم عرض السعر الخاص بك لحجز غرف الفنادق وتوفير المال. تعلم استراتيجيات الحجز بالساعة مع وفرلي لتحصل على أفضل الأسعار في السعودية والخليج."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-n-voitkevich-8062355.jpg"
 author: "فريق وفرلي للسفر"
 category: "نصائح السفر"
 city: "Saudi Arabia"
-tags: ["توفير", "حجوزات فندقية", "وفرلي", "السياحة في السعودية"]
-primaryKeyword: "How to Bid Your Own Price for Hotel Rooms and Get the Best Deal"
-translationKey: "how-to-bid-hotel-price"
+tags: ["توفير", "حجوزات فندقية", "وفرلي", "السياحة في السعودية", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "السعودية"]
+primaryKeyword: "المزايدة على سعر غرفة الفندق"
+translationKey: bidding-hotel-rooms-guide
 draft: false
 ---
 

@@ -7,7 +7,7 @@ heroImage: "/images/riyadh-airport-layover.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
 city: "Riyadh"
-tags: ["Riyadh", "Layover", "Saudi Arabia", "Micro-stay", "Business"]
+tags: ["Riyadh", "Layover", "Saudi Arabia", "Micro-stay", "Business", "short stays", "booking", "hourly hotels", "day-use rooms", "micro-stays", "budget travel", "KSA"]
 primaryKeyword: "Riyadh layover"
 translationKey: "riyadh-layover"
 draft: false

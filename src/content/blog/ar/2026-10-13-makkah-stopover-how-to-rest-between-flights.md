@@ -3,11 +3,11 @@ title: "استراحة مكة: دليلك الشامل لحجز فنادق با�
 description: "هل تخطط لزيارة مكة؟ اكتشف كيف توفر مالك ووقتك مع خيار حجز فنادق بالساعة. دليلك لاختيار أفضل فندق اقتصادي بالساعة في مكة لراحة مثالية بين رحلاتك بكل سهولة."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-konevi-34246941.jpg"
 author: "فريق وفرلي"
 category: "دليل السفر"
 city: "Makkah"
-tags: ["مكة", "سفر اقتصادي", "وفرلي", "حجز فنادق"]
+tags: ["مكة", "سفر اقتصادي", "وفرلي", "حجز فنادق", "إقامة قصيرة", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "السعودية"]
 primaryKeyword: "budget hourly hotel makkah"
 translationKey: "makkah-stopover-guide"
 draft: false

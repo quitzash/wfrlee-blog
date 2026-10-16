@@ -3,11 +3,11 @@ title: "The Ultimate Jeddah Wfrlee.com Guide: Micro-Stays Made Easy"
 description: "Discover the best way to rest during a Jeddah layover. Our Jeddah Wfrlee.com guide covers booking hourly micro-stays for comfort and convenience in KSA."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/ultimate-jeddah-layover-guide.jpg"
+heroImage: "/images/pexels-planespotter-geneva-1877406873-29894746.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Guides"
 city: "Jeddah"
-tags: ["Jeddah", "layover", "micro-stays", "travel tips"]
+tags: ["Jeddah", "layover", "micro-stays", "travel tips", "short stays", "booking", "hourly hotels", "day-use rooms", "budget travel", "Saudi Arabia", "KSA"]
 primaryKeyword: "Jeddah Wfrlee.com Guide"
 translationKey: "jeddah-wfrlee-guide"
 draft: false
@@ -90,4 +90,4 @@ Using our platform is straightforward. Follow these steps to secure your space:
 *Updated: May 22, 2024*
 *Author: Wfrlee Travel Team*
 
-![A comfortable hotel room interior representing a micro-stay in Jeddah](alt="Jeddah Wfrlee.com guide micro-stay accommodation")
+![A comfortable hotel room interior representing a micro-stay in Jeddah](/images/ultimate-jeddah-layover-guide.jpg "Jeddah Wfrlee.com guide micro-stay accommodation")

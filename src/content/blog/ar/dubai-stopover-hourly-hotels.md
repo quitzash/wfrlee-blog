@@ -6,7 +6,7 @@ heroImage: "/images/dubai-stopover.jpg"
 author: "فريق وفرلي.كوم للسفر"
 category: "أدلة الترانزيت"
 city: "Dubai"
-tags: ["دبي", "توقف", "الإمارات", "إقامة قصيرة", "مطار دبي"]
+tags: ["دبي", "توقف", "الإمارات", "إقامة قصيرة", "مطار دبي", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "الخليج"]
 primaryKeyword: "توقف في دبي"
 translationKey: "dubai-stopover"
 draft: false

@@ -3,12 +3,12 @@ title: "Flexible Resting Options for Pilgrims in Makkah & Madinah"
 description: "Discover flexible resting options for pilgrims during Umrah. Learn how to book hourly micro-stays in Makkah and Madinah for a comfortable, affordable stop."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-konevi-34246946.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Makkah"
-tags: [Umrah, Makkah, Madinah, micro-stays, Saudi travel]
-primaryKeyword: "Flexible resting options for pilgrims during Umrah or short visits to Makkah/Mad"
+tags: ["Umrah", "Makkah", "Madinah", "micro-stays", "Saudi travel", "short stays", "booking", "hourly hotels", "day-use rooms", "budget travel", "Saudi Arabia", "KSA"]
+primaryKeyword: "Flexible Resting Options for Umrah Pilgrims"
 translationKey: umrah-flexible-resting-options
 draft: false
 ---

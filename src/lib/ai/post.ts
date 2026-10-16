@@ -6,7 +6,7 @@
  * weekly keyword-driven job (`/api/ai/weekly-post`), so the frontmatter
  * cleanup and the schema's description window stay consistent everywhere.
  */
-import { generateGuide } from '@/lib/ai/gemini';
+import { generateGuide } from '@/lib/ai/guide';
 import { commitMarkdownFile } from '@/lib/publish/github';
 import { toKebab } from '@/lib/utils';
 

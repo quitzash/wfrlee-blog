@@ -14,11 +14,11 @@ Astro.response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
 Astro.response.headers.set('Content-Security-Policy', ADMIN_CSP);
 
 const adminTokenConfigured = Boolean(serverEnv('ADMIN_TOKEN'));
-const geminiConfigured = Boolean(serverEnv('GEMINI_API_KEY'));
+const claudeConfigured = Boolean(serverEnv('ANTHROPIC_API_KEY'));
 const githubConfigured = Boolean(serverEnv('GITHUB_TOKEN') && serverEnv('GITHUB_REPO'));
 const checks = [
 	{ label: 'ADMIN_TOKEN', ok: adminTokenConfigured },
-	{ label: 'GEMINI_API_KEY', ok: geminiConfigured },
+	{ label: 'ANTHROPIC_API_KEY', ok: claudeConfigured },
 	{ label: 'GITHUB_TOKEN + GITHUB_REPO', ok: githubConfigured },
 ];
 ---
@@ -29,7 +29,7 @@ const checks = [
 			<p class="text-xs font-semibold uppercase tracking-wide text-brand-600">Wfrlee internal tool</p>
 			<h1 class="mt-2 text-3xl font-bold text-slate-900">AI Content Studio</h1>
 			<p class="mt-2 max-w-2xl text-slate-600">
-				Generate SEO guides with Gemini and publish them live to the blog via GitHub. Each post is committed to
+				Generate SEO guides with Claude and publish them live to the blog via GitHub. Each post is committed to
 				the repo, which triggers a Vercel rebuild that puts it on the site. This page is not indexed and is not
 				linked from the public site.
 			</p>
@@ -461,7 +461,7 @@ const checks = [
 		// ---- Random topic & keyword generator -----------------------------------
 		// On-brand combinations for Wfrlee.com: hourly micro-stays, layovers and
 		// short bookings across Saudi Arabia and the Gulf. Pure client-side so it
-		// is instant and never depends on the Gemini key.
+		// is instant and never depends on the Claude key.
 		const topicInput = document.getElementById('topic') as HTMLInputElement | null;
 		const keywordInput = document.getElementById('primaryKeyword') as HTMLInputElement | null;
 		const tagsInput = document.getElementById('tags') as HTMLInputElement | null;

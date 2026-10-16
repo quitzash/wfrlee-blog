@@ -3,11 +3,11 @@ title: "Attending an Event in Riyadh? How to Book a Room Just for the Night"
 description: "Heading to Riyadh for a major event or concert? Don't pay for a full hotel stay. Discover how to book flexible micro-stays by the hour with Wfrlee.com today."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/riyadh-airport-layover.jpg
+heroImage: "/images/pexels-grbr-snts-323519936-33763650.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Riyadh"
-tags: [Riyadh, micro-stays, event travel, hourly hotels, Saudi Arabia]
+tags: ["Riyadh", "micro-stays", "event travel", "hourly hotels", "Saudi Arabia", "short stays", "booking", "day-use rooms", "budget travel", "KSA"]
 primaryKeyword: "Attending an Event in Riyadh"
 translationKey: attending-event-riyadh-guide
 draft: false

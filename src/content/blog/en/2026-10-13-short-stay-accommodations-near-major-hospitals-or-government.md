@@ -3,17 +3,17 @@ title: "Need a Few Hours Between Appointments? Quick Hotel Rest Made Easy"
 description: "Tired of waiting for appointments in lobby chairs? Discover how Wfrlee helps you book hourly hotels for rest between meetings or hospital visits in KSA."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Tips"
 city: "Saudi Arabia"
-tags: ["micro-stays", "hourly-hotels", "business-travel", "saudi-arabia"]
-primaryKeyword: "Need a Few Hours Between Appointments? Quick Hotel Rest Made Easy"
+tags: ["micro-stays", "hourly-hotels", "business-travel", "saudi-arabia", "short stays", "booking", "hourly hotels", "day-use rooms", "budget travel", "Saudi Arabia", "KSA"]
+primaryKeyword: "Hotel Rest Between Appointments"
 translationKey: "hourly-rest-between-appointments"
 draft: false
 ---
 
-![A comfortable hotel room interior suitable for a quick rest between appointments](https://wfrlee.com/images/hourly-micro-stays.jpg)
+![A comfortable hotel room interior suitable for a quick rest between appointments](/images/hourly-micro-stays.jpg)
 
 # Need a Few Hours Between Appointments? Quick Hotel Rest Made Easy
 

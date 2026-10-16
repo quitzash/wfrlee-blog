@@ -1,13 +1,13 @@
 ---
 title: "لماذا يعد فندق بالساعة في الدمام خيارك الأذكى؟ | وفرلي.كوم"
-description: "اكتشف لماذا يعتبر اختيار فندق بالساعة في الدمام عبر wfrlee.com خياراً أوفر وأكثر ذكاءً من حجز يوم كامل. احجز إقامتك المريحة بأسعار تنافسية الآن. Book hourly..."
+description: "اكتشف لماذا يعتبر اختيار فندق بالساعة في الدمام عبر wfrlee.com خياراً أوفر وأكثر ذكاءً من حجز يوم كامل. احجز إقامتك المريحة بأسعار تنافسية الآن وبسهولة تامة."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-nicolas-rueda-175965148-12639108.jpg"
 author: "فريق وفرلي"
 category: "دليل السفر"
 city: "Dammam"
-tags: ["الدمام", "سياحة اقتصادية", "وفرلي", "فنادق بالساعة"]
+tags: ["الدمام", "سياحة اقتصادية", "وفرلي", "فنادق بالساعة", "إقامة قصيرة", "حجز فنادق", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "السعودية"]
 primaryKeyword: "wfrlee.com dammam budget hourly hotel"
 translationKey: "dammam-hourly-hotel-guide"
 draft: false

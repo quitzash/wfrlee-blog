@@ -1,19 +1,20 @@
 /**
- * Thin wrapper around the Gemini SDK with automatic model fallback.
+ * Thin wrapper around the Anthropic SDK with automatic model fallback.
  *
- * Free-tier API keys can only use Flash-family models, and those frequently
- * return 429 (quota / paid-only) or 503 (high demand). Instead of failing a
- * publish, iterate through a model list:
+ * Instead of failing a publish when one model errors or is unavailable,
+ * iterate through a model list:
  *  - transport errors ("fetch failed", no HTTP status) get same-model retries
  *    with backoff (first-request DNS/TLS blips after a cold start);
- *  - 400/401/403/404 skip to the next model (a model that needs OAuth, is
- *    paid-only, or doesn't exist on this key must never abort the chain);
- *  - 429/500/503 retry the same model a few times, then skip to the next one.
+ *  - 400/401/403/404 skip to the next model (a bad model name, an unusable
+ *    model for this key, or an auth problem on that model must never abort
+ *    the chain);
+ *  - 429/500/529 retry the same model a few times, then skip to the next one.
  */
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Anthropic from '@anthropic-ai/sdk';
 import { serverEnv } from '@/lib/env';
 
-const apiKey = serverEnv('GEMINI_API_KEY');
+const apiKey = serverEnv('ANTHROPIC_API_KEY');
+const workspaceId = serverEnv('ANTHROPIC_WORKSPACE_ID');
 
 /** Build a de-duplicated model list: primary env var first, then fallbacks. */
 export function modelList(primaryEnv: string, defaultFallbacks: string[]): string[] {
@@ -23,16 +24,16 @@ export function modelList(primaryEnv: string, defaultFallbacks: string[]): strin
     if (trimmed && !list.includes(trimmed)) list.push(trimmed);
   };
   push(serverEnv(primaryEnv) ?? '');
-  for (const name of (serverEnv('GEMINI_FALLBACK_MODELS') ?? '').split(',')) push(name);
+  for (const name of (serverEnv('CLAUDE_FALLBACK_MODELS') ?? '').split(',')) push(name);
   for (const name of defaultFallbacks) push(name);
-  if (list.length === 0) push('gemini-2.5-flash');
+  if (list.length === 0) push('claude-sonnet-5-5');
   return list;
 }
 
 /** True when this one model won't work on this key — skip to the next model. */
 function isModelLevelError(status: number | undefined): boolean {
-  // 400/404: bad model name. 401/403: needs OAuth (pro/paid-only) or is not
-  // usable with an API key — the key itself may still be fine for flash models.
+  // 400/404: bad model name or invalid request for that model. 401/403: the
+  // key is rejected or not allowed to use this model.
   return status === 400 || status === 401 || status === 403 || status === 404;
 }
 
@@ -44,12 +45,12 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * readable error instead of letting the platform return an opaque 504.
  */
 const DEFAULT_BUDGET_MS = 45_000;
-/** Ceiling for a single generateContent request. */
+/** Ceiling for a single messages.create request. */
 const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
 /** Never start another request with less than this much budget left. */
 const MIN_ATTEMPT_MS = 1_500;
 
-/** Call generateContent, retrying/falling back per the model list. */
+/** Call the Messages API, retrying/falling back per the model list. */
 export async function generateText(options: {
   prompt: string;
   systemInstruction?: string;
@@ -58,9 +59,15 @@ export async function generateText(options: {
   budgetMs?: number;
   /** Per-request timeout ceiling (default 30s). */
   timeoutMs?: number;
+  /** Max output tokens (default 8192). */
+  maxTokens?: number;
 }): Promise<string> {
-  if (!apiKey) throw new Error('GEMINI_API_KEY missing');
-  const genAI = new GoogleGenerativeAI(apiKey);
+  if (!apiKey) throw new Error('ANTHROPIC_API_KEY missing');
+  const anthropic = new Anthropic({
+    apiKey,
+    // Some keys are not scoped to a workspace and must name one explicitly.
+    defaultHeaders: workspaceId ? { 'anthropic-workspace-id': workspaceId } : undefined,
+  });
   const budgetMs = options.budgetMs ?? DEFAULT_BUDGET_MS;
   const requestTimeoutMs = options.timeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS;
   const deadline = Date.now() + budgetMs;
@@ -77,15 +84,22 @@ export async function generateText(options: {
         break;
       }
       try {
-        const model = genAI.getGenerativeModel({
-          model: modelName,
-          systemInstruction: options.systemInstruction,
-        });
-        const { response } = await model.generateContent(options.prompt, {
-          // Fail fast so retry/fallback fits in the 60s function limit.
-          timeout: Math.min(requestTimeoutMs, remaining),
-        });
-        return response.text();
+        const message = await anthropic.messages.create(
+          {
+            model: modelName,
+            max_tokens: options.maxTokens ?? 8192,
+            system: options.systemInstruction,
+            messages: [{ role: 'user', content: options.prompt }],
+          },
+          {
+            // Fail fast so retry/fallback fits in the 60s function limit.
+            timeout: Math.min(requestTimeoutMs, remaining),
+          },
+        );
+        return message.content
+          .filter((block) => block.type === 'text')
+          .map((block) => block.text)
+          .join('');
       } catch (error: any) {
         lastError = error;
         const rawStatus = Number(error?.status);
@@ -107,7 +121,7 @@ export async function generateText(options: {
 
   if (!lastError) {
     throw new Error(
-      `Gemini did not finish within ${Math.round(budgetMs / 1000)}s (tried: ${options.models.join(', ')}). ` +
+      `Claude did not finish within ${Math.round(budgetMs / 1000)}s (tried: ${options.models.join(', ')}). ` +
         'The serverless function has a 60s limit — try again shortly.',
     );
   }
@@ -119,14 +133,14 @@ export async function generateText(options: {
     authStatus === 401 || authStatus === 403
       ? ' The last error was an auth rejection (HTTP ' +
         authStatus +
-        ') on EVERY model — the GEMINI_API_KEY on this deployment is invalid, revoked, or restricted. Copy the exact value from the GEMINI_API_KEY line in your local .env.'
+        ') on EVERY model — the ANTHROPIC_API_KEY on this deployment is invalid or revoked. Copy the exact value from the ANTHROPIC_API_KEY line in your local .env.'
       : authStatus === 429
-        ? ' The last error was "quota exceeded" (HTTP 429) — the key has no free quota left right now. Wait, or use a different GEMINI_API_KEY.'
+        ? ' The last error was "rate limited" (HTTP 429) — the key is out of immediate capacity right now. Wait, or use a different ANTHROPIC_API_KEY.'
         : '';
   const budgetHint = exhausted
     ? ' The time budget ran out before any model finished — the serverless function has a 60s limit, so try again shortly.'
     : '';
   throw new Error(
-    `All Gemini models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}${authHint}${budgetHint}`,
+    `All Claude models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}${authHint}${budgetHint}`,
   );
 }

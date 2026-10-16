@@ -15,7 +15,7 @@
  *     a ranked list.
  *
  * No AI call happens here on purpose: the weekly job must fit inside the 60s
- * serverless limit (Vercel Hobby) with a single Gemini call left for the guide
+ * serverless limit (Vercel Hobby) with a single Claude call left for the guide
  * itself. An extra scoring round-trip made the whole job time out.
  */
 import { cities } from '@/lib/cities';

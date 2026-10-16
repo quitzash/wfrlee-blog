@@ -3,13 +3,13 @@ title: "حجز فندق بالساعة قرب مطار الدمام: دليل ا
 description: "هل تبحث عن فندق اقتصادي بالساعة قرب مطار الدمام؟ اكتشف كيف توفر مالك ووقتك مع وفرلي واستمتع براحة تامة خلال توقف رحلتك في الدمام بأسعار تنافسية ومميزة."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: /images/hourly-micro-stays.jpg
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "فريق وفرلي للسفر"
 category: "دليل السفر"
 city: "Dammam"
-tags: ["Dammam", "budget travel", "wfrlee.com", "booking"]
+tags: ["Dammam", "budget travel", "wfrlee.com", "booking", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "سفر اقتصادي", "السعودية"]
 primaryKeyword: "budget hourly hotel near dammam airport"
-translationKey: "budget-hourly-hotel-dammam"
+translationKey: dammam-hourly-hotels-guide
 draft: false
 ---
 

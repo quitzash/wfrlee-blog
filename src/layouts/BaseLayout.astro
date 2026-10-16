@@ -16,6 +16,7 @@ interface Props {
 	publishedTime?: Date;
 	modifiedTime?: Date;
 	author?: string;
+	keywords?: string[];
 	noindex?: boolean;
 }
 
@@ -30,6 +31,7 @@ const {
 	publishedTime,
 	modifiedTime,
 	author,
+	keywords,
 	noindex,
 } = Astro.props;
 
@@ -50,6 +52,7 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 			publishedTime={publishedTime}
 			modifiedTime={modifiedTime}
 			author={author}
+			keywords={keywords}
 			noindex={noindex}
 		/>
 	</head>
