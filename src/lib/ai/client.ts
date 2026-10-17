@@ -40,13 +40,13 @@ function isModelLevelError(status: number | undefined): boolean {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Total wall-clock budget shared across every model and retry. Vercel Hobby
- * kills a function at 60s, so we stop ourselves a little early and throw a
+ * Total wall-clock budget shared across every model and retry. Keep this a
+ * little under the function's maxDuration (see astro.config.mjs) so we throw a
  * readable error instead of letting the platform return an opaque 504.
  */
-const DEFAULT_BUDGET_MS = 45_000;
+const DEFAULT_BUDGET_MS = 240_000;
 /** Ceiling for a single messages.create request. */
-const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+const DEFAULT_REQUEST_TIMEOUT_MS = 120_000;
 /** Never start another request with less than this much budget left. */
 const MIN_ATTEMPT_MS = 1_500;
 
@@ -57,7 +57,7 @@ export async function generateText(options: {
   models: string[];
   /** Total wall-clock budget across every model and retry (default 45s). */
   budgetMs?: number;
-  /** Per-request timeout ceiling (default 30s). */
+  /** Per-request timeout ceiling (default 120s). */
   timeoutMs?: number;
   /** Max output tokens (default 8192). */
   maxTokens?: number;
@@ -92,7 +92,7 @@ export async function generateText(options: {
             messages: [{ role: 'user', content: options.prompt }],
           },
           {
-            // Fail fast so retry/fallback fits in the 60s function limit.
+            // Fail fast so retry/fallback fits within the function's maxDuration.
             timeout: Math.min(requestTimeoutMs, remaining),
           },
         );
@@ -122,7 +122,7 @@ export async function generateText(options: {
   if (!lastError) {
     throw new Error(
       `Claude did not finish within ${Math.round(budgetMs / 1000)}s (tried: ${options.models.join(', ')}). ` +
-        'The serverless function has a 60s limit — try again shortly.',
+        'The serverless function hit its time budget — try again shortly, or raise maxDuration/budgetMs.',
     );
   }
 
@@ -138,7 +138,7 @@ export async function generateText(options: {
         ? ' The last error was "rate limited" (HTTP 429) — the key is out of immediate capacity right now. Wait, or use a different ANTHROPIC_API_KEY.'
         : '';
   const budgetHint = exhausted
-    ? ' The time budget ran out before any model finished — the serverless function has a 60s limit, so try again shortly.'
+    ? ' The time budget ran out before any model finished — the serverless function reached its maxDuration, so try again shortly.'
     : '';
   throw new Error(
     `All Claude models are unavailable right now (tried: ${options.models.join(', ')}). ${detail}${authHint}${budgetHint}`,

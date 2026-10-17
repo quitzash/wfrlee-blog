@@ -12,10 +12,11 @@ export default defineConfig({
 	adapter: vercel({
 		imageService: true,
 		webAnalytics: { enabled: true },
-		// Claude guide generation commonly takes 20-60s; without this, Vercel
-		// (Hobby default ~10s) kills the function mid-request and the browser
-		// shows "Failed to fetch". 60s is the Hobby ceiling, Pro allows more.
-		maxDuration: 60,
+		// Guide generation with the larger word/paragraph target can take well
+		// over a minute. Vercel Hobby caps functions at 60s; Pro allows up to
+		// 300s. Raise this to 300 if you are on a Pro plan so the whole guide
+		// finishes in one request instead of being killed mid-stream.
+		maxDuration: 300,
 	}),
 
 	i18n: {

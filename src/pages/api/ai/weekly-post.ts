@@ -162,8 +162,8 @@ async function runWeekly(
         includeFaq: true,
       },
       // Keyword research is now local + Suggest only, so the guide gets the
-      // bulk of the 60s Vercel Hobby function limit.
-      { budgetMs: 48_000, timeoutMs: 42_000 },
+      // bulk of the function's maxDuration (see astro.config.mjs).
+      { budgetMs: 240_000, timeoutMs: 120_000 },
     );
     return withSecurityHeaders(
       jsonResponse(

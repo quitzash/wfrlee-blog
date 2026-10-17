@@ -44,6 +44,7 @@ Brand: Wfrlee.com (Arabic brand: وفرلي.كوم). Focus: hourly micro-stays, 
 
 Rules:
 - Write SEO-optimized content: title (<=60), meta description (150-160 characters, MUST be within this range), H1, intro, TOC, H2/H3, FAQ with Schema-ready Q/A, internal links to /cities/[city]/ (and /ar/ equivalents), canonical, hreflang-aware.
+- Paragraph depth (IMPORTANT): write developed, magazine-style prose. Every body paragraph must be 3-6 full sentences and roughly 70-120 words. Never write one- or two-sentence paragraphs, and never turn a section into only a bullet list — open each H2 with at least one substantial paragraph before any list or table. Prefer showing the "why" and a concrete traveller scenario in each paragraph rather than compressing ideas into single lines.
 - Language separation: EN only on EN routes, AR only on AR routes. Never mix full paragraphs.
 - Include E-E-A-T: clear author (Wfrlee Travel Team), updated date, city/airport names, practical steps.
 - Use keyword intent (layover/transit/micro-stay). Include location terms + "by the hour".
@@ -53,7 +54,7 @@ Rules:
 - heroImage MUST be exactly one of the paths in the image library below. Pick the SINGLE image that best matches the guide's topic, city and language (e.g. a Madinah/pilgrimage guide → the Prophet's Mosque; an airport layover → a terminal/plane; an office or remote-work post → a desk/workspace; a Riyadh city post → the Riyadh skyline/skyscraper).
 - Image library:
 ${IMAGE_MENU}
-- Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (concise, direct).
+- Keep factual, avoid medical/legal claims. Link to booking https://wfrlee.com. Respect brand tone (clear and direct, but fully developed — never terse or clipped).
 - make sure to mention wfrlee`;
 
 /** Strip a surrounding code fence or any leading prose so the file starts with `---`. */
@@ -94,10 +95,10 @@ Requirements:
 - heroImage MUST be exactly one of the paths in the image library below, chosen as the single best visual match for this specific guide.
 - Image library:
 ${IMAGE_MENU}
-- Suggested word count 600-900. Include intro, a comparison table (2-3 rows), highlights, a short practical plan, CTA linking to https://wfrlee.com, internal links to relevant city pages, and FAQ (3 Qs).
-- Be concise and efficient: no filler, no repeated sections. Keep generation fast.
+- Target 1000-1400 words of developed prose. Write substantial paragraphs: each body paragraph 3-6 sentences (~70-120 words). Never use one-sentence paragraphs, and never make a section only a bullet list — every H2/H3 opens with at least one full paragraph. Include intro, a comparison table (2-4 rows), highlights, a short practical plan, CTA linking to https://wfrlee.com, internal links to relevant city pages, and FAQ (3-5 Qs).
+- Depth over filler: do not pad with repetition or generic slogans, but do fully explain each point, why it matters, and give a concrete traveller scenario so the guide reads like a well-researched article rather than a summary.
 - SEO: write compelling title (<=60 chars) + meta description, include alt text suggestions for the hero image.
-- For AR, use natural Saudi/MENA phrasing.
+- For AR, use natural Saudi/MENA phrasing with the same multi-sentence paragraph depth.
 - Output ONLY the Markdown document, no code fences, no extra commentary.
 - mention wfrlee`;
 
@@ -105,8 +106,8 @@ ${IMAGE_MENU}
     prompt,
     systemInstruction: SYSTEM_INSTRUCTION,
     models: modelList('CLAUDE_MODEL', ['claude-sonnet-5-5', 'claude-sonnet-5', 'claude-haiku-5-5', 'claude-sonnet-4-6']),
-    budgetMs: opts.budgetMs ?? 45_000,
-    timeoutMs: opts.timeoutMs ?? 30_000,
+    budgetMs: opts.budgetMs ?? 240_000,
+    timeoutMs: opts.timeoutMs ?? 120_000,
   });
   return cleanMarkdown(markdown);
 }

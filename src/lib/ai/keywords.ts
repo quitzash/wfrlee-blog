@@ -14,9 +14,10 @@
  *  3. Score every candidate locally on ranking / trend / visibility and return
  *     a ranked list.
  *
- * No AI call happens here on purpose: the weekly job must fit inside the 60s
- * serverless limit (Vercel Hobby) with a single Claude call left for the guide
- * itself. An extra scoring round-trip made the whole job time out.
+ * No AI call happens here on purpose: keyword research is kept local and cheap
+ * so the weekly job's single Claude call gets the bulk of the function's time
+ * budget (see `maxDuration` in astro.config.mjs). An extra scoring round-trip
+ * made the whole job time out.
  */
 import { cities } from '@/lib/cities';
 import { toKebab } from '@/lib/utils';
@@ -129,7 +130,7 @@ function seedKeywords(lang: KeywordLang, weekIndex: number): string[] {
   seeds.push(...generic);
 
   // Shuffle deterministically by week, then cap so the number of network calls
-  // (and total runtime, capped at 60s on the cron) stays bounded.
+  // (and total runtime) stays bounded.
   return seeds
     .map((seed, i) => ({ seed, order: (i * 7 + weekIndex * 13) % seeds.length }))
     .sort((a, b) => a.order - b.order)
