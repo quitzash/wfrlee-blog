@@ -8,7 +8,7 @@ export const SITE_BRAND = 'Wfrlee.com';
 /** Arabic brand name — "وفّر لي" (save for me). */
 export const SITE_BRAND_AR = 'وفرلي.كوم';
 export const SITE_DESCRIPTION =
-	'Micro-stay guides, airport layover survival tips, and hourly hotel booking advice for travelers across Saudi Arabia and the wider MENA region.';
+	'Micro-stay guides, airport layover survival tips, and hourly hotel booking advice for travelers across Saudi Arabia.';
 /** Arabic site description, shown on /ar/ pages only. */
 export const SITE_DESCRIPTION_AR =
 	'أدلة الإقامات القصيرة ونصائح التوقف في المطارات والتنقّل للمسافرين في السعودية ومنطقة الشرق الأوسط.';

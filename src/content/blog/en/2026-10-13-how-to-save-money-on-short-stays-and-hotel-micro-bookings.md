@@ -19,7 +19,7 @@ draft: false
 
 In the traditional travel world, the standard 24-hour hotel cycle is the norm. You check in at 3 PM and check out the next morning, regardless of whether you spent 18 of those hours exploring the city or catching a flight. But what if you only need a quiet space to nap, refresh, or work for three to six hours? 
 
-At [Wfrlee.com](https://wfrlee.com), we believe you should only pay for the time you actually use. Hourly micro-stays are changing the way travelers experience cities across Saudi Arabia and the MENA region.
+At [Wfrlee.com](https://wfrlee.com), we believe you should only pay for the time you actually use. Hourly micro-stays are changing the way travelers experience cities across Saudi Arabia.
 
 ## The Problem with Traditional Hotel Bookings
 When you book a standard room for a short layover or a brief business trip, you are essentially paying for a "night" you won’t fully utilize. If you land at [Jeddah](https://wfrlee.com/cities/jeddah/) at 2 AM and have a connecting flight at 10 AM, booking a full night is a waste of resources. You end up paying full price for services and time slots that remain empty while you are on the move.

@@ -20,7 +20,7 @@ Here is how micro-stays work, who they are for, and how to decide whether bookin
 
 A micro-stay is a clean, private hotel room booked for a short block of time instead of a full night. Instead of rigid check-in and check-out times, you choose the hours you actually need and pay only for those hours.
 
-Wfrlee offers flexible blocks across Saudi Arabia and the MENA region:
+Wfrlee offers flexible blocks across Saudi Arabia:
 
 - **3 hours** — a shower and a power nap, from **70 SAR**.
 - **6 hours** — a proper sleep plus time to eat and get organized.

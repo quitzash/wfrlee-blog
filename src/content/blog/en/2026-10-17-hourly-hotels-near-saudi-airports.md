@@ -3,7 +3,7 @@ title: "Best Hourly Hotels Near Saudi Airports | Wfrlee"
 description: "Find the best hourly hotels near Saudi airports in Jeddah, Riyadh, Dammam, Madinah and Jazan. Book a layover room by the hour with Wfrlee and rest easy."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Saudi Arabia"

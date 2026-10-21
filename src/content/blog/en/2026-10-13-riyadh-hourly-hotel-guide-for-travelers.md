@@ -3,7 +3,7 @@ title: "Book Hourly Hotel in Riyadh: Your Ultimate Layover Guide"
 description: "Need to rest during your Riyadh layover? Discover how to book an hourly hotel in Riyadh with Wfrlee.com. Flexible stays for comfort at the best rates today."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/pexels-grbr-snts-323519936-33763650.jpg"
+heroImage: "/images/pexels-abul-lais-2161703794-39470846.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Riyadh"

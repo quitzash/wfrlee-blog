@@ -3,7 +3,7 @@ title: "Dammam Airport Micro-Stay: Short Rests Near DMM"
 description: "Plan a short rest near King Fahd International Airport. Compare hourly micro-stays in Dammam and Al Khobar, timing advice and booking by the hour with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Dammam"

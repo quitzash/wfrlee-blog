@@ -3,7 +3,7 @@ title: "دليل التوقف في السعودية: كيف ترتاح بين ا
 description: "دليل التوقف في السعودية: اعرف كيف ترتاح بين رحلاتك بحجز غرفة بالساعة قرب مطارات جدة والرياض والدمام مع وفرلي، وخطوات عملية تناسب وقتك ومواعيد طيرانك بسهولة."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "فريق وفرلي للسفر (Wfrlee Travel Team)"
 category: "أدلة الترانزيت"
 city: "Saudi Arabia"

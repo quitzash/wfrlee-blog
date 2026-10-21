@@ -3,7 +3,7 @@ title: "السفر مع الأطفال: لماذا تعتبر غرف الاست�
 description: "اكتشف كيف يسهّل حجز غرفة فندقية بالساعة رحلتك مع الأطفال في السعودية. وفّر ساعات الانتظار المتعبة في المطار واحصل على راحة وخصوصية حقيقية لعائلتك مع وفرلي."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "فريق وفرلي للسفر"
 category: "نصائح السفر"
 city: "Saudi Arabia"

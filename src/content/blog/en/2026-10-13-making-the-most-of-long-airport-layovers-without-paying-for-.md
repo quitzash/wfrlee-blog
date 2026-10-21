@@ -3,7 +3,7 @@ title: "How to Turn a Long Layover in Jeddah into a Relaxing Mini Break"
 description: "Turn your Jeddah layover into a refreshing retreat. Discover how to book micro-stays by the hour near King Abdulaziz International Airport with Wfrlee.com."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Guides"
 city: "Jeddah"

@@ -3,7 +3,7 @@ title: "Riyadh Season Hourly Hotel: Rest Between Events"
 description: "Planning Riyadh Season? Find where to rest by the hour between events, compare areas, and book a Riyadh Season hourly hotel on Wfrlee for flexible short stays."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-grbr-snts-323519936-33763650.jpg"
+heroImage: "/images/pexels-abul-lais-2161703794-39470846.jpg"
 author: "Wfrlee Travel Team"
 category: "Events & Short Stays"
 city: "Riyadh"
@@ -18,7 +18,7 @@ draft: false
 
 **By Wfrlee Travel Team · Last updated: 2026-10-17**
 
-![A modern Riyadh skyscraper rising above the city at sunset, the kind of skyline visitors see between Riyadh Season events](/images/pexels-grbr-snts-323519936-33763650.jpg)
+![A modern Riyadh skyscraper rising above the city at sunset, the kind of skyline visitors see between Riyadh Season events](/images/pexels-abul-lais-2161703794-39470846.jpg)
 
 *Suggested alt text: "Modern Riyadh skyscraper at sunset, a reminder to plan hourly hotel rest between Riyadh Season events."*
 

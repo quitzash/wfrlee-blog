@@ -3,7 +3,7 @@ title: "فندق ترانزيت مطار جدة: ارتاح بالساعة قر�
 description: "دليل فندق ترانزيت مطار جدة: كيف تحجز غرفة بالساعة قرب مطار الملك عبدالعزيز، وتستريح وتنتعش بين رحلتيك مع وفرلي.كوم بخطوات واضحة وأسعار مرنة تناسب مدة انتظارك."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "فريق وفرلي للسفر (Wfrlee Travel Team)"
 category: "دليل الترانزيت"
 city: "Jeddah"

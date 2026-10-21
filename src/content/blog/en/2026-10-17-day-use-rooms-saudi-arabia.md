@@ -3,7 +3,7 @@ title: "Day Use Rooms in Saudi Arabia: Complete Guide"
 description: "Day use rooms in Saudi Arabia explained: how hourly stays work in Jeddah, Riyadh, Dammam and more, what to compare, and how to book by the hour with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Guides"
 city: "Saudi Arabia"

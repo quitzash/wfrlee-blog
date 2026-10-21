@@ -3,7 +3,7 @@ title: "Jubail Business Hourly Hotel: Industrial City Guide"
 description: "Plan a Jubail business hourly hotel stay: rest, freshen up and take calls between Jubail Industrial City visits, with tips on timing, transfers and booking."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Business Travel"
 city: "Al Jubail"
@@ -15,7 +15,7 @@ draft: false
 
 # Jubail Business Travel: Hourly Hotels for Industrial City Visits
 
-![A modern hotel lobby with guests seated, suggesting a calm place to pause between business meetings in Al Jubail](/images/pexels-katianaidenko-7512139.jpg)
+![A modern hotel lobby with guests seated, suggesting a calm place to pause between business meetings in Al Jubail](/images/pexels-pavel-danilyuk-6812435.jpg)
 
 *Suggested alt text: "Hotel lobby lounge where a business traveller can rest by the hour between Jubail Industrial City meetings."*
 

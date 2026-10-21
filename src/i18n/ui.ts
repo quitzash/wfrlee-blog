@@ -20,7 +20,7 @@ export const ui = {
 		'home.kicker': 'Wfrlee travel guides',
 		'home.title': 'The Wfrlee Blog',
 		'home.intro':
-			'Layover survival tips, transit know-how, and micro-stay advice for travelers across Saudi Arabia and the MENA region.',
+			'Layover survival tips, transit know-how, and micro-stay advice for travelers across Saudi Arabia.',
 		'home.latest': 'Latest guide',
 		'home.more': 'More guides',
 		'home.empty': 'No published guides yet. Check back soon.',
@@ -35,7 +35,7 @@ export const ui = {
 		'article.by': 'By',
 		'article.updated': 'Updated',
 		'article.authorBlurb':
-			'We write practical layover, transit, and micro-stay guides for travelers across Saudi Arabia and the MENA region.',
+			'We write practical layover, transit, and micro-stay guides for travelers across Saudi Arabia.',
 		'article.ctaTitle': 'Need a room between flights?',
 		'article.ctaText':
 			'Book an hourly micro-stay from 70 SAR and turn your layover into real rest.',

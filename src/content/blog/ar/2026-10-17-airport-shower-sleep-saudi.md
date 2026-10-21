@@ -3,7 +3,7 @@ title: "استحمام ونوم في المطار: دليل مطارات الس�
 description: "دليل عملي لخيارات الاستحمام والنوم في مطارات السعودية: صالات، مقاعد، وفنادق بالساعة قرب جدة والرياض والدمام مع خطوات حجز سريعة عبر وفرلي لراحة الترانزيت"
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "فريق وفرلي للسفر"
 category: "دليل الترانزيت"
 city: "Saudi Arabia"

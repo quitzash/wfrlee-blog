@@ -3,7 +3,7 @@ title: "Last-Minute Hourly Hotels in Saudi Arabia: Booking Guide"
 description: "Need a room tonight? Learn how to book a last minute hourly hotel in Saudi Arabia, from Jeddah to Riyadh, with practical steps for layovers by the hour."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-anete-lusina-5721001.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-7654190.jpg"
 author: "Wfrlee Travel Team"
 category: "Booking Guides"
 city: "Saudi Arabia"

@@ -3,7 +3,7 @@ title: "Airport Shower & Sleep Options Across Saudi Arabia"
 description: "Compare airport lounges, terminal rest and hourly hotels for a shower and sleep during a Saudi layover, with a practical plan from Wfrlee for Jeddah and Riyadh."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Saudi Arabia"

@@ -3,7 +3,7 @@ title: "Hajj Season Rest in Saudi Arabia: Hourly Stays Guide"
 description: "Plan Hajj season rest in Saudi Arabia: how hourly micro-stays in Jeddah, Madinah, Riyadh and Dammam help pilgrims and layover travellers recover. By Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Travel Guides"
 city: "Saudi Arabia"

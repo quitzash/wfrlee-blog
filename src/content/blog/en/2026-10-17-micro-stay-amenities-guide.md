@@ -3,7 +3,7 @@ title: "Micro-Stay Amenities in Saudi Arabia: What to Expect"
 description: "Learn which amenities to expect in a Saudi micro-stay: private room, fast Wi-Fi, shower, A/C and more. Book hourly rooms near KSA airports with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Guides"
 city: "Saudi Arabia"

@@ -3,7 +3,7 @@ title: "Al Khobar Hourly Hotels: Rest Near the Corniche by the Hour"
 description: "Find an al khobar hourly hotel near the Corniche. Book a rest by the hour for layovers, transit and short breaks with Wfrlee, with a simple step-by-step plan."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "City Guides"
 city: "Al Khobar"

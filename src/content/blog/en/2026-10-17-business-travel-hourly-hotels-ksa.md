@@ -3,7 +3,7 @@ title: "Business Travel in Saudi Arabia: Why Hourly Hotels Win"
 description: "Hourly hotels suit business travel in Saudi Arabia: book day-use rooms by the hour in Riyadh, Jeddah and Dammam for meetings, layovers and rest with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Business Travel"
 city: "Saudi Arabia"

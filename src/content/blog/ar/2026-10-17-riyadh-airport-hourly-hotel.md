@@ -3,7 +3,7 @@ title: "فندق بالساعة مطار الرياض: راحة بين رحلا�
 description: "دليل فندق بالساعة مطار الرياض: كيف تحجز غرفة هادئة بين رحلتين في مطار الملك خالد الدولي، وما المدة المناسبة والتكلفة والخطوات العملية مع وفرلي.كوم في الرياض."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "دليل الترانزيت"
 city: "Riyadh"

@@ -3,7 +3,7 @@ title: "Tabuk Stopover Hotel Guide: Hourly Stays Near the Airport"
 description: "Planning a Tabuk stopover? Compare hourly hotels near the airport, learn how micro-stays work, and book a short rest by the hour with Wfrlee in Saudi Arabia."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Tabuk"

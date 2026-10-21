@@ -3,7 +3,7 @@ title: "Long Layover Tips in Saudi Arabia: Sleep, Shower, Repeat"
 description: "Long layover tips for Saudi Arabia: how to sleep, shower and reset by the hour in Jeddah, Riyadh, Dammam, Jazan and Madinah with Wfrlee hourly micro-stays."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
 city: "Saudi Arabia"

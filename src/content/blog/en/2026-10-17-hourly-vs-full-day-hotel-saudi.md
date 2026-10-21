@@ -3,7 +3,7 @@ title: "Hourly Hotel vs Full-Day in Saudi Arabia: Which Wins?"
 description: "Hourly hotel or full-day booking in Saudi Arabia? Compare cost, comfort and timing for layovers in Jeddah, Riyadh and Dammam, and book by the hour with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Booking Guides"
 city: "Saudi Arabia"

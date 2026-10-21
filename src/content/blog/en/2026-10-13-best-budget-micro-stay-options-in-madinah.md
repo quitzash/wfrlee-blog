@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: "/images/pexels-konevi-34246946.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
+city: "Madinah"
 tags: ["Madinah", "budget travel", "wfrlee.com", "booking", "hourly hotels", "short stays", "day-use rooms", "micro-stays", "Saudi Arabia", "KSA"]
 primaryKeyword: "madinah budget hourly hotel"
 translationKey: madinah-budget-hourly-hotels

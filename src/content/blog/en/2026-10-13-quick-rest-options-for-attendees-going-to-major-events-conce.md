@@ -3,7 +3,7 @@ title: "Attending an Event in Riyadh? How to Book a Room Just for the Night"
 description: "Heading to Riyadh for a major event or concert? Don't pay for a full hotel stay. Discover how to book flexible micro-stays by the hour with Wfrlee.com today."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/pexels-grbr-snts-323519936-33763650.jpg"
+heroImage: "/images/pexels-abul-lais-2161703794-39470846.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Riyadh"

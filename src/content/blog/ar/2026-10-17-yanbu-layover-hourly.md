@@ -3,7 +3,7 @@ title: "فندق بالساعة ينبع: دليل الترانزيت على ا�
 description: "دليل فندق بالساعة في ينبع للمسافر العابر: نوم قصير واستحمام وراحة على ساحل البحر الأحمر، مع خطوات حجز واضحة عبر wfrlee.com قبل موعد رحلتك التالية بكل سهولة."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "فريق وفرلي للسفر (Wfrlee Travel Team)"
 category: "دليل المدن"
 city: "Yanbu"

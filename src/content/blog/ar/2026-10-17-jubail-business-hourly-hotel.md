@@ -3,7 +3,7 @@ title: "فندق بالساعة في الجبيل: دليل سفر العمل م
 description: "دليل سفر العمل إلى الجبيل: اعرف متى يناسبك فندق بالساعة الجبيل، وكيف تحجز غرفة للراحة أو الاجتماعات بين المواعيد مع وفرلي، وخطة عملية قصيرة لرحلة عمل أسهل."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "فريق وفرلي للسفر (Wfrlee Travel Team)"
 category: "سفر العمل"
 city: "Al Jubail"

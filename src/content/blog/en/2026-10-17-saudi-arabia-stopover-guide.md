@@ -3,7 +3,7 @@ title: "Saudi Arabia Stopover Guide: Rest Between Flights"
 description: "Plan a Saudi Arabia stopover with confidence: how to rest between flights in Jeddah, Riyadh, Dammam and beyond, with hourly stays booked through Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
 city: "Saudi Arabia"

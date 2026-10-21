@@ -1,9 +1,9 @@
 ---
 title: "Pay As You Stay: Short Hotel Bookings by the Hour | Wfrlee"
-description: "Pay as you stay means paying only for the hours you use. See how Wfrlee short stay hotel booking by the hour beats a full night in Saudi Arabia and MENA."
+description: "Pay as you stay means paying only for the hours you use. See how Wfrlee short stay hotel booking by the hour beats a full night in Saudi Arabia."
 pubDate: 2025-06-01T08:00:00.000Z
 updatedDate: 2025-06-01T08:00:00.000Z
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Guides"
 city: "Saudi Arabia"
@@ -15,7 +15,7 @@ draft: false
 
 # Pay As You Stay: How Short Hotel Bookings by the Hour Work
 
-![A modern hotel lobby where guests rest between flights and meetings, illustrating short stay hotel booking by the hour with Wfrlee](/images/pexels-katianaidenko-7512139.jpg)
+![A modern hotel lobby where guests rest between flights and meetings, illustrating short stay hotel booking by the hour with Wfrlee](/images/pexels-pavel-danilyuk-6812435.jpg)
 
 *By the Wfrlee Travel Team. Updated June 1, 2025.*
 
@@ -72,7 +72,7 @@ Availability, hours, and rates vary by property and city. Always check the detai
 
 ## Where to use it in Saudi Arabia
 
-Wfrlee focuses on hourly micro-stays across Saudi Arabia and the wider MENA region. Explore these city pages to find short stay options:
+Wfrlee focuses on hourly micro-stays across Saudi Arabia. Explore these city pages to find short stay options:
 
 - [Jeddah](/cities/jeddah/): useful for layovers and pre-flight rest.
 - [Riyadh](/cities/riyadh/): handy between business meetings and connections.

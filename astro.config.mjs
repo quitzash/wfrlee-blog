@@ -8,6 +8,7 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://wfrlee.com',
+	base: '/blog',
 	output: 'server',
 	adapter: vercel({
 		imageService: true,

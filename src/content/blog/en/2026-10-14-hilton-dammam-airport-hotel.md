@@ -3,7 +3,7 @@ title: "Hilton Dammam Airport Hotel: Layover Guide & Hourly Stays"
 description: "Planning a stay near King Fahd International Airport? Discover if the Hilton Dammam Airport Hotel is right for you and how to book micro-stays in Dammam."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: Wfrlee Travel Team
 category: "Travel Guides"
 city: "Dammam"

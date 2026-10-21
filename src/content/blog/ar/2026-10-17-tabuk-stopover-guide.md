@@ -3,7 +3,7 @@ title: "فندق بالساعة تبوك: دليل الترانزيت قرب ا�
 description: "دليل عملي لـ فندق بالساعة تبوك قرب المطار: كيف تستغل ساعات الترانزيت بإقامة قصيرة مريحة ومنظمة، وخطوات الحجز مع وفرلي.كوم وأسئلة شائعة وخطة سريعة للمسافرين."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "فريق وفرلي للسفر"
 category: "دليل الترانزيت"
 city: "Tabuk"

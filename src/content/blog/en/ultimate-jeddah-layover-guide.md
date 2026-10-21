@@ -13,7 +13,7 @@ translationKey: "jeddah-layover"
 draft: false
 ---
 
-A **Jeddah layover** can last anywhere from four hours to a full day, and how you spend it decides whether you land in Riyadh or Dubai feeling refreshed or completely wrecked. King Abdulaziz International Airport (JED) is one of the busiest transfer hubs in the Middle East, and with the right plan you can turn dead time into real rest.
+A **Jeddah layover** can last anywhere from four hours to a full day, and how you spend it decides whether you arrive at your next stop feeling refreshed or completely wrecked. King Abdulaziz International Airport (JED) is one of the busiest transfer hubs in the Middle East, and with the right plan you can turn dead time into real rest.
 
 This guide covers everything you need to survive a long stopover at JED: how the terminals connect, whether you can leave the airport, where to store your bags, and how hourly micro-stays from Wfrlee solve the one problem no airport bench can — sleep.
 
@@ -73,7 +73,7 @@ A full-day hotel is the usual answer, but it is expensive and wasteful when you 
 
 ## How Wfrlee micro-stays fix the layover
 
-Wfrlee is a micro-stay booking platform for the MENA region. Instead of paying for a full night you do not need, you book a clean, private room by the hour — flexible check-in, no minimum stay, and prices that make sense for a layover.
+Wfrlee is a micro-stay booking platform for Saudi Arabia. Instead of paying for a full night you do not need, you book a clean, private room by the hour — flexible check-in, no minimum stay, and prices that make sense for a layover.
 
 **Micro-stay options near Jeddah**
 

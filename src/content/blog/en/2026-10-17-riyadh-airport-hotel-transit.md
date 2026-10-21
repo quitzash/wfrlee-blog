@@ -3,7 +3,7 @@ title: "Riyadh Airport Hotel Transit: Rest by the Hour at RUH"
 description: "Riyadh airport hotel transit guide: book a hotel by the hour near King Khalid International (RUH), compare options and rest between flights with Wfrlee."
 pubDate: 2025-06-10T08:00:00Z
 updatedDate: 2025-06-10T08:00:00Z
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Riyadh"
@@ -17,13 +17,13 @@ draft: false
 
 *By the Wfrlee Travel Team · Updated June 10, 2025 · Canonical: https://wfrlee.com/blog/riyadh-airport-hotel-transit/ · Also available in Arabic at /ar/*
 
-![A traveler sitting by a large window in an airport waiting area, a typical scene during a Riyadh layover](/images/pexels-clickerhappy-36983.jpg)
+![A traveler sitting by a large window in an airport waiting area, a typical scene during a Riyadh layover](/images/pexels-railgunbreaker-38876606.jpg)
 
 *Hero image alt text suggestion: "Traveler resting by an airport window while waiting for a connecting flight in Riyadh."*
 
 A Riyadh airport hotel transit is the simplest way to turn a tiring connection into a proper rest. Imagine landing at King Khalid International Airport (RUH) just after midnight with a connecting flight at 10 a.m. You could spend nine hours on a terminal bench, or you could spend a few of them in a quiet, private room and still reach your gate comfortably. Hotel stays by the hour exist precisely for this gap between a full overnight booking and no bed at all.
 
-This guide explains how a transit stay works in Riyadh, what to check before you book, and how to plan the hours so nothing is left to chance. It is written by the Wfrlee Travel Team, who focus on hourly micro-stays and airport layovers across Saudi Arabia and the wider MENA region. Wfrlee.com (وفرلي.كوم) lets you book a room for the hours you need, rather than for a full night you will not use.
+This guide explains how a transit stay works in Riyadh, what to check before you book, and how to plan the hours so nothing is left to chance. It is written by the Wfrlee Travel Team, who focus on hourly micro-stays and airport layovers across Saudi Arabia. Wfrlee.com (وفرلي.كوم) lets you book a room for the hours you need, rather than for a full night you will not use.
 
 ## Table of Contents
 

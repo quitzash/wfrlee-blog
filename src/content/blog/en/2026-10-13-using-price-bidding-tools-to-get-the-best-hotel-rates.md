@@ -3,7 +3,7 @@ title: "How to Bid Your Own Price for Hotel Rooms and Get the Best Deal"
 description: "Master the art of bidding on hotel rooms to save big. Learn how to secure luxury micro-stays and transit hotels at your own price with these expert tips."
 pubDate: 2024-05-22
 updatedDate: 2024-05-22
-heroImage: "/images/pexels-n-voitkevich-8062355.jpg"
+heroImage: "/images/pexels-fernanda-da-silva-lopes-2055473628-29379902.jpg"
 author: Wfrlee Travel Team
 category: "Travel Tips"
 city: "Saudi Arabia"

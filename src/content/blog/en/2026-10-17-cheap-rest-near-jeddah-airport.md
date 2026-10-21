@@ -3,7 +3,7 @@ title: "Cheap Rest Near Jeddah Airport (JED): Hourly Options"
 description: "Looking for a cheap rest near Jeddah Airport (JED)? Compare lounges, terminal seating and hotels by the hour, and plan a quiet layover nap with Wfrlee.com."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Jeddah"

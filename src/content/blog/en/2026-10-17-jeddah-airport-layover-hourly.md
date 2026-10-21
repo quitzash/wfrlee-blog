@@ -3,7 +3,7 @@ title: "Jeddah Airport Layover Hotel: Rest by the Hour Near JED"
 description: "Plan a Jeddah airport layover hotel stay by the hour near JED. Learn timing, terminals, costs and how to book a short rest with Wfrlee.com before your flight."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Jeddah"

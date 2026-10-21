@@ -3,7 +3,7 @@ title: "Family Day Use Rooms in Saudi Arabia: What to Expect"
 description: "Planning a family day use room in Saudi Arabia? Learn what to expect, how by-the-hour stays work in Jeddah, Riyadh and Dammam, and how to book with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-katianaidenko-7512139.jpg"
+heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
 author: "Wfrlee Travel Team"
 category: "Family Travel"
 city: "Saudi Arabia"
@@ -15,7 +15,7 @@ draft: false
 
 # Family Day Use Rooms in Saudi Arabia: What to Expect
 
-![A family resting in a calm, modern hotel lobby, representing a family day-use room stay in Saudi Arabia](/images/pexels-katianaidenko-7512139.jpg)
+![A family resting in a calm, modern hotel lobby, representing a family day-use room stay in Saudi Arabia](/images/pexels-pavel-danilyuk-6812435.jpg)
 
 *Hero image alt text suggestion: "Family relaxing in a quiet hotel lounge before an hourly day-use room check-in in Saudi Arabia."*
 

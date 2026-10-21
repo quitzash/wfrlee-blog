@@ -3,7 +3,7 @@ title: "Yanbu Layover Hotel: Rest by the Hour on the Red Sea"
 description: "Plan a Yanbu layover hotel stay by the hour: compare options near the airport and Red Sea corniche, learn timing tips, and book a short rest with Wfrlee."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Layover Guides"
 city: "Yanbu"

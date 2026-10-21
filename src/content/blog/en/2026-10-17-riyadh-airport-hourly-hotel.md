@@ -3,7 +3,7 @@ title: "Riyadh Airport Hourly Hotel: Rest Near RUH by the Hour"
 description: "Need a rest between flights? Use a Riyadh airport hourly hotel near RUH: learn timing, transfers and how to book a room by the hour in Riyadh with Wfrlee.com."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Riyadh"

@@ -85,7 +85,7 @@ Using our platform is straightforward. Follow these steps to secure your space:
 }
 </script>
 
-**Have more questions?** Visit our [homepage](https://wfrlee.com) to view live availability in Jeddah and across the MENA region. 
+**Have more questions?** Visit our [homepage](https://wfrlee.com) to view live availability in Jeddah and across Saudi Arabia. 
 
 *Updated: May 22, 2024*
 *Author: Wfrlee Travel Team*

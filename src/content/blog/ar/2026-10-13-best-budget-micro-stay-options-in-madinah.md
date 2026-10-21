@@ -6,6 +6,7 @@ updatedDate: 2024-05-22
 heroImage: "/images/pexels-konevi-34246946.jpg"
 author: "فريق وفرلي للسفر"
 category: "نصائح السفر"
+city: "Madinah"
 tags: ["المدينة المنورة", "سفر اقتصادي", "وفرلي.كوم", "حجوزات", "إقامة قصيرة", "حجز فنادق", "فنادق بالساعة", "غرف استخدام يومي", "إقامة بالساعة", "السعودية"]
 primaryKeyword: "madinah budget hourly hotel"
 translationKey: madinah-budget-hourly-hotels

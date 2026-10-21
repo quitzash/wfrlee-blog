@@ -3,7 +3,7 @@ title: "Jazan Stopover Hotel: Hourly Rooms Near GIZ Airport"
 description: "Plan a Jazan stopover hotel by the hour near GIZ Airport. Compare hourly rooms, transfer times and layover tips, then book short stays with Wfrlee in KSA."
 pubDate: 2026-10-17
 updatedDate: 2026-10-17
-heroImage: "/images/pexels-clickerhappy-36983.jpg"
+heroImage: "/images/pexels-railgunbreaker-38876606.jpg"
 author: "Wfrlee Travel Team"
 category: "Airport Layovers"
 city: "Jazan"

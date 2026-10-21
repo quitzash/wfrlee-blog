@@ -56,7 +56,7 @@ Booking your space is designed to be as fast as your schedule requires:
 4. **Instant Confirmation:** Book and receive your confirmation immediately so you can head straight to your private sanctuary.
 
 ## Locations We Serve
-We are expanding rapidly across the MENA region. Whether you are traveling for healthcare or administrative tasks, you can find hourly accommodation near major transport and city centers in:
+We are expanding rapidly across Saudi Arabia. Whether you are traveling for healthcare or administrative tasks, you can find hourly accommodation near major transport and city centers in:
 * **[Jeddah](/cities/jeddah/):** Ideal for those navigating the bustling city traffic.
 * **[Riyadh](/cities/riyadh/):** Perfect for business travelers with back-to-back meetings.
 * **[Dammam](/cities/dammam/) & [Al Khobar](/cities/al-khobar/):** Essential for seamless regional travel.
