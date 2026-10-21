@@ -2,7 +2,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
@@ -10,14 +10,11 @@ export default defineConfig({
 	site: 'https://wfrlee.com',
 	base: '/blog',
 	output: 'server',
-	adapter: vercel({
-		imageService: true,
-		webAnalytics: { enabled: true },
-		// Guide generation with the larger word/paragraph target can take well
-		// over a minute. Vercel Hobby caps functions at 60s; Pro allows up to
-		// 300s. Raise this to 300 if you are on a Pro plan so the whole guide
-		// finishes in one request instead of being killed mid-stream.
-		maxDuration: 300,
+	adapter: cloudflare({
+		// Optimize images at build time with sharp. (The default for this
+		// adapter version, set explicitly to suppress the runtime-sharp
+		// warning; runtime transforms would need Cloudflare Images.)
+		imageService: 'compile',
 	}),
 
 	i18n: {
@@ -39,7 +36,7 @@ export default defineConfig({
 		}),
 	],
 
-	// Admin page scripts must be real files: @astrojs/vercel inlines small
+	// Admin page scripts must be real files: Vite inlines small
 	// scripts (< Vite's default 4KB assetsInlineLimit) directly into SSR HTML,
 	// and the admin CSP (script-src 'self') blocks inline scripts — which would
 	// silently kill the admin login button. Disable inlining so every script is
