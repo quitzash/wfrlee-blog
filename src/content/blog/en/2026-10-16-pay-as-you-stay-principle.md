@@ -1,6 +1,6 @@
 ---
 title: "Pay As You Stay: Short Hotel Bookings by the Hour | Wfrlee"
-description: "Pay as you stay means paying only for the hours you use. See how Wfrlee short stay hotel booking by the hour beats a full night in Saudi Arabia."
+description: "Pay as you stay means paying only for the hours you use. See how Wfrlee short stay hotel booking by the hour beats a full night in Riyadh, Jeddah and Dammam."
 pubDate: 2025-06-01T08:00:00.000Z
 updatedDate: 2025-06-01T08:00:00.000Z
 heroImage: "/images/pexels-pavel-danilyuk-6812435.jpg"
