@@ -38,7 +38,7 @@ The `/blog` segment in post URLs comes from the route itself
 | `npm run build` | Production build into `./dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run check` | `astro check` — type-check `.astro` files and content |
-| `npm run deploy` | Publish `./dist/` to Cloudflare Pages (`wrangler pages deploy`) |
+| `npm run deploy` | Publish `./dist/` to Cloudflare Pages (`scripts/deploy.mjs` → `wrangler pages deploy`) |
 | `npm run pages:dev` | Run the built Worker locally through `wrangler pages dev` |
 
 ## Project structure
@@ -102,27 +102,65 @@ Deploy from the CLI:
 
 ```sh
 npm run build
-npm run deploy          # wrangler pages deploy dist --project-name wfrlee-blog
+npm run deploy
 ```
+
+`npm run deploy` runs `scripts/deploy.mjs`, which calls
+`wrangler pages deploy dist --project-name wfrlee-blog` with the branch and
+commit hash resolved explicitly — from `CF_PAGES_BRANCH` / `CF_PAGES_COMMIT_SHA`
+during a Cloudflare build, from git otherwise. The project name has to be
+explicit: the Pages build container clones the repository into
+`/opt/buildhome/repo`, so Wrangler could not infer it.
+
+`scripts/postbuild.mjs` writes `dist/.assetsignore` with `_worker.js` and
+`_routes.json` in it. Without those patterns Wrangler refuses to upload the
+server bundle (`Uploading a Pages _worker.js directory as an asset`), and an
+empty file would only silence the error while uploading the server-side code
+as a public static asset.
 
 ### Cloudflare Pages project settings
 
 | Setting | Value |
 | --- | --- |
+| Production branch | `master` |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
 | Deploy command | `npm run deploy` |
 | Node version | `24` (or whatever `NODE_VERSION` is set to) |
 
-The deploy command **must not** be `npx wrangler preview` — that command does
-not exist in Wrangler v3+ and the build fails with `wrangler: not found`
-unless Wrangler is installed. `wrangler` is a dev dependency of this repo, so
-`npm run deploy` resolves it from `node_modules/.bin`.
+> **The deploy command has to be `npm run deploy`.** It used to be
+> `npx wrangler preview`, which cannot work for this project:
+>
+> - `wrangler preview` is the Workers **Previews** beta command. It publishes
+>   a *Worker* preview, not the Pages project, so it never updates
+>   `blog.wfrlee.com`.
+> - It requires a `previews` block in the Wrangler config, and Pages projects
+>   reject that key outright:
+>   `Configuration file for Pages projects does not support "previews"`.
+> - Adding that key is not an option either: the same rejection then breaks
+>   every other Wrangler command, including the deploy itself.
+>
+> A Pages project is published with `wrangler pages deploy` — see
+> [Wrangler Pages commands](https://developers.cloudflare.com/workers/wrangler/commands/#pages).
 
 > A `wrangler.jsonc` that contains `pages_build_output_dir` becomes the source
 > of truth for the Pages project configuration. Keep it in sync with the
 > dashboard (bindings, environment variables) and remember that Pages rejects
 > the `triggers` key — Cron Triggers are a Workers-only feature.
+
+### First deploy checklist
+
+1. Set the **deploy command** to `npm run deploy` (table above). Everything
+   else in the build settings is already correct.
+2. `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` have to be available to
+   the deploy step. The Pages build container provides them; a local
+   `npm run deploy` needs them in the shell (or `npx wrangler login`). If the
+   deploy fails with *"it's necessary to set a CLOUDFLARE_API_TOKEN environment
+   variable"*, add it under **Settings → Variables and Secrets**.
+3. After the first successful deploy, re-check **Settings → Variables and
+   Secrets** on the Pages project. The Wrangler file is the source of truth
+   for the project configuration, so the dashboard variables listed below have
+   to still be there.
 
 ### Environment variables and secrets
 

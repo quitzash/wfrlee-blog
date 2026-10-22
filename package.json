@@ -7,13 +7,13 @@
     "node": ">=18.17.1"
   },
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build && node scripts/postbuild.mjs",
+    "dev": "node init && astro dev",
+    "start": "node init && astro dev",
+    "build": "node init && astro build && node scripts/postbuild.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
-    "deploy": "wrangler pages deploy dist --project-name wfrlee-blog",
+    "deploy": "node scripts/deploy.mjs",
     "pages:dev": "wrangler pages dev dist"
   },
   "dependencies": {
