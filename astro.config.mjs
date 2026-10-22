@@ -7,7 +7,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'blog.wfrlee.com',
+	site: 'https://blog.wfrlee.com',
 	base: '/blog',
 	output: 'server',
 	adapter: cloudflare({
