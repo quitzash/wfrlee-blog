@@ -13,7 +13,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
-    "deploy": "wrangler pages deploy dist --project-name wfrlee-blog",
+    "deploy": "node scripts/deploy.mjs",
     "pages:dev": "wrangler pages dev dist"
   },
   "dependencies": {
