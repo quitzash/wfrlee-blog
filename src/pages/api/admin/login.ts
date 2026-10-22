@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         JSON.stringify({
           ok: false,
           error:
-            'Server misconfigured: ADMIN_TOKEN is not set in this deployment. Add it in Vercel → Settings → Environment Variables (Production), then redeploy.',
+            'Server misconfigured: ADMIN_TOKEN is not set in this deployment. Add it as an environment variable (Cloudflare: Settings → Variables and Secrets; Vercel: Settings → Environment Variables), then redeploy.',
         }),
         { status: 500, headers: { 'content-type': 'application/json' } },
       ),
@@ -61,6 +61,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
     return withSecurityHeaders(new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'content-type': 'application/json' } }));
   } catch {
-    return withSecurityHeaders(new Response(JSON.stringify({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set on Vercel.' }), { status: 500, headers: { 'content-type': 'application/json' } }));
+    return withSecurityHeaders(new Response(JSON.stringify({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set in this deployment.' }), { status: 500, headers: { 'content-type': 'application/json' } }));
   }
 };

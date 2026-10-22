@@ -1,63 +1,126 @@
-# Astro Starter Kit: Blog
+# Wfrlee Blog
 
-```sh
-npm create astro@latest -- --template blog
-```
+The blog for [wfrlee.com](https://wfrlee.com) — micro-stay and airport layover
+guides for travellers in Saudi Arabia, published in English and Arabic.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Live site: **<https://blog.wfrlee.com>**
 
-Features:
+## Stack
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+| | |
+| --- | --- |
+| Framework | [Astro](https://astro.build) 5 (SSR / `output: 'server'`) |
+| Adapter | `@astrojs/cloudflare` (Cloudflare Pages) |
+| Content | Markdown/MDX collections with a Zod schema |
+| Styling | Tailwind CSS 3 |
+| i18n | Astro's built-in i18n (`en` at the root, `ar` under `/ar/`) |
 
-## 🚀 Project Structure
+## Domains
 
-Inside of your Astro project, you'll see the following folders and files:
+| Host | Role |
+| --- | --- |
+| `blog.wfrlee.com` | Canonical host for the blog. Set as `site` in `astro.config.mjs` and as `SITE_URL` in `src/consts.ts` — keep the two in sync. |
+| `wfrlee.com` | The main marketing/booking site. Linked to from the footer and the admin panel. |
+
+The blog is served from the **root** of `blog.wfrlee.com`, so `base` is `/`.
+The `/blog` segment in post URLs comes from the route itself
+(`src/pages/blog/[...slug].astro`), not from `base`.
+
+> `site` must be an absolute URL **with a scheme**. Astro validates it with
+> `z.string().url()` and aborts the build with `site: Invalid url` otherwise.
+
+## Commands
+
+| Command | Action |
+| --- | --- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Dev server on <http://localhost:4321> |
+| `npm run build` | Production build into `./dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run check` | `astro check` — type-check `.astro` files and content |
+
+## Project structure
 
 ```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+src/
+├── components/      UI components (Header, Footer, BlogPostCard, seo/…)
+├── content/blog/    Posts, split per language: blog/en/ and blog/ar/
+├── layouts/         BaseLayout, ArticleLayout
+├── lib/             Business logic: ai/, publish/, auth, email, cities
+├── pages/           Routes. blog/[...slug].astro, cities/, ar/, admin/, api/
+└── middleware.ts    Baseline security headers on every rendered response
+public/              Static assets, plus the Apache (.htaccess) and IIS
+                     (web.config) configs and the Cloudflare Pages _headers
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Routes
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Route | Notes |
+| --- | --- |
+| `/` | Home |
+| `/blog/<slug>/` | English post |
+| `/ar/` and `/ar/blog/<slug>/` | Arabic home and post |
+| `/cities/<city>/` | Per-city landing pages |
+| `/about/`, `/why-wfrlee/` | Static pages |
+| `/admin/` | AI Content Studio (token login) |
+| `/api/*` | Admin, AI and newsletter endpoints |
+| `/rss.xml`, `/ar/rss.xml`, `/sitemap-index.xml`, `/robots.txt` | Feeds and discovery |
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## Writing a post
 
-Any static assets, like images, can be placed in the `public/` directory.
+Posts live in `src/content/blog/<lang>/<yyyy-mm-dd>-<slug>.md`. Every field is
+validated at build time by the schema in `src/content.config.ts`:
 
-## 🧞 Commands
+```yaml
+---
+title: "Best Madinah Budget Hourly Hotels: A Guide for Travelers"   # max 70 chars
+description: "…"                                                     # 150-160 chars
+pubDate: 2024-05-22
+updatedDate: 2024-05-22                                              # optional
+heroImage: "/images/pexels-konevi-34246946.jpg"                      # path in /public
+author: Wfrlee Travel Team
+category: "Travel Guides"
+city: "Madinah"                                                      # optional
+tags: ["Madinah", "budget travel"]
+primaryKeyword: "madinah budget hourly hotel"
+translationKey: madinah-budget-hourly-hotels                         # links the translation
+draft: false
+---
+```
 
-All commands are run from the root of the project, from a terminal:
+Set `draft: true` to keep a post out of the blog index and the sitemap.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Deploying
 
-## 👀 Want to learn more?
+The site is deployed to **Cloudflare Pages** with the Cloudflare adapter.
+`npm run build` writes `dist/` (the Worker in `dist/_worker.js/` plus the
+static assets); `wrangler.jsonc` points Pages at that folder.
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```sh
+npm run build
+npx wrangler pages deploy dist
+```
 
-## Credit
+Scheduled jobs run through `wrangler.jsonc` → `triggers.crons`. Cloudflare
+cron triggers authenticate with `CF-Authorization: Bearer <CRON_SECRET>`, so
+`CRON_SECRET` must be set as a secret on the Pages project — see
+[.env.example](./.env.example) for every variable the app reads.
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Security headers are applied in two places, because the deployment target
+ignores the Apache/IIS configs:
+
+- `public/_headers` — Cloudflare Pages, for the prerendered HTML and assets.
+- `src/middleware.ts` — every response the Worker renders at request time.
+
+## Admin panel
+
+`/admin` is the AI Content Studio. It is protected by `ADMIN_TOKEN`
+(sent as the `x-admin-token` header) and issues a short-lived, httpOnly,
+`SameSite=Strict` session cookie. Cookie-authenticated requests must come
+from a trusted origin.
+
+## AI publishing
+
+`/admin` can research keywords and publish a post to this repository through
+the GitHub API. The weekly run happens on a cron trigger and publishes one
+post per week, alternating between English and Arabic.

@@ -97,6 +97,22 @@ export function clientIp(request: Request): string {
 }
 
 /**
+ * True when the request carries a valid cron secret.
+ *
+ * Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>`; Cloudflare
+ * cron triggers send `CF-Authorization: Bearer <CRON_SECRET>`. Both are
+ * accepted so the same code works on either platform.
+ */
+export function isCronRequest(request: Request): boolean {
+  const cronSecret = serverEnv('CRON_SECRET')?.trim();
+  if (!cronSecret) return false;
+  const expected = `Bearer ${cronSecret}`;
+  const header = request.headers.get('authorization') ?? '';
+  const cfHeader = request.headers.get('cf-authorization') ?? '';
+  return constantTimeEqual(header, expected) || constantTimeEqual(cfHeader, expected);
+}
+
+/**
  * Cookie-authenticated requests must come from a trusted origin (CSRF defense).
  * Non-browser clients (curl, cron) send no Origin header and are allowed through;
  * they must use the x-admin-token header instead.
@@ -108,6 +124,10 @@ export function isTrustedOrigin(request: Request): boolean {
     const host = new URL(origin).hostname;
     if (host === 'localhost') return true;
     if (host.endsWith('.vercel.app')) return true;
+    // Cloudflare preview deployments of this project. Scoped to this
+    // project's own preview domain, so an unrelated third-party Pages
+    // project can never pass the origin check.
+    if (host.endsWith('.wfrlee-blog.pages.dev')) return true;
     return host === new URL(SITE_URL).hostname;
   } catch {
     return false;

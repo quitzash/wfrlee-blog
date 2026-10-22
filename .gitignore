@@ -1,6 +1,11 @@
 # build output
 dist/
 .vercel/
+# wrangler dev server cache and bundles
+.wrangler/
+
+# packaged build archive
+dist.zip
 
 # generated types
 .astro/

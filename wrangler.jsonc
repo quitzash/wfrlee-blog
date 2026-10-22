@@ -3,5 +3,17 @@
 	"name": "wfrlee-blog",
 	"compatibility_date": "2026-10-01",
 	"compatibility_flags": ["nodejs_compat"],
-	"pages_build_output_dir": "./dist"
+	"pages_build_output_dir": "./dist",
+	// Scheduled invocations for the API routes. Cloudflare cron triggers send
+	// `CF-Authorization: Bearer <CRON_SECRET>` once that secret is configured
+	// on the Pages project (see .env.example).
+	//
+	// One weekly entry is enough here: /api/ai/weekly-post picks the language
+	// from the week index when no explicit language is given, so it alternates
+	// between English and Arabic on its own. The two Vercel entries in
+	// vercel.json stay as they are — that platform identifies the schedule
+	// with the `x-vercel-cron-schedule` header instead.
+	"triggers": {
+		"crons": ["0 7 * * 1"]
+	}
 }

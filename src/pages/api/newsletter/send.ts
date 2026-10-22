@@ -7,8 +7,8 @@ import { serverEnv } from '@/lib/env';
 import {
   SESSION_COOKIE,
   clientIp,
-  constantTimeEqual,
   isAdminAuthed,
+  isCronRequest,
   isRateLimited,
   isTrustedOrigin,
   withSecurityHeaders,
@@ -43,14 +43,12 @@ async function runSend(
   lang: 'en' | 'ar',
 ): Promise<Response> {
   if (!serverEnv('ADMIN_TOKEN')?.trim()) {
-    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set on Vercel.' }, 500));
+    return withSecurityHeaders(jsonResponse({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set in this deployment.' }, 500));
   }
 
-  // Vercel cron jobs send `Authorization: Bearer <CRON_SECRET>` automatically
-  // once CRON_SECRET is configured, so the weekly send can run unattended.
-  const cronSecret = serverEnv('CRON_SECRET')?.trim();
-  const authHeader = request.headers.get('authorization') ?? '';
-  const isCron = Boolean(cronSecret) && constantTimeEqual(authHeader, `Bearer ${cronSecret}`);
+  // Cron jobs authenticate with the shared CRON_SECRET: Vercel sends it as
+  // `Authorization: Bearer <secret>`, Cloudflare as `CF-Authorization`.
+  const isCron = isCronRequest(request);
 
   if (!isCron) {
     const sessionCookie = cookies.get(SESSION_COOKIE)?.value ?? null;
