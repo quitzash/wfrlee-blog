@@ -1,0 +1,77 @@
+name: Weekly cron
+
+# Cloudflare Pages has no Cron Triggers — that is a Workers-only feature, and
+# Pages rejects a `triggers` key in wrangler.jsonc. The scheduled jobs are
+# therefore driven from here: this workflow calls the same HTTP endpoints the
+# Vercel crons used to call, authenticating with the CRON_SECRET repository
+# secret as `Authorization: Bearer <secret>`.
+#
+# The matching CRON_SECRET must also be set on the Cloudflare Pages project
+# (Settings -> Variables and Secrets, production + preview), otherwise the
+# endpoints reject every request with 401.
+
+on:
+  schedule:
+    # Mondays 07:00 UTC — one English post, one Arabic post, then the
+    # newsletter. Mirrors the three entries in vercel.json.
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      lang:
+        description: Language for a manual run
+        required: false
+        default: en
+        type: choice
+        options:
+          - en
+          - ar
+
+permissions:
+  contents: read
+
+# Never let two runs publish at the same time.
+concurrency:
+  group: weekly-cron
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    name: Weekly AI post + newsletter
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SITE_URL: https://blog.wfrlee.com
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: Verify the cron secret
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET is not set on this repository (Settings -> Secrets -> Actions)"
+            exit 1
+          fi
+
+      # A scheduled run publishes both languages; a manual run publishes only
+      # the language picked in the workflow_dispatch input.
+      - name: Generate and publish the English post
+        if: github.event_name == 'schedule' || inputs.lang == 'en'
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 900 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$SITE_URL/api/ai/weekly-post?lang=en"
+
+      - name: Generate and publish the Arabic post
+        if: github.event_name == 'schedule' || inputs.lang == 'ar'
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 900 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$SITE_URL/api/ai/weekly-post?lang=ar"
+
+      # Only sends when the posts above succeeded, so a failed generation never
+      # mails the subscribers.
+      - name: Send the newsletter
+        env:
+          NEWSLETTER_LANG: ${{ github.event_name == 'schedule' && (vars.NEWSLETTER_LANG || 'en') || inputs.lang }}
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 300 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$SITE_URL/api/newsletter/send?lang=$NEWSLETTER_LANG"

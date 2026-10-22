@@ -12,7 +12,9 @@
     "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "wrangler pages deploy dist --project-name wfrlee-blog",
+    "pages:dev": "wrangler pages dev dist"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",
@@ -33,7 +35,8 @@
     "@astrojs/check": "^0.9.10",
     "@opencode/cli": "2.0.32",
     "@types/node": "^24.19.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.151.3"
   },
   "allowScripts": {
     "esbuild": true,
