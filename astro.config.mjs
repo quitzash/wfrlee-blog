@@ -7,8 +7,14 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'blog.wfrlee.com',
-	base: '/blog',
+	// Canonical origin for the blog. Must include the scheme: Astro validates
+	// `site` with z.string().url(), and a scheme-less value aborts the build
+	// with "site: Invalid url".
+	site: 'https://blog.wfrlee.com',
+	// The blog is served from the root of its own host, so no base prefix.
+	// The `/blog` segment that appears in post URLs comes from the route
+	// itself (src/pages/blog/[...slug].astro), not from `base`.
+	base: '/',
 	output: 'server',
 	adapter: cloudflare({
 		// Optimize images at build time with sharp. (The default for this

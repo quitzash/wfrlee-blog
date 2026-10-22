@@ -1,12 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "blog.wfrlee.com" }],
-      "destination": "https://wfrlee.com/:path*",
-      "permanent": true
-    }
-  ],
   "crons": [
     {
       "path": "/api/newsletter/send",

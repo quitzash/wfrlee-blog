@@ -24,10 +24,6 @@ AddDefaultCharset UTF-8
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	# Redirect blog.wfrlee.com -> wfrlee.com (preserve path)
-	RewriteCond %{HTTP_HOST} ^blog\.wfrlee\.com$ [NC]
-	RewriteRule ^(.*)$ https://wfrlee.com/$1 [R=301,L]
-
 	# Redirect any non-HTTPS request to HTTPS. The X-Forwarded-Proto check
 	# keeps the rule safe behind a proxy / load balancer (e.g. Cloudflare).
 	RewriteCond %{HTTPS} !=on

@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
 		title: 'مدونة وفرلي.كوم',
 		description:
 			'أدلة الإقامات القصيرة ونصائح التوقف في المطارات والتنقّل للمسافرين في السعودية ومنطقة الشرق الأوسط.',
-		site: context.site ?? 'https://wfrlee.com',
+		site: context.site ?? 'https://blog.wfrlee.com',
 		items: posts.map((post) => ({
 			title: post.data.title,
 			description: post.data.description,

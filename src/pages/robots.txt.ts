@@ -3,7 +3,7 @@ import type { APIContext } from 'astro';
 export const prerender = true;
 
 export function GET({ site }: APIContext) {
-	const base = site ?? new URL('https://wfrlee.com');
+	const base = site ?? new URL('https://blog.wfrlee.com');
 	const sitemap = new URL('sitemap-index.xml', base).toString();
 
 	const body = `# robots.txt for Wfrlee.com

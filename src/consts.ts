@@ -1,6 +1,11 @@
 // Global site data. Import anywhere with: import { SITE_TITLE } from '@/consts';
 
-export const SITE_URL = 'https://wfrlee.com';
+/**
+ * Canonical origin of the blog. Kept in sync with `site` in
+ * astro.config.mjs — it feeds the JSON-LD `url` fields and the trusted-origin
+ * check for admin sessions.
+ */
+export const SITE_URL = 'https://blog.wfrlee.com';
 export const SITE_TITLE = 'Wfrlee Blog';
 /** Arabic blog/site title, shown on /ar/ pages only. */
 export const SITE_TITLE_AR = 'مدونة وفرلي.كوم';
