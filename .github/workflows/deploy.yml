@@ -1,0 +1,55 @@
+name: Deploy
+
+# Every push to master (including the posts the AI publisher commits) is
+# deployed to the VM: SSH in and run scripts/deploy.sh, which pulls, builds
+# and reloads the app under pm2.
+#
+# Repository secrets (Settings -> Secrets and variables -> Actions):
+#   VM_HOST     public IP or hostname of the VM
+#   VM_USER     SSH user (ubuntu on Ubuntu AMIs, ec2-user on Amazon Linux)
+#   VM_SSH_KEY  private key for that user (the .pem you use in MobaXterm)
+# Optional repository variable:
+#   VM_APP_DIR  app folder on the VM (default /var/www/wfrlee-blog)
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never run two deploys at once; a newer push waits for the current one.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VM_HOST: ${{ secrets.VM_HOST }}
+      VM_USER: ${{ secrets.VM_USER }}
+      VM_SSH_KEY: ${{ secrets.VM_SSH_KEY }}
+      VM_APP_DIR: ${{ vars.VM_APP_DIR || '/var/www/wfrlee-blog' }}
+    steps:
+      - name: Check secrets
+        run: |
+          for name in VM_HOST VM_USER VM_SSH_KEY; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name is not set (Settings -> Secrets and variables -> Actions)"
+              exit 1
+            fi
+          done
+
+      - name: Deploy over SSH
+        run: |
+          mkdir -p ~/.ssh
+          install -m 600 /dev/null ~/.ssh/vm_key
+          printf '%s\n' "$VM_SSH_KEY" > ~/.ssh/vm_key
+          ssh -i ~/.ssh/vm_key \
+            -o StrictHostKeyChecking=accept-new \
+            -o ServerAliveInterval=30 \
+            "$VM_USER@$VM_HOST" \
+            "bash -lc 'bash \"$VM_APP_DIR/scripts/deploy.sh\"'"

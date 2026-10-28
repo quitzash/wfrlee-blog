@@ -2,7 +2,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import cloudflare from '@astrojs/cloudflare';
+import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
@@ -16,12 +16,9 @@ export default defineConfig({
 	// itself (src/pages/blog/[...slug].astro), not from `base`.
 	base: '/',
 	output: 'server',
-	adapter: cloudflare({
-		// Optimize images at build time with sharp. (The default for this
-		// adapter version, set explicitly to suppress the runtime-sharp
-		// warning; runtime transforms would need Cloudflare Images.)
-		imageService: 'compile',
-	}),
+	// Self-hosted Node server (dist/server/entry.mjs) behind nginx on the VM.
+	// See deploy/nginx.conf and ecosystem.config.cjs.
+	adapter: node({ mode: 'standalone' }),
 
 	i18n: {
 		defaultLocale: 'en',

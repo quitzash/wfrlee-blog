@@ -4,22 +4,20 @@
   "version": "0.0.1",
   "private": true,
   "engines": {
-    "node": ">=18.17.1"
+    "node": ">=20.6.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build && node scripts/postbuild.mjs",
+    "start": "node --env-file=.env dist/server/entry.mjs",
+    "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "astro": "astro",
-    "deploy": "node scripts/deploy.mjs",
-    "pages:dev": "wrangler pages dev dist"
+    "astro": "astro"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",
-    "@astrojs/cloudflare": "^12.6.13",
     "@astrojs/mdx": "^4.3.14",
+    "@astrojs/node": "^9.5.5",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/tailwind": "^6.0.2",
@@ -35,13 +33,11 @@
     "@astrojs/check": "^0.9.10",
     "@opencode/cli": "2.0.32",
     "@types/node": "^24.19.2",
-    "typescript": "^5.9.3",
-    "wrangler": "^4.151.3"
+    "typescript": "^5.9.3"
   },
   "allowScripts": {
     "esbuild": true,
     "sharp": true,
-    "@opencode/cli": true,
-    "workerd": true
+    "@opencode/cli": true
   }
 }

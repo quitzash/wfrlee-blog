@@ -1,14 +1,12 @@
 name: Weekly cron
 
-# Cloudflare Pages has no Cron Triggers — that is a Workers-only feature, and
-# Pages rejects a `triggers` key in wrangler.jsonc. The scheduled jobs are
-# therefore driven from here: this workflow calls the same HTTP endpoints the
-# Vercel crons used to call, authenticating with the CRON_SECRET repository
-# secret as `Authorization: Bearer <secret>`.
+# The scheduled jobs are driven from here: this workflow calls the site's HTTP
+# endpoints, authenticating with the CRON_SECRET repository secret as
+# `Authorization: Bearer <secret>`.
 #
-# The matching CRON_SECRET must also be set on the Cloudflare Pages project
-# (Settings -> Variables and Secrets, production + preview), otherwise the
-# endpoints reject every request with 401.
+# The matching CRON_SECRET must also be in the `.env` file on the VM,
+# otherwise the endpoints reject every request with 401. Set the SITE_URL
+# repository variable if the site is not served from https://blog.wfrlee.com.
 
 on:
   schedule:
@@ -40,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      SITE_URL: https://blog.wfrlee.com
+      SITE_URL: ${{ vars.SITE_URL || 'https://blog.wfrlee.com' }}
       CRON_SECRET: ${{ secrets.CRON_SECRET }}
     steps:
       - name: Verify the cron secret

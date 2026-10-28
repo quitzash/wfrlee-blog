@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         JSON.stringify({
           ok: false,
           error:
-            'Server misconfigured: ADMIN_TOKEN is not set in this deployment. Add it as an environment variable (Cloudflare: Settings → Variables and Secrets; Vercel: Settings → Environment Variables), then redeploy.',
+            'Server misconfigured: ADMIN_TOKEN is not set in this deployment. Add it to the .env file next to package.json on the server, then restart the app (pm2 reload wfrlee-blog).',
         }),
         { status: 500, headers: { 'content-type': 'application/json' } },
       ),

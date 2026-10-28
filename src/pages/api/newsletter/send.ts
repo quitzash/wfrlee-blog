@@ -46,8 +46,8 @@ async function runSend(
     return withSecurityHeaders(jsonResponse({ ok: false, error: 'Server misconfigured: ADMIN_TOKEN is not set in this deployment.' }, 500));
   }
 
-  // Cron jobs authenticate with the shared CRON_SECRET: Vercel sends it as
-  // `Authorization: Bearer <secret>`, Cloudflare as `CF-Authorization`.
+  // Cron jobs authenticate with the shared CRON_SECRET, sent as
+  // `Authorization: Bearer <secret>` (GitHub Actions or Vercel cron).
   const isCron = isCronRequest(request);
 
   if (!isCron) {

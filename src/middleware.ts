@@ -2,10 +2,10 @@
  * Baseline security headers for every rendered response.
  *
  * `public/.htaccess` and `public/web.config` carry the same policy for the
- * Apache/IIS hosts, but Cloudflare Pages — the deployment target — ignores
- * both of them. This middleware covers the pages the Worker renders at
- * request time (home, admin, API routes); `public/_headers` covers the
- * prerendered HTML and the static assets.
+ * Apache/IIS hosts; the VM runs nginx, which ignores both. This middleware
+ * covers the pages the Node server renders at request time (home, admin, API
+ * routes). The prerendered HTML and static assets bypass middleware, so
+ * `deploy/nginx.conf` adds the same headers to those.
  */
 import { defineMiddleware } from 'astro:middleware';
 
