@@ -10,7 +10,7 @@ Live site: **<https://blog.wfrlee.com>**
 | | |
 | --- | --- |
 | Framework | [Astro](https://astro.build) 5 (SSR / `output: 'server'`) |
-| Adapter | `@astrojs/cloudflare` (Cloudflare Pages) |
+| Adapter | `@astrojs/node` (standalone Node server behind nginx on an AWS VM) |
 | Content | Markdown/MDX collections with a Zod schema |
 | Styling | Tailwind CSS 3 |
 | i18n | Astro's built-in i18n (`en` at the root, `ar` under `/ar/`) |
@@ -36,10 +36,9 @@ The `/blog` segment in post URLs comes from the route itself
 | `npm install` | Install dependencies |
 | `npm run dev` | Dev server on <http://localhost:4321> |
 | `npm run build` | Production build into `./dist/` |
+| `npm start` | Run the production build (`dist/server/entry.mjs`) with `.env` loaded |
 | `npm run preview` | Serve the production build locally |
 | `npm run check` | `astro check` — type-check `.astro` files and content |
-| `npm run deploy` | Publish `./dist/` to Cloudflare Pages (`scripts/deploy.mjs` → `wrangler pages deploy`) |
-| `npm run pages:dev` | Run the built Worker locally through `wrangler pages dev` |
 
 ## Project structure
 
@@ -52,7 +51,10 @@ src/
 ├── pages/           Routes. blog/[...slug].astro, cities/, ar/, admin/, api/
 └── middleware.ts    Baseline security headers on every rendered response
 public/              Static assets, plus the Apache (.htaccess) and IIS
-                     (web.config) configs and the Cloudflare Pages _headers
+                     (web.config) configs
+deploy/nginx.conf    nginx site for the VM
+scripts/deploy.sh    Pull, build and restart on the VM (run by the Deploy workflow)
+ecosystem.config.cjs pm2 process definition
 ```
 
 ### Routes
@@ -94,79 +96,93 @@ Set `draft: true` to keep a post out of the blog index and the sitemap.
 
 ## Deploying
 
-The site is deployed to **Cloudflare Pages** with the Cloudflare adapter.
-`npm run build` writes `dist/` (the Worker in `dist/_worker.js/` plus the
-static assets); `wrangler.jsonc` points Pages at that folder.
+The site runs on an **AWS Linux VM** as a Node server (`@astrojs/node`,
+standalone mode) managed by **pm2**, with **nginx** in front of it.
 
-Deploy from the CLI:
-
-```sh
-npm run build
-npm run deploy
+```text
+git push master → GitHub Actions (Deploy) → SSH → scripts/deploy.sh
+                                                   git pull, npm ci, build,
+                                                   pm2 reload
+browser → https://blog.wfrlee.com → nginx :443 → Node on 127.0.0.1:4321
 ```
 
-`npm run deploy` runs `scripts/deploy.mjs`, which calls
-`wrangler pages deploy dist --project-name wfrlee-blog` with the branch and
-commit hash resolved explicitly — from `CF_PAGES_BRANCH` / `CF_PAGES_COMMIT_SHA`
-during a Cloudflare build, from git otherwise. The project name has to be
-explicit: the Pages build container clones the repository into
-`/opt/buildhome/repo`, so Wrangler could not infer it.
+Every push to `master` is deployed automatically, including the posts the AI
+publisher commits through the GitHub API.
 
-`scripts/postbuild.mjs` writes `dist/.assetsignore` with `_worker.js` and
-`_routes.json` in it. Without those patterns Wrangler refuses to upload the
-server bundle (`Uploading a Pages _worker.js directory as an asset`), and an
-empty file would only silence the error while uploading the server-side code
-as a public static asset.
+### One-time VM setup
 
-### Cloudflare Pages project settings
+Commands for Ubuntu (use `dnf` instead of `apt` on Amazon Linux):
 
-| Setting | Value |
+```sh
+# Node 22, git, nginx, pm2
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs git nginx
+sudo npm install -g pm2
+
+# A read-only key so the VM can pull from GitHub
+ssh-keygen -t ed25519 -f ~/.ssh/github -N ""
+cat ~/.ssh/github.pub   # GitHub → repo → Settings → Deploy keys → Add (read-only)
+printf 'Host github.com\n  IdentityFile ~/.ssh/github\n' >> ~/.ssh/config
+
+# Clone, configure, first start
+sudo mkdir -p /var/www && sudo chown "$USER" /var/www
+git clone git@github.com:quitzash/wfrlee-blog.git /var/www/wfrlee-blog
+cd /var/www/wfrlee-blog
+cp .env.example .env && nano .env      # fill in the secrets
+bash scripts/deploy.sh                 # install, build, start under pm2
+pm2 startup                            # run the command it prints (restart on reboot)
+```
+
+Never edit files in `/var/www/wfrlee-blog` directly: `deploy.sh` uses
+`git pull --ff-only` and stops if the server copy has local changes. The only
+server-only file is `.env`. After changing it, run
+`pm2 reload wfrlee-blog --update-env`.
+
+### nginx and the subdomain
+
+1. **DNS:** add an `A` record for the subdomain pointing at the VM's
+   **Elastic IP** (a normal public IP changes when the VM stops).
+2. **AWS security group:** allow inbound 80 and 443 (and 22 for SSH).
+3. Install the site and HTTPS:
+
+   ```sh
+   sudo cp deploy/nginx.conf /etc/nginx/sites-available/wfrlee-blog
+   sudo ln -s /etc/nginx/sites-available/wfrlee-blog /etc/nginx/sites-enabled/
+   sudo nginx -t && sudo systemctl reload nginx
+   sudo apt install -y certbot python3-certbot-nginx
+   sudo certbot --nginx -d blog.wfrlee.com
+   ```
+
+Using a different subdomain? Change it in `deploy/nginx.conf`, in `site` in
+`astro.config.mjs` and in `SITE_URL` in `src/consts.ts`, and set the
+`SITE_URL` repository variable for the weekly cron.
+
+The Node server applies the security headers to the pages it renders
+(`src/middleware.ts`). Prerendered pages and static files bypass the
+middleware, so `deploy/nginx.conf` adds the same headers to any response that
+does not already have them.
+
+### Automatic deploys (GitHub Actions)
+
+`.github/workflows/deploy.yml` runs on every push to `master` (or manually from
+**Actions → Deploy → Run workflow**). Add these repository secrets under
+**Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
 | --- | --- |
-| Production branch | `master` |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Deploy command | `npm run deploy` |
-| Node version | `24` (or whatever `NODE_VERSION` is set to) |
+| `VM_HOST` | The VM's Elastic IP or hostname |
+| `VM_USER` | `ubuntu` (Ubuntu) or `ec2-user` (Amazon Linux) |
+| `VM_SSH_KEY` | The private key (`.pem`) you use to SSH in, e.g. from MobaXterm |
 
-> **The deploy command has to be `npm run deploy`.** It used to be
-> `npx wrangler preview`, which cannot work for this project:
->
-> - `wrangler preview` is the Workers **Previews** beta command. It publishes
->   a *Worker* preview, not the Pages project, so it never updates
->   `blog.wfrlee.com`.
-> - It requires a `previews` block in the Wrangler config, and Pages projects
->   reject that key outright:
->   `Configuration file for Pages projects does not support "previews"`.
-> - Adding that key is not an option either: the same rejection then breaks
->   every other Wrangler command, including the deploy itself.
->
-> A Pages project is published with `wrangler pages deploy` — see
-> [Wrangler Pages commands](https://developers.cloudflare.com/workers/wrangler/commands/#pages).
-
-> A `wrangler.jsonc` that contains `pages_build_output_dir` becomes the source
-> of truth for the Pages project configuration. Keep it in sync with the
-> dashboard (bindings, environment variables) and remember that Pages rejects
-> the `triggers` key — Cron Triggers are a Workers-only feature.
-
-### First deploy checklist
-
-1. Set the **deploy command** to `npm run deploy` (table above). Everything
-   else in the build settings is already correct.
-2. `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` have to be available to
-   the deploy step. The Pages build container provides them; a local
-   `npm run deploy` needs them in the shell (or `npx wrangler login`). If the
-   deploy fails with *"it's necessary to set a CLOUDFLARE_API_TOKEN environment
-   variable"*, add it under **Settings → Variables and Secrets**.
-3. After the first successful deploy, re-check **Settings → Variables and
-   Secrets** on the Pages project. The Wrangler file is the source of truth
-   for the project configuration, so the dashboard variables listed below have
-   to still be there.
+Optional repository variable `VM_APP_DIR` (default `/var/www/wfrlee-blog`).
+GitHub's runners connect from changing IPs, so port 22 has to be reachable
+from the internet. Key-only SSH (the EC2 default) keeps that safe.
 
 ### Environment variables and secrets
 
-Set these on the Pages project (**Settings → Variables and Secrets**, for both
-production and preview). Encrypted variables are the ones the app reads at
-runtime; see [.env.example](./.env.example) for the full list.
+They live in `/var/www/wfrlee-blog/.env` on the VM and are loaded when the
+server starts (`node --env-file=.env`). See [.env.example](./.env.example) for
+the full list.
 
 | Variable | Purpose |
 | --- | --- |
@@ -177,32 +193,23 @@ runtime; see [.env.example](./.env.example) for the full list.
 | `GITHUB_TOKEN` | Publishes generated posts to this repository |
 | `RESEND_API_KEY` | Sends the newsletter |
 
-Security headers are applied in two places, because the deployment target
-ignores the Apache/IIS configs:
-
-- `public/_headers` — Cloudflare Pages, for the prerendered HTML and assets.
-- `src/middleware.ts` — every response the Worker renders at request time.
-
 ## Scheduled jobs
 
-Cloudflare Pages **does not support Cron Triggers** (they are a Workers-only
-feature), so the weekly jobs are driven from GitHub Actions:
+The weekly jobs are driven from GitHub Actions:
 
 - `.github/workflows/weekly-cron.yml` runs every Monday at 07:00 UTC.
 - It calls `/api/ai/weekly-post?lang=en` and `?lang=ar` (one post per
   language), then `/api/newsletter/send?lang=…`.
 - Authentication is `Authorization: Bearer <CRON_SECRET>`, so the same secret
-  has to exist twice: as the `CRON_SECRET` repository secret in GitHub and as
-  an encrypted variable on the Cloudflare Pages project.
+  has to exist twice: as the `CRON_SECRET` repository secret in GitHub and in
+  `.env` on the VM.
+- The target is `https://blog.wfrlee.com` unless the `SITE_URL` repository
+  variable says otherwise.
 - The newsletter language defaults to English. Override it with the
   `NEWSLETTER_LANG` repository variable, or run the workflow manually
   (**Actions → Weekly cron → Run workflow**) to pick a language.
 
 `vercel.json` keeps the equivalent Vercel crons for Vercel deployments.
-
-> The AI post endpoint can run for a few minutes. Cloudflare's free plan caps
-> the CPU time of a single invocation, so if the generation times out there,
-> trigger it from `/admin` instead.
 
 ## Admin panel
 
